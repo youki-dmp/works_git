@@ -1,11 +1,11 @@
 # Works Git
 
-## Overview
-This repository collects tools and applications designed to automate work tasks and improve efficiency.
+## 概要
+このリポジトリは、日々の業務を自動化し、効率を向上させるためのツールやアプリケーションをまとめたものです。
 
-## Contents
-- **Scripts**: Automation scripts for daily tasks.
-- **Apps**: Custom applications built to streamline workflows.
+## コンテンツ
+- **Scripts**: 日常業務のための自動化スクリプト。
+- **Apps**: ワークフローを効率化するために構築されたカスタムアプリケーション。
 
-## Getting Started
-(Usage instructions to be added as tools are developed)
+## はじめに
+(ツールの開発に伴い、使用方法を追記予定)
