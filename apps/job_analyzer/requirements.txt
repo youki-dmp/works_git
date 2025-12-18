@@ -2,3 +2,6 @@ google-generativeai
 requests
 beautifulsoup4
 python-dotenv
+flask
+markdown
+playwright

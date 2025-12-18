@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Analyzer AI</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+    rel="stylesheet">
+  <!-- CSS -->
+  <link rel="stylesheet" href="/static/style.css">
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <i class="fa-solid fa-robot"></i> Job Analyzer
+      </div>
+      <div class="history-section">
+        <h3><i class="fa-solid fa-clock-rotate-left"></i> 履歴</h3>
+        <div id="history-list" class="history-list">
+          <!-- History items injected by JS -->
+          <div class="loading-spinner-sm"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header>
+        <h1>AI キャリアアドバイザー</h1>
+        <p>求人URLを入力して、AIに希望条件との適合度を診断させましょう。</p>
+      </header>
+
+      <!-- Input Section -->
+      <section class="input-section glass-panel">
+        <form id="analyze-form">
+          <div id="url-inputs">
+            <div class="input-group">
+              <input type="url" name="url" placeholder="https://example.com/job/123" required>
+              <button type="button" class="icon-btn remove-btn" disabled><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="add-url-btn" class="secondary-btn">
+              <i class="fa-solid fa-plus"></i> URLを追加
+            </button>
+            <button type="button" id="analyze-btn" class="primary-btn">
+              <span class="btn-text">求人を診断する</span>
+              <span class="btn-loader hidden"><i class="fa-solid fa-circle-notch fa-spin"></i> 処理中...</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Results Section -->
+      <section id="results-section" class="results-section hidden">
+        <h2>診断結果</h2>
+        <div id="results-grid" class="results-grid">
+          <!-- Result cards injected here -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal for details -->
+  <div id="detail-modal" class="modal hidden">
+    <div class="modal-content glass-panel">
+      <span class="close-modal">&times;</span>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+
+</html>
