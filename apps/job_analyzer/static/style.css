@@ -445,3 +445,187 @@ button {
     transform: rotate(360deg);
   }
 }
+
+/* Tabs Styling */
+.tabs-nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+}
+
+.tab-btn:hover {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.tab-btn.active {
+  background: var(--accent-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.2);
+}
+
+.tab-content {
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Editor & Full Width */
+.full-width {
+  flex-direction: column;
+}
+
+textarea {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+  background: #fff;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+textarea:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.settings-header {
+  margin-bottom: 20px;
+}
+
+.settings-header h3 {
+  margin-bottom: 5px;
+  color: #1e293b;
+}
+
+.settings-header p {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+/* Score Pill */
+.score-pill {
+  background: #f1f5f9;
+  color: #1e293b;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid #e2e8f0;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* History Improvements */
+.history-item {
+  position: relative;
+}
+
+.delete-history-btn {
+  background: transparent;
+  color: #cbd5e1;
+  padding: 2px 5px;
+  font-size: 0.8rem;
+  visibility: hidden;
+  transition: color 0.2s;
+}
+
+.history-item:hover .delete-history-btn {
+  visibility: visible;
+}
+
+.delete-history-btn:hover {
+  color: var(--danger-color) !important;
+}
+
+.h-score {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+/* Modal Improvements */
+.modal-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 20px;
+}
+
+.modal-tools {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-text-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.icon-text-btn:hover {
+  background: #f1f5f9;
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.modal-main-content {
+  line-height: 1.8;
+  color: #1e293b;
+}
+
+.modal-main-content h1,
+.modal-main-content h2 {
+  margin: 1.5rem 0 1rem;
+  color: #0f172a;
+}
+
+.modal-main-content ul {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.modal-main-content li {
+  margin-bottom: 0.5rem;
+}

@@ -18,50 +18,107 @@ def load_file(filepath):
         print(f"Error: File not found: {filepath}")
         return ""
 
+def save_file(filepath, content):
+    """Saves text to a file."""
+    try:
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+        return True
+    except Exception as e:
+        print(f"Error saving file: {e}")
+        return False
+
 from playwright.sync_api import sync_playwright
 
 def fetch_text_from_url(url):
-    """Fetches text content from a URL using Playwright (Headless Browser)."""
+    """Fetches text content from a URL using Playwright (Headless Browser) with enhanced robustness."""
     try:
         with sync_playwright() as p:
-            # Launch with HTTP/2 disabled to avoid protocol errors on strict sites
+            # Using higher quality browser launch arguments
             browser = p.chromium.launch(
                 headless=True,
-                args=['--disable-http2']
+                args=[
+                    '--disable-http2',
+                    '--disable-blink-features=AutomationControlled',
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox'
+                ]
             )
             
-            # Create a context with a realistic Mac user agent
+            # Context with more complete browser fingerprint
             context = browser.new_context(
                 user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 viewport={'width': 1280, 'height': 800},
+                device_scale_factor=1,
+                is_mobile=False,
+                has_touch=False,
+                locale='ja-JP',
+                timezone_id='Asia/Tokyo',
                 ignore_https_errors=True
             )
             
             page = context.new_page()
             
-            # Go to URL and wait for load
-            # 'domcontentloaded' is faster than 'networkidle' but usually sufficient for text
-            page.goto(url, timeout=60000, wait_until='domcontentloaded')
+            # Set additional headers
+            page.set_extra_http_headers({
+                "Accept-Language": "ja,en-US;q=0.9,en;q=0.8",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "Upgrade-Insecure-Requests": "1",
+                "Sec-Fetch-Dest": "document",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Site": "none",
+                "Sec-Fetch-User": "?1"
+            })
+
+            # Go to URL with slightly longer timeout and better wait strategy
+            # Use 'networkidle' for more reliable content loading on JS-heavy sites
+            try:
+                page.goto(url, timeout=45000, wait_until='networkidle')
+            except Exception as e:
+                print(f"Networkidle failed, falling back to domcontentloaded: {e}")
+                page.goto(url, timeout=30000, wait_until='domcontentloaded')
+
+            # Wait a bit just in case of slow JS rendering
+            page.wait_for_timeout(2000)
             
             # Get content
             content = page.content()
             browser.close()
             
-            # Parse with BeautifulSoup as before
+            # Parse with BeautifulSoup
             soup = BeautifulSoup(content, 'html.parser')
             
-            # Remove script and style elements
-            for script in soup(["script", "style", "header", "footer", "nav", "noscript"]):
-                script.decompose()
+            # Remove exhaustive list of noise elements
+            noise_elements = [
+                "script", "style", "header", "footer", "nav", "noscript", 
+                "aside", "iframe", "svg", "button", "input", "form"
+            ]
+            for element in soup(noise_elements):
+                element.decompose()
                 
-            text = soup.get_text()
+            # Focus on main content if possible (common job site structures)
+            main_content = soup.find('main') or soup.find('div', id='content') or soup.find('div', class_='content') or soup
             
-            # Clean text
-            lines = (line.strip() for line in text.splitlines())
-            chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-            text = '\n'.join(chunk for chunk in chunks if chunk)
+            text = main_content.get_text(separator='\n')
             
-            return text
+            # Clean text thoroughly
+            lines = []
+            for line in text.splitlines():
+                stripped = line.strip()
+                if stripped and len(stripped) > 2: # Ignore very short lines (often debris)
+                    lines.append(stripped)
+            
+            cleaned_text = '\n'.join(lines)
+            
+            # If cleaned text is too short, the scraping might have failed or hit a bot wall
+            if len(cleaned_text) < 100:
+                return f"Error: Fetched content is too short ({len(cleaned_text)} chars). Site might be blocking or content is empty."
+            
+            return cleaned_text
+
+    except Exception as e:
+        print(f"Error fetching URL with Playwright: {e}")
+        return f"Error fetching URL: {e}"
 
     except Exception as e:
         print(f"Error fetching URL with Playwright: {e}")
@@ -95,6 +152,7 @@ def analyze_job_content(job_description, requirements):
     以下のMarkdown形式で出力してください。見出しなどは適切に使用してください。
 
     # 総合判定: [S/A/B/C]
+    適合スコア: [0-100の数値]
     
     ## 推奨理由
     - (理由1)

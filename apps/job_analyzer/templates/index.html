@@ -37,11 +37,18 @@
     <main class="main-content">
       <header>
         <h1>AI キャリアアドバイザー</h1>
-        <p>求人URLを入力して、AIに希望条件との適合度を診断させましょう。</p>
+        <p>求人情報を入力して、AIに希望条件との適合度を診断させましょう。</p>
       </header>
 
-      <!-- Input Section -->
-      <section class="input-section glass-panel">
+      <!-- Tabs Navigation -->
+      <nav class="tabs-nav">
+        <button class="tab-btn active" data-tab="url-tab"><i class="fa-solid fa-link"></i> URLで診断</button>
+        <button class="tab-btn" data-tab="text-tab"><i class="fa-solid fa-file-text"></i> テキストで診断</button>
+        <button class="tab-btn" data-tab="settings-tab"><i class="fa-solid fa-gear"></i> 希望条件設定</button>
+      </nav>
+
+      <!-- URL Analysis Section -->
+      <section id="url-tab" class="tab-content input-section glass-panel">
         <form id="analyze-form">
           <div id="url-inputs">
             <div class="input-group">
@@ -60,6 +67,35 @@
             </button>
           </div>
         </form>
+      </section>
+
+      <!-- Text Analysis Section -->
+      <section id="text-tab" class="tab-content input-section glass-panel hidden">
+        <div class="input-group full-width">
+          <textarea id="job-text-input" placeholder="求人情報の本文をここに貼り付けてください..." rows="10"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" id="analyze-text-btn" class="primary-btn">
+            <span class="btn-text">テキストを診断する</span>
+            <span class="btn-loader hidden"><i class="fa-solid fa-circle-notch fa-spin"></i> 処理中...</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section id="settings-tab" class="tab-content input-section glass-panel hidden">
+        <div class="settings-header">
+          <h3>希望条件の編集 (requirements.md)</h3>
+          <p>AIが判定基準として使用するあなたの希望条件を編集します。</p>
+        </div>
+        <div class="input-group full-width">
+          <textarea id="requirements-input" rows="15"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" id="save-requirements-btn" class="primary-btn">
+            <i class="fa-solid fa-save"></i> 設定を保存
+          </button>
+        </div>
       </section>
 
       <!-- Results Section -->
