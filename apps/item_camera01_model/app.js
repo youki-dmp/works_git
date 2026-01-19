@@ -19,7 +19,13 @@ let imageLoaded = false;
 let volume = 0;
 let sensitivity = 1.0;
 let headRotation = { x: 0, y: 0, z: 0 };
+let headPosition = { x: 0, y: 0 };
+let headScale = 1.0;
 let isBlinking = false;
+let blinkScore = 0; // Normalized 0-1
+let mouthScore = 0; // Normalized 0-1
+let smoothBlink = 0;
+let smoothMouth = 0;
 let neutralLandmarks = null;
 let currentLandmarks = null;
 let isCalibrating = false;
@@ -132,19 +138,40 @@ async function predictWebcam() {
 
       currentLandmarks = faceLandmarks;
 
-      // Blink detection
+      // Continuous Scores for Interpolation
       const eyeBlinkLeft = faceBlendshapes.find(b => b.categoryName === "eyeBlinkLeft").score;
       const eyeBlinkRight = faceBlendshapes.find(b => b.categoryName === "eyeBlinkRight").score;
-      isBlinking = (eyeBlinkLeft + eyeBlinkRight) / 2 > 0.4;
+      blinkScore = (eyeBlinkLeft + eyeBlinkRight) / 2;
+
+      const jawOpen = (faceBlendshapes.find(b => b.categoryName === "jawOpen")?.score || 0);
+      mouthScore = Math.max(jawOpen, Math.min(1.0, volume / 30.0));
+
+      // Smoothing (EMA)
+      const alpha = 0.6; // High value = faster response, low value = smoother
+      smoothBlink = smoothBlink * (1 - alpha) + blinkScore * alpha;
+      smoothMouth = smoothMouth * (1 - alpha) + mouthScore * alpha;
+
+      isBlinking = smoothBlink > 0.4;
 
       // Rotation estimation
       const nose = faceLandmarks[1];
-      const leftEye = faceLandmarks[33];
-      const rightEye = faceLandmarks[263];
+      const eyeL = faceLandmarks[33];
+      const eyeR = faceLandmarks[263];
 
-      headRotation.y = (nose.x - 0.5) * 60; // Yaw
-      headRotation.x = (nose.y - 0.5) * 40; // Pitch
-      headRotation.z = (rightEye.y - leftEye.y) * 100; // Roll
+      // Rotation estimation (Relative to Calibration)
+      const neut = neutralLandmarks ? neutralLandmarks : currentLandmarks;
+      headRotation.y = (nose.x - neut[1].x) * 60; // Yaw
+      headRotation.x = (nose.y - neut[1].y) * 40; // Pitch
+      headRotation.z = ((eyeR.y - eyeL.y) - (neut[263].y - neut[33].y)) * 100; // Roll
+
+      // Position & Scale (Depth) - Relative to Calibration
+      const eyeDist = Math.sqrt(Math.pow(eyeR.x - eyeL.x, 2) + Math.pow(eyeR.y - eyeL.y, 2));
+      const neutralDist = Math.sqrt(Math.pow(neut[263].x - neut[33].x, 2) + Math.pow(neut[263].y - neut[33].y, 2));
+      headScale = Math.max(0.7, Math.min(1.5, eyeDist / neutralDist));
+
+      // Face center for translation
+      headPosition.x = (nose.x - neut[1].x) * 120;
+      headPosition.y = (nose.y - neut[1].y) * 80;
     }
   }
   renderCharacter();
@@ -163,23 +190,32 @@ function renderCharacter() {
   canvasCtx.save();
   canvasCtx.translate(centerX, centerY);
 
+  // Advanced Body Transforms
+  // Scale (Depth)
+  canvasCtx.scale(headScale, headScale);
+
+  // Translation (X/Y Movement)
+  canvasCtx.translate(headPosition.x, headPosition.y);
+
+  // Body Leaning (Tilt the whole character slightly)
+  const leaning = headRotation.y * 0.002;
+  canvasCtx.transform(1, 0, leaning, 1, 0, 0);
+
   // Pseudo-3D Rotation (Stabilized)
   const maxSkew = 0.08;
   canvasCtx.rotate(headRotation.z * Math.PI / 180);
   const yawRad = Math.max(-maxSkew, Math.min(maxSkew, headRotation.y * Math.PI / 180 * 0.2));
   const pitchRad = Math.max(-maxSkew, Math.min(maxSkew, headRotation.x * Math.PI / 180 * 0.2));
   canvasCtx.transform(1, pitchRad, yawRad, 1, 0, 0);
-  canvasCtx.translate(headRotation.y * 0.8, headRotation.x * 0.8);
 
   // Bounce
   const bounce = Math.sin(Date.now() * 0.01) * (volume * 0.05);
   canvasCtx.translate(0, bounce - (volume * 0.1));
 
-  // Draw base static image (only if mesh is not ready or restricted)
+  // Draw Mesh Layer
   if (!neutralLandmarks || !currentLandmarks) {
     canvasCtx.drawImage(characterImage, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
   } else {
-    // The mesh will draw the image layers
     drawMovingMesh(imgWidth, imgHeight);
   }
 
@@ -209,13 +245,14 @@ function getFaceBounds() {
   });
 
   // Add padding
-  const paddingX = (maxX - minX) * 0.2;
-  const paddingY = (maxY - minY) * 0.2;
+  const paddingX = (maxX - minX) * 0.25;
+  const paddingYTop = (maxY - minY) * 0.15;
+  const paddingYBottom = (maxY - minY) * 0.45; // Much more padding at the bottom for mouth/chin
   return {
     minX: Math.max(0, minX - paddingX),
-    minY: Math.max(0, minY - paddingY),
+    minY: Math.max(0, minY - paddingYTop),
     maxX: Math.min(1, maxX + paddingX),
-    maxY: Math.min(1, maxY + paddingY)
+    maxY: Math.min(1, maxY + paddingYBottom)
   };
 }
 
@@ -223,74 +260,132 @@ function getFaceBounds() {
  * Advanced Mesh Warping Logic (Case 1)
  */
 function drawMovingMesh(width, height) {
-  const gridX = 10;
-  const gridY = 10;
+  const gridX = 30;
+  const gridY = 30;
   const mode = appModeSelect.value;
 
-  // State selection
-  let cellX = 0; // Blink state
-  let cellY = 0; // Mouth state
-  if (isBlinking) cellX = 1;
-  const jawOpen = (faceBlendshapes?.find(b => b.categoryName === "jawOpen")?.score || 0);
-  if (jawOpen > 0.25 || volume > 5) cellY = 1;
+  // Weights for interpolation
+  // w00: Standard, w10: Blink, w01: MouthOpen, w11: Both
 
-  // Pick source image
-  let sourceImg = characterImage;
-  if (mode === 'separate') {
-    if (cellX === 0 && cellY === 0) sourceImg = characterImage;
-    else if (cellX === 1 && cellY === 0) sourceImg = imageBlink;
-    else if (cellX === 0 && cellY === 1) sourceImg = imageMouth;
-    else if (cellX === 1 && cellY === 1) sourceImg = imageBoth;
-  }
+  // SHARPNESS ADJUSTMENT:
+  // Use a power function to stay in states 0 or 1 longer.
+  // Also, emphasize the dominant state.
+  const sharpen = (v) => {
+    // Simple curve: stays near 0/1 longer, moves fast in middle
+    if (v < 0.25) return 0;
+    if (v > 0.75) return 1;
+    return (v - 0.25) / 0.5; // Linear ramp in the slightly wider middle (0.25 - 0.75)
+  };
 
-  if (!sourceImg.complete || sourceImg.naturalWidth === 0) {
-    sourceImg = characterImage; // Fallback
-  }
+  const b = sharpen(smoothBlink);
+  const m = sharpen(smoothMouth);
+  const weights = [
+    { cx: 0, cy: 0, img: characterImage, alpha: (1 - b) * (1 - m) },
+    { cx: 1, cy: 0, img: (mode === 'separate' ? imageBlink : characterImage), alpha: b * (1 - m) },
+    { cx: 0, cy: 1, img: (mode === 'separate' ? imageMouth : characterImage), alpha: (1 - b) * m },
+    { cx: 1, cy: 1, img: (mode === 'separate' ? imageBoth : characterImage), alpha: b * m }
+  ];
 
   const cellW = 1.0 / gridX;
   const cellH = 1.0 / gridY;
 
   for (let iy = 0; iy < gridY; iy++) {
     for (let ix = 0; ix < gridX; ix++) {
-      // Normalized coordinates for the WHOLE image (0.0 to 1.0)
       const snx1 = ix * cellW, sny1 = iy * cellH;
       const snx2 = (ix + 1) * cellW, sny2 = iy * cellH;
       const snx3 = ix * cellW, sny3 = (iy + 1) * cellH;
       const snx4 = (ix + 1) * cellW, sny4 = (iy + 1) * cellH;
 
-      // Texture pixel coordinates
-      let u1 = snx1 * sourceImg.width, v1 = sny1 * sourceImg.height;
-      let u2 = snx2 * sourceImg.width, v2 = sny2 * sourceImg.height;
-      let u3 = snx3 * sourceImg.width, v3 = sny3 * sourceImg.height;
-      let u4 = snx4 * sourceImg.width, v4 = sny4 * sourceImg.height;
+      // PART LOCALIZATION: Map neutralLandmarks to a centered space for Illustration
+      const cx = snx1 + cellW / 2;
+      const cy = sny1 + cellH / 2;
+      let isPart = false;
+      if (neutralLandmarks) {
+        // Find face center in neutral landmarks
+        const bounds = getFaceBounds();
+        const fCX = (bounds.minX + bounds.maxX) / 2;
+        const fCY = (bounds.minY + bounds.maxY) / 2;
 
-      // If using sprite sheet, adjust the source UVs to the active 2x2 cell
-      if (mode === 'spritesheet') {
-        const tw = sourceImg.width / 2;
-        const th = sourceImg.height / 2;
-        u1 = (u1 / 2) + cellX * tw; v1 = (v1 / 2) + cellY * th;
-        u2 = (u2 / 2) + cellX * tw; v2 = (v2 / 2) + cellY * th;
-        u3 = (u3 / 2) + cellX * tw; v3 = (v3 / 2) + cellY * th;
-        u4 = (u4 / 2) + cellX * tw; v4 = (v4 / 2) + cellY * th;
+        const mapX = (lx) => (lx - fCX) + 0.5;
+        const mapY = (ly) => (ly - fCY) + 0.45; // Shifted slightly up for mouth
+
+        const eL = neutralLandmarks[468]; // Iris L
+        const eR = neutralLandmarks[473]; // Iris R
+        const mC = neutralLandmarks[13];  // Upper Lip
+
+        const dL = Math.hypot(cx - mapX(eL.x), cy - mapY(eL.y));
+        const dR = Math.hypot(cx - mapX(eR.x), cy - mapY(eR.y));
+        const dM = Math.hypot(cx - mapX(mC.x), cy - mapY(mC.y));
+
+        // Larger radii for robust mapping
+        isPart = (dL < 0.12 || dR < 0.12 || dM < 0.2);
       }
 
-      // Destination coordinates on canvas
       const p1 = getWarpedPoint(snx1, sny1, width, height);
       const p2 = getWarpedPoint(snx2, sny2, width, height);
       const p3 = getWarpedPoint(snx3, sny3, width, height);
       const p4 = getWarpedPoint(snx4, sny4, width, height);
 
-      drawWarpedTriangle(sourceImg, u1, v1, u2, v2, u3, v3, p1, p2, p3);
-      drawWarpedTriangle(sourceImg, u2, v2, u4, v4, u3, v3, p2, p4, p3);
+      if (!isPart || mode === 'single') {
+        const sourceImg = characterImage;
+        let u1 = snx1 * sourceImg.width, v1 = sny1 * sourceImg.height;
+        let u2 = snx2 * sourceImg.width, v2 = sny2 * sourceImg.height;
+        let u3 = snx3 * sourceImg.width, v3 = sny3 * sourceImg.height;
+        let u4 = snx4 * sourceImg.width, v4 = sny4 * sourceImg.height;
+
+        if (mode === 'spritesheet') {
+          // Lock to top-left cell (0,0) for non-face parts
+          u1 /= 2; v1 /= 2;
+          u2 /= 2; v2 /= 2;
+          u3 /= 2; v3 /= 2;
+          u4 /= 2; v4 /= 2;
+        }
+
+        canvasCtx.globalAlpha = 1.0;
+        drawWarpedTriangle(sourceImg, u1, v1, u2, v2, u3, v3, p1, p2, p3);
+        drawWarpedTriangle(sourceImg, u2, v2, u4, v4, u3, v3, p2, p4, p3);
+      } else {
+        // Draw alpha-blended stack for face
+        // OPACITY FIX: To prevent the "glowing/thin" look, we must ensure the bottom layer is 1.0 alpha.
+        // We sort layers by weight and draw the most dominant one first at 1.0 alpha.
+        const activeLayers = weights.filter(l => l.alpha > 0.01)
+          .sort((a, b) => b.alpha - a.alpha);
+
+        activeLayers.forEach((layer, index) => {
+          let sourceImg = layer.img;
+          if (!sourceImg.complete || sourceImg.naturalWidth === 0) sourceImg = characterImage;
+
+          let u1 = snx1 * sourceImg.width, v1 = sny1 * sourceImg.height;
+          let u2 = snx2 * sourceImg.width, v2 = sny2 * sourceImg.height;
+          let u3 = snx3 * sourceImg.width, v3 = sny3 * sourceImg.height;
+          let u4 = snx4 * sourceImg.width, v4 = sny4 * sourceImg.height;
+
+          if (mode === 'spritesheet') {
+            const tw = sourceImg.width / 2;
+            const th = sourceImg.height / 2;
+            u1 = (u1 / 2) + layer.cx * tw; v1 = (v1 / 2) + layer.cy * th;
+            u2 = (u2 / 2) + layer.cx * tw; v2 = (v2 / 2) + layer.cy * th;
+            u3 = (u3 / 2) + layer.cx * tw; v3 = (v3 / 2) + layer.cy * th;
+            u4 = (u4 / 2) + layer.cx * tw; v4 = (v4 / 2) + layer.cy * th;
+          }
+
+          // The first layer (most dominant) is drawn at 1.0 alpha to fill the background.
+          // Subsequent layers are drawn at their weights to "blend" in.
+          canvasCtx.globalAlpha = (index === 0) ? 1.0 : layer.alpha;
+          drawWarpedTriangle(sourceImg, u1, v1, u2, v2, u3, v3, p1, p2, p3);
+          drawWarpedTriangle(sourceImg, u2, v2, u4, v4, u3, v3, p2, p4, p3);
+        });
+      }
     }
   }
+  canvasCtx.globalAlpha = 1.0;
 }
 
 function drawDebugMesh(width, height) {
-  const gridX = 10;
-  const gridY = 10;
+  const gridX = 30;
+  const gridY = 30;
   canvasCtx.strokeStyle = "rgba(0, 255, 0, 0.7)";
-  canvasCtx.lineWidth = 1;
+  canvasCtx.lineWidth = 0.5;
 
   for (let iy = 0; iy <= gridY; iy++) {
     for (let ix = 0; ix <= gridX; ix++) {
@@ -298,9 +393,24 @@ function drawDebugMesh(width, height) {
       const ny = iy / gridY;
       const p = getWarpedPoint(nx, ny, width, height);
 
+      // PART LOCALIZATION: Use same mapping as drawMovingMesh
+      let isPart = false;
+      if (neutralLandmarks) {
+        const bounds = getFaceBounds();
+        const fCX = (bounds.minX + bounds.maxX) / 2;
+        const fCY = (bounds.minY + bounds.maxY) / 2;
+        const mapX = (lx) => (lx - fCX) + 0.5;
+        const mapY = (ly) => (ly - fCY) + 0.45;
+
+        const dL = Math.hypot(nx - mapX(neutralLandmarks[468].x), ny - mapY(neutralLandmarks[468].y));
+        const dR = Math.hypot(nx - mapX(neutralLandmarks[473].x), ny - mapY(neutralLandmarks[473].y));
+        const dM = Math.hypot(nx - mapX(neutralLandmarks[13].x), ny - mapY(neutralLandmarks[13].y));
+        isPart = (dL < 0.12 || dR < 0.12 || dM < 0.2);
+      }
+
       // Draw point
-      canvasCtx.fillStyle = "red";
-      canvasCtx.fillRect(p.x - 1, p.y - 1, 2, 2);
+      canvasCtx.fillStyle = isPart ? "yellow" : "red";
+      canvasCtx.fillRect(p.x - 0.5, p.y - 0.5, 1, 1);
 
       // Draw lines
       if (ix < gridX) {
@@ -359,18 +469,21 @@ function drawWarpedTriangle(img, sx1, sy1, sx2, sy2, sx3, sy3, p1, p2, p3) {
   canvasCtx.restore();
 }
 
-const handleImageLoad = (file, targetImg) => {
+const handleImageLoad = (file, targetImg, isPrimary = false) => {
   if (file) {
     const reader = new FileReader();
     reader.onload = (event) => {
+      targetImg.onload = () => {
+        if (isPrimary) imageLoaded = true;
+        console.log("Image loaded:", targetImg.src.substring(0, 50) + "...");
+      };
       targetImg.src = event.target.result;
-      targetImg.onload = () => { imageLoaded = true; };
     };
     reader.readAsDataURL(file);
   }
 };
 
-imageUpload.addEventListener('change', (e) => handleImageLoad(e.target.files[0], characterImage));
+imageUpload.addEventListener('change', (e) => handleImageLoad(e.target.files[0], characterImage, true));
 imageBlinkInput.addEventListener('change', (e) => handleImageLoad(e.target.files[0], imageBlink));
 imageMouthInput.addEventListener('change', (e) => handleImageLoad(e.target.files[0], imageMouth));
 imageBothInput.addEventListener('change', (e) => handleImageLoad(e.target.files[0], imageBoth));
