@@ -17,23 +17,53 @@
 
     <div id="ui-overlay">
       <div id="controls">
-        <h1>PNGTuber Cam</h1>
+        <h1>PNGTuber キャム</h1>
         <input type="file" id="image_upload" accept="image/png">
         <div class="setting-item">
-          <label>Volume Sensitivity:</label>
+          <label>音量感度:</label>
           <input type="range" id="sensitivity" min="0.1" max="5.0" step="0.1" value="1.0">
+          <div class="setting-item">
+            <label>顔トラッキング:</label>
+            <input type="checkbox" id="enable_tracking" checked>
+          </div>
+          <div class="setting-item">
+            <label>モード選択:</label>
+            <select id="app_mode">
+              <option value="single">通常 (1枚絵)</option>
+              <option value="spritesheet">スプライトシート (2x2)</option>
+              <option value="separate">4枚の別画像</option>
+            </select>
+          </div>
+          <div id="file_inputs">
+            <div class="setting-item" id="input_main">
+              <label>通常時:</label>
+              <input type="file" id="image_upload" accept="image/*">
+            </div>
+            <div class="setting-item separator" id="input_blink" style="display: none;">
+              <label>目閉じ:</label>
+              <input type="file" id="image_blink" accept="image/*">
+            </div>
+            <div class="setting-item" id="input_mouth" style="display: none;">
+              <label>口開け:</label>
+              <input type="file" id="image_mouth" accept="image/*">
+            </div>
+            <div class="setting-item" id="input_both" style="display: none;">
+              <label>目閉じ+口開け:</label>
+              <input type="file" id="image_both" accept="image/*">
+            </div>
+          </div>
+          <button id="start_btn">アプリを開始</button>
+          <button id="calibrate_btn" style="background: #ff4757; color: white;">位置合わせを実行</button>
+          <p class="hint">OBS用: 「ブラウザソース」を使用し、「表示されていないときにソースをシャットダウンする」にチェックを入れてください。</p>
         </div>
+        <canvas id="waveform_canvas"></canvas>
         <div class="setting-item">
-          <label>Face Tracking:</label>
-          <input type="checkbox" id="enable_tracking" checked>
+          <label>メッシュを表示 (デバッグ):</label>
+          <input type="checkbox" id="show_mesh">
         </div>
-        <button id="start_btn">Start App</button>
-        <p class="hint">For OBS: Use "Browser Source" and check "Shutdown source when not visible".</p>
       </div>
-      <canvas id="waveform_canvas"></canvas>
     </div>
-  </div>
-  <script type="module" src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 
 </html>
