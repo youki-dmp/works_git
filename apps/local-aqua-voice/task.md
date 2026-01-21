@@ -1,24 +1,16 @@
-# Task: Local Aqua Voice Development / タスク：ローカル版アクアボイスの開発
+# Task: Voice Input-kun Development / タスク：ボイス入力くんの開発
 
 - [x] Project Setup / プロジェクトのセットアップ
-    - [x] Initialize Python environment / Python仮想環境の初期化
-    - [x] Install dependencies (`faster-whisper`, `PyQt6`, `sounddevice`, `pynput`) / 依存関係のインストール
 - [x] Core Logic Implementation / コアロジックの実装
-    - [x] Audio recording module / 音声録音モジュールの作成
-    - [x] Transcription module using `faster-whisper` / `faster-whisper`を用いた文字起こしモジュールの作成
-    - [x] Keyboard injection module (pasting text) / キーボード入力（テキスト挿入）モジュールの作成
 - [x] UI Refactoring to Menu Bar / メニューバーUIへのリファクタリング
-    - [x] Create `QSystemTrayIcon` for macOS menu bar / macOSメニューバー用の`QSystemTrayIcon`の作成
-    - [x] Implement tray click to toggle recording / トレイクリックで録音開始・停止を切り替え
-    - [x] Add menu options (Quit, Status) / メニューオプション（終了、ステータス表示）の追加
 - [x] Optimization and Hotkey / 最適化とホットキー
-    - [x] Tuning `faster-whisper` for speed (model choice, beam_size) / 文字起こしの高速化（モデル選定、beam_sizeの調整）
-    - [x] Implement global hotkey `Cmd+Fn` using `pynput` / `pynput`による`Cmd+Fn`ホットキーの実装
 - [x] Verification / 検証
-    - [x] Test with various Japanese sentences / 様々な日本語文章でのテスト
-    - [x] Verify keyboard injection in different apps / 各種アプリへのテキスト挿入の検証
-- [x] Packaging as macOS App / macOSアプリ化
-    - [x] Update code for bundle path handling / バンドル時のパス処理のコード修正
-    - [x] Create PyInstaller spec file / PyInstaller設定ファイルの作成
-    - [x] Build standalone .app bundle / スタンドアロン.appのビルド
-    - [x] Final verification of bundled app / パッケージ版の最終確認
+- [x] Initial Packaging as macOS App / 初回パッケージ化
+- [ ] Rename Project to "Voice Input-kun" / アプリ名を「ボイス入力くん」に変更
+    - [ ] Update code (tooltips, titles) / コード内の名称修正
+    - [ ] Rename files and spec file / ファイル名および設定ファイルの修正
+    - [ ] Update documentation (README, MANUAL) / ドキュメントの修正
+- [ ] Re-package and Support Download / 再パッケージ化とダウンロード対応
+    - [ ] Build new .app bundle with new name / 新名称での.appビルド
+    - [ ] Create a ZIP for easy downloading / ダウンロード用にZIP作成
+    - [ ] Upload everything to GitHub / 全てをGitHubへ反映
