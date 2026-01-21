@@ -134,7 +134,7 @@ class AquaVoiceTray(QSystemTrayIcon):
         self.icon_processing = self.create_icon("#8E8E93", "⌛")
         
         self.setIcon(self.icon_normal)
-        self.setToolTip("Local Aqua Voice (Cmd + .)")
+        self.setToolTip("ボイス入力くん (Cmd + .)")
         
         self.menu = QMenu()
         self.status_action = self.menu.addAction("Ready / 準備完了")
