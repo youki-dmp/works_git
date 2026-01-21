@@ -3,13 +3,23 @@ import os
 import json
 from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QInputDialog, QMessageBox
 from PyQt6.QtGui import QIcon, QPixmap, QPainter, QColor
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QObject
+from PyQt6.QtCore import Qt, QThread, pyqtSignal, QObject, QStandardPaths
 from recorder import AudioRecorder
 from transcription import TranscriptionEngine
 from pynput.keyboard import Controller, GlobalHotKeys, Key
 
-# Path for config file
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config.json")
+def get_base_path():
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+def get_config_path():
+    app_support = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.AppDataLocation)
+    if not os.path.exists(app_support):
+        os.makedirs(app_support, exist_ok=True)
+    return os.path.join(app_support, "config.json")
+
+CONFIG_PATH = get_config_path()
 
 def load_config():
     default = {"shortcut": "<cmd>+."}
