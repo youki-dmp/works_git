@@ -3,3 +3,6 @@ venv/
 *.wav
 *.pyc
 .DS_Store
+build/
+dist/
+*.spec
