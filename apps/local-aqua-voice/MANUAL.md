@@ -21,6 +21,12 @@ python main.py
 起動すると macOS のメニューバーに 🎤 アイコンが表示されます。
 
 ## 操作方法
+
+### アプリの状態
+| 待機中（Ready） | 録音中（Recording） |
+|:---:|:---:|
+| ![Ready](./docs/images/ready.png) | ![Recording](./docs/images/recording.png) |
+
 | 操作 | 説明 |
 |------|------|
 | **ショートカット** | デフォルトは `Command + .`（ドット）。このキーで録音開始/停止をトグルします。 |
