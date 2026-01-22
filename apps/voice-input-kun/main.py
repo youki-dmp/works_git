@@ -86,7 +86,7 @@ class HotkeyListener(QObject):
         self.last_trigger_time = now
         self.hotkey_triggered.emit()
 
-class AquaVoiceTray(QSystemTrayIcon):
+class VoiceInputKunTray(QSystemTrayIcon):
     def __init__(self, app):
         super().__init__()
         self.app = app
@@ -220,6 +220,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
     
-    tray = AquaVoiceTray(app)
+    tray = VoiceInputKunTray(app)
     
     sys.exit(app.exec())
