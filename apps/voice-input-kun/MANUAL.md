@@ -1,5 +1,10 @@
 # ボイス入力くん – ユーザーマニュアル
-![alt text](./docs/images/2026-01-22_demonstration.gif)
+![操作説明動画](./docs/images/2026-01-22_demonstration.gif)
+
+▼youtube動画版（音声あり）
+https://youtu.be/sufWLTdF14I
+
+
 ## 概要
 ローカルで動作する高精度日本語音声入力アプリです。メニューバーに常駐し、ショートカットキーで録音・文字起こしを行い、テキストをアクティブアプリに自動入力します。
 
