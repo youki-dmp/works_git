@@ -1,0 +1,12 @@
+numpy
+pyaudio
+sounddevice
+librosa
+onnxruntime
+torch
+torchaudio
+requests
+tqdm
+rvc-python
+pystray
+Pillow
