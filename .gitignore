@@ -3,6 +3,12 @@
 *.log
 .venv/
 venv/
+.env
+
+# Voicevox Changer Models
+apps/voicevox-changer/model/*.pth
+apps/voicevox-changer/model/*.index
+apps/voicevox-changer/model/*.zip
 
 # Editor directories
 .idea/
