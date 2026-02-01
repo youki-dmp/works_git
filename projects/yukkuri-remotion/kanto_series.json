@@ -1,0 +1,230 @@
+{
+  "kanagawa": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！次は神奈川県の成り立ちを解説するのだ！",
+      "audio": "kanagawa/voice_0.wav",
+      "duration": 4.522667
+    },
+    {
+      "speaker": "metan",
+      "text": "横浜や鎌倉など、歴史の宝庫よね。楽しみだわ。",
+      "audio": "kanagawa/voice_1.wav",
+      "duration": 4.32
+    },
+    {
+      "speaker": "zundamon",
+      "text": "かつては鎌倉幕府が置かれた政治の中心地だったのだ！",
+      "audio": "kanagawa/voice_2.wav",
+      "duration": 4.416
+    },
+    {
+      "speaker": "metan",
+      "text": "その後、幕末の1859年に横浜港が開港して、一気に国際都市になったのよね。",
+      "audio": "kanagawa/voice_3.wav",
+      "duration": 7.264
+    },
+    {
+      "speaker": "zundamon",
+      "text": "1871年の廃藩置県で、横浜県が神奈川県に改称されたのだ！",
+      "audio": "kanagawa/voice_4.wav",
+      "duration": 7.04
+    },
+    {
+      "speaker": "metan",
+      "text": "今では人口第2位の、日本を代表する県になったわね。",
+      "audio": "kanagawa/voice_5.wav",
+      "duration": 4.426667
+    }
+  ],
+  "saitama": [
+    {
+      "speaker": "zundamon",
+      "text": "次は埼玉県の成り立ちなのだ！",
+      "audio": "saitama/voice_0.wav",
+      "duration": 2.709333
+    },
+    {
+      "speaker": "metan",
+      "text": "「彩の国」埼玉。意外と歴史が深いのよね。",
+      "audio": "saitama/voice_1.wav",
+      "duration": 3.968
+    },
+    {
+      "speaker": "zundamon",
+      "text": "江戸時代は中山道の宿場町として、江戸の胃袋を支えていたのだ！",
+      "audio": "saitama/voice_2.wav",
+      "duration": 5.632
+    },
+    {
+      "speaker": "metan",
+      "text": "1871年に浦和県などが合併して埼玉県が誕生。その後、秩父地方なども加わったのよ。",
+      "audio": "saitama/voice_3.wav",
+      "duration": 8.010667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "今は東京のベッドタウンとして、ものすごく発展しているのだ！",
+      "audio": "saitama/voice_4.wav",
+      "duration": 4.821333
+    },
+    {
+      "speaker": "metan",
+      "text": "住みやすさ抜群の、活気ある県になったわね。",
+      "audio": "saitama/voice_5.wav",
+      "duration": 3.530667
+    }
+  ],
+  "chiba": [
+    {
+      "speaker": "zundamon",
+      "text": "千葉県の成り立ちを解説するのだ！",
+      "audio": "chiba/voice_0.wav",
+      "duration": 2.816
+    },
+    {
+      "speaker": "metan",
+      "text": "房総半島。海と緑に囲まれた素敵な場所ね。",
+      "audio": "chiba/voice_1.wav",
+      "duration": 3.776
+    },
+    {
+      "speaker": "zundamon",
+      "text": "1873年に木更津県と印旛県が合併して千葉県になったのだ！",
+      "audio": "chiba/voice_2.wav",
+      "duration": 6.133333
+    },
+    {
+      "speaker": "metan",
+      "text": "かつては下総・上総・安房の3つの国に分かれていたのよ。",
+      "audio": "chiba/voice_3.wav",
+      "duration": 4.682667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "成田空港やディズニーランドがあって、日本の玄関口なのだ！",
+      "audio": "chiba/voice_4.wav",
+      "duration": 5.173333
+    },
+    {
+      "speaker": "metan",
+      "text": "農業も工業も盛んな、バランスの取れた県になったわね。",
+      "audio": "chiba/voice_5.wav",
+      "duration": 4.277333
+    }
+  ],
+  "ibaraki": [
+    {
+      "speaker": "zundamon",
+      "text": "茨城県の成り立ちを教えるのだ！",
+      "audio": "ibaraki/voice_0.wav",
+      "duration": 2.698667
+    },
+    {
+      "speaker": "metan",
+      "text": "水戸黄門さまでおなじみの、常陸国（ひたちのくに）ね。",
+      "audio": "ibaraki/voice_1.wav",
+      "duration": 4.693333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "1871年の廃藩置県を経て、1875年に今の茨城県の形になったのだ！",
+      "audio": "ibaraki/voice_2.wav",
+      "duration": 8.512
+    },
+    {
+      "speaker": "metan",
+      "text": "水戸徳川家の本拠地として、江戸時代から重要な場所だったのよ。",
+      "audio": "ibaraki/voice_3.wav",
+      "duration": 4.618667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "今はつくば研究学園都市など、科学の最先端を行く県なのだ！",
+      "audio": "ibaraki/voice_4.wav",
+      "duration": 5.610667
+    },
+    {
+      "speaker": "metan",
+      "text": "メロンや納豆など、美味しいものもいっぱいあるわね。",
+      "audio": "ibaraki/voice_5.wav",
+      "duration": 3.509333
+    }
+  ],
+  "tochigi": [
+    {
+      "speaker": "zundamon",
+      "text": "栃木県の成り立ちなのだ！",
+      "audio": "tochigi/voice_0.wav",
+      "duration": 2.133333
+    },
+    {
+      "speaker": "metan",
+      "text": "日光東照宮。徳川家康公が眠る聖地ね。",
+      "audio": "tochigi/voice_1.wav",
+      "duration": 3.84
+    },
+    {
+      "speaker": "zundamon",
+      "text": "1873年に栃木県と宇都宮県が合併して誕生したのだ！",
+      "audio": "tochigi/voice_2.wav",
+      "duration": 6.016
+    },
+    {
+      "speaker": "metan",
+      "text": "当初は栃木市に県庁があったけど、後に宇都宮市に移ったのよ。",
+      "audio": "tochigi/voice_3.wav",
+      "duration": 4.778667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "世界遺産の日光や、美味しい餃子、イチゴが有名なのだ！",
+      "audio": "tochigi/voice_4.wav",
+      "duration": 5.376
+    },
+    {
+      "speaker": "metan",
+      "text": "観光と産業、どちらも魅力的な県になったわね。",
+      "audio": "tochigi/voice_5.wav",
+      "duration": 3.808
+    }
+  ],
+  "gunma": [
+    {
+      "speaker": "zundamon",
+      "text": "最後は群馬県の成り立ちなのだ！",
+      "audio": "gunma/voice_0.wav",
+      "duration": 2.688
+    },
+    {
+      "speaker": "metan",
+      "text": "上毛三山に囲まれた、歴史と温泉の国ね。",
+      "audio": "gunma/voice_1.wav",
+      "duration": 3.605333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "1871年に誕生。富岡製糸場など、日本の近代化を支えたのだ！",
+      "audio": "gunma/voice_2.wav",
+      "duration": 7.552
+    },
+    {
+      "speaker": "metan",
+      "text": "「かかあ天下と空っ風」と言われるように、力強い文化があるわ。",
+      "audio": "gunma/voice_3.wav",
+      "duration": 4.917333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "草津や伊香保など、日本屈指の温泉地がたくさんあるのだ！",
+      "audio": "gunma/voice_4.wav",
+      "duration": 4.810667
+    },
+    {
+      "speaker": "metan",
+      "text": "大自然と歴史が息づく、素晴らしい県になったわね。",
+      "audio": "gunma/voice_5.wav",
+      "duration": 3.936
+    }
+  ]
+}

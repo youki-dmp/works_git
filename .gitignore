@@ -1,0 +1,11 @@
+node_modules/
+*.mp4
+*.wav
+*.mp3
+.DS_Store
+.agent/
+.agents/
+.cline/
+.cursor/
+.gemini/
+canvas/

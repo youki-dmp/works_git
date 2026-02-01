@@ -1,0 +1,11 @@
+{
+  "active_projects": [
+    {
+      "id": "manager-view-setup",
+      "name": "Manager View Setup",
+      "status": "Running",
+      "description": "管理画面の構築中"
+    }
+  ],
+  "last_updated": "2026-01-24T11:45:00Z"
+}
