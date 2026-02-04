@@ -1,0 +1,68 @@
+[
+  {
+    "speaker": "metan",
+    "text": "実は森だけじゃなかった！？青森という名前の衝撃の由来！",
+    "audio": "aomori_v3/voice_v3_0.wav",
+    "duration": 3.616
+  },
+  {
+    "speaker": "both",
+    "text": "1分で青森県を紹介！",
+    "audio": "aomori_v3/voice_v3_1.wav",
+    "duration": 1.802667
+  },
+  {
+    "speaker": "metan",
+    "text": "ずんだもん、青森は森が青いから青森だと思ってる？",
+    "audio": "aomori_v3/voice_v3_2.wav",
+    "duration": 3.402667
+  },
+  {
+    "speaker": "zundamon",
+    "text": "違うのだ！？森が目印だったって聞いたのだ！",
+    "audio": "aomori_v3/voice_v3_3.wav",
+    "duration": 3.104
+  },
+  {
+    "speaker": "metan",
+    "text": "そう、江戸時代に青森港へ入る船の目印だった、青々とした森が由来なの。まさに海の安全を守るランドマークだったのよ。",
+    "audio": "aomori_v3/voice_v3_4.wav",
+    "duration": 7.84
+  },
+  {
+    "speaker": "zundamon",
+    "text": "海の標識だったのだ！じゃあ、県になったのはいつなのだ？",
+    "audio": "aomori_v3/voice_v3_5.wav",
+    "duration": 4.426667
+  },
+  {
+    "speaker": "metan",
+    "text": "1871年、最初は弘前県として誕生したの。でもすぐに県庁が今の青森市に移って青森県に。本州最北端を守る北の要として、独自の発展を遂げていったのよ。",
+    "audio": "aomori_v3/voice_v3_6.wav",
+    "duration": 11.616
+  },
+  {
+    "speaker": "zundamon",
+    "text": "北の守護神なのだ！今は人口約120万人で、リンゴが最強なのだ！",
+    "audio": "aomori_v3/voice_v3_7.wav",
+    "duration": 5.642667
+  },
+  {
+    "speaker": "metan",
+    "text": "ええ、でもリンゴだけじゃないわ。世界遺産の三内丸山遺跡のように、縄文時代から1万年以上も栄えてきた、日本最古級の文明の地でもあるのよ。",
+    "audio": "aomori_v3/voice_v3_8.wav",
+    "duration": 9.770667
+  },
+  {
+    "speaker": "zundamon",
+    "text": "歴史もリンゴも濃密すぎるのだ！青森最高なのだ！",
+    "audio": "aomori_v3/voice_v3_9.wav",
+    "duration": 3.701333
+  },
+  {
+    "speaker": "metan",
+    "text": "ふふ、また次の授業で会いましょう。",
+    "audio": "aomori_v3/voice_v3_10.wav",
+    "duration": 2.186667
+  }
+]

@@ -1,0 +1,1022 @@
+{
+  "aomori": [
+    {
+      "speaker": "metan",
+      "text": "実は森だけじゃなかった！？青森という名前の衝撃の由来！",
+      "audio": "v3/aomori/voice_v3_0.wav",
+      "duration": 3.616
+    },
+    {
+      "speaker": "both",
+      "text": "1分で青森県を紹介！",
+      "audio": "v3/aomori/voice_v3_1.wav",
+      "duration": 1.802667
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、青森県の名前の由来を知っているかしら？",
+      "audio": "v3/aomori/voice_v3_2.wav",
+      "duration": 3.328
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/aomori/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "江戸時代に青森港へ入る船の目印だった、青々とした森が由来なの。まさに海の安全を守るランドマークだったのよ。",
+      "audio": "v3/aomori/voice_v3_4.wav",
+      "duration": 7.146667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/aomori/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "1871年、最初は弘前県として誕生したの。でもすぐに県庁が今の青森市に移って青森県に。本州最北端を守る北の要として、独自の発展を遂げていったのよ。",
+      "audio": "v3/aomori/voice_v3_6.wav",
+      "duration": 11.616
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/aomori/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "今は人口約120万人で、リンゴが最強なのだ！世界遺産の三内丸山遺跡のように、縄文時代から1万年以上も栄えてきた、日本最古級の文明の地でもあるのよ。",
+      "audio": "v3/aomori/voice_v3_8.wav",
+      "duration": 11.306667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！青森県、最高なのだ！",
+      "audio": "v3/aomori/voice_v3_9.wav",
+      "duration": 4.352
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/aomori/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "iwate": [
+    {
+      "speaker": "metan",
+      "text": "本州一デカい県はどこ！？岩手県の名前の由来が伝説すぎる！",
+      "audio": "v3/iwate/voice_v3_0.wav",
+      "duration": 4.064
+    },
+    {
+      "speaker": "both",
+      "text": "1分で岩手県を紹介！",
+      "audio": "v3/iwate/voice_v3_1.wav",
+      "duration": 1.706667
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、岩手県の名前の由来を知っているかしら？",
+      "audio": "v3/iwate/voice_v3_2.wav",
+      "duration": 3.285333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/iwate/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "昔、悪さをする鬼を捕まえた時、もう悪さをしない証として岩に手形を押させた『鬼の手形』伝説が由来と言われているわ。",
+      "audio": "v3/iwate/voice_v3_4.wav",
+      "duration": 8.032
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/iwate/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "奥州藤原氏が築いた平泉の黄金文化は世界遺産。1871年に盛岡県などが統合して岩手県になり、広大な大地に豊かな文化を根付かせていったのよ。",
+      "audio": "v3/iwate/voice_v3_6.wav",
+      "duration": 10.357333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/iwate/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "わんこそばに南部鉄器、大谷翔平選手の出身地としても有名ね！人口は約118万人。宮沢賢治が愛した理想郷・イーハトーブの風景が今も広がっているわ。",
+      "audio": "v3/iwate/voice_v3_8.wav",
+      "duration": 11.008
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！岩手県、最高なのだ！",
+      "audio": "v3/iwate/voice_v3_9.wav",
+      "duration": 4.266667
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/iwate/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "miyagi": [
+    {
+      "speaker": "metan",
+      "text": "独眼竜・政宗が愛した杜の都！宮城県の名前、実はミステリー！？",
+      "audio": "v3/miyagi/voice_v3_0.wav",
+      "duration": 5.28
+    },
+    {
+      "speaker": "both",
+      "text": "1分で宮城県を紹介！",
+      "audio": "v3/miyagi/voice_v3_1.wav",
+      "duration": 1.76
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、宮城県の名前の由来を知っているかしら？",
+      "audio": "v3/miyagi/voice_v3_2.wav",
+      "duration": 3.349333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/miyagi/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "『宮城』の由来は、古代の多賀城などの『宮（お宮）』と『城（お城）』があった場所、という説が有力なのよ。",
+      "audio": "v3/miyagi/voice_v3_4.wav",
+      "duration": 8.256
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/miyagi/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "伊達政宗公が仙台城を築き、湿地帯を大都会に変えたのが始まり。1872年に仙台県から改称され、東北一の経済拠点として成長し続けてきたの。",
+      "audio": "v3/miyagi/voice_v3_6.wav",
+      "duration": 10.826667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/miyagi/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "牛タン、ずんだ餅、日本三景の松島！人口は約226万人。都会的な仙台と、豊かな海・山の自然が絶妙にブレンドされた東北のリーダーよ。",
+      "audio": "v3/miyagi/voice_v3_8.wav",
+      "duration": 11.04
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！宮城県、最高なのだ！",
+      "audio": "v3/miyagi/voice_v3_9.wav",
+      "duration": 4.277333
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/miyagi/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "akita": [
+    {
+      "speaker": "metan",
+      "text": "秋田美人だけじゃない！『秋田』という名前、実は沼だった！？",
+      "audio": "v3/akita/voice_v3_0.wav",
+      "duration": 3.978667
+    },
+    {
+      "speaker": "both",
+      "text": "1分で秋田県を紹介！",
+      "audio": "v3/akita/voice_v3_1.wav",
+      "duration": 1.706667
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、秋田県の名前の由来を知っているかしら？",
+      "audio": "v3/akita/voice_v3_2.wav",
+      "duration": 3.189333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/akita/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "昔、この地にはアゴ（顎）のような形の湿地が多く『アギタ』と呼ばれていたのが、後に『秋田』になったという説があるわ。",
+      "audio": "v3/akita/voice_v3_4.wav",
+      "duration": 8.213333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/akita/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "佐竹氏が治める秋田藩として発展し、1871年の廃藩置県で秋田県が誕生。独自の稲作文化と厳しい冬を越える知恵が、今の秋田を作ったの。",
+      "audio": "v3/akita/voice_v3_6.wav",
+      "duration": 10.144
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/akita/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "なまはげ、きりたんぽ、そして日本一深い田沢湖！人口は約91万人。伝統を守りつつ、最近では世界からも注目される秋田犬の聖地でもあるわね。",
+      "audio": "v3/akita/voice_v3_8.wav",
+      "duration": 10.570667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！秋田県、最高なのだ！",
+      "audio": "v3/akita/voice_v3_9.wav",
+      "duration": 4.170667
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/akita/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "yamagata": [
+    {
+      "speaker": "metan",
+      "text": "山の中の宝庫！『山形』という名前の由来がシンプルすぎて意外！？",
+      "audio": "v3/yamagata/voice_v3_0.wav",
+      "duration": 4.405333
+    },
+    {
+      "speaker": "both",
+      "text": "1分で山形県を紹介！",
+      "audio": "v3/yamagata/voice_v3_1.wav",
+      "duration": 1.834667
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、山形県の名前の由来を知っているかしら？",
+      "audio": "v3/yamagata/voice_v3_2.wav",
+      "duration": 3.573333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/yamagata/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "その名の通り、山の近く（山の形）に街があったことから付いたと言われているわ。蔵王や月山など、まさに山の恩恵を受けた土地なの。",
+      "audio": "v3/yamagata/voice_v3_4.wav",
+      "duration": 8.938667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/yamagata/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "最上義光公が山形城下町を整備したのが基礎。1876年に山形県、置賜県、鶴岡県が合併して今の形になり、フルーツ王国へと進化していったのよ。",
+      "audio": "v3/yamagata/voice_v3_6.wav",
+      "duration": 11.370667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/yamagata/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "さくらんぼ生産量日本一！将棋の駒も日本一！人口は約103万人。山寺の静寂から米沢牛の贅沢まで、五感で歴史を楽しめる県なのよ。",
+      "audio": "v3/yamagata/voice_v3_8.wav",
+      "duration": 10.378667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！山形県、最高なのだ！",
+      "audio": "v3/yamagata/voice_v3_9.wav",
+      "duration": 4.437333
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/yamagata/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "fukushima": [
+    {
+      "speaker": "metan",
+      "text": "東北の玄関口！『福島』という名前に隠された幸福の願いとは！？",
+      "audio": "v3/fukushima/voice_v3_0.wav",
+      "duration": 4.554667
+    },
+    {
+      "speaker": "both",
+      "text": "1分で福島県を紹介！",
+      "audio": "v3/fukushima/voice_v3_1.wav",
+      "duration": 1.802667
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、福島県の名前の由来を知っているかしら？",
+      "audio": "v3/fukushima/voice_v3_2.wav",
+      "duration": 3.466667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/fukushima/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "木曽義仲の家臣がこの地を『福島』と呼んだ説や、阿武隈川沿いの地形に由来する説など、実は諸説あるミステリアスな名前なのよ。",
+      "audio": "v3/fukushima/voice_v3_4.wav",
+      "duration": 8.576
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/fukushima/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "会津の鶴ヶ城に象徴される武士の精神が今も息づく地。1876年に福島・磐前・若松の3県が合併して今の広大な福島県が完成したの。",
+      "audio": "v3/fukushima/voice_v3_6.wav",
+      "duration": 10.474667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/fukushima/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "桃の美味しさは宇宙一！スパリゾートハワイアンズも有名ね。人口は約177万人。困難を乗り越えて力強く歩む、情熱あふれる東北の入口よ。",
+      "audio": "v3/fukushima/voice_v3_8.wav",
+      "duration": 10.378667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！福島県、最高なのだ！",
+      "audio": "v3/fukushima/voice_v3_9.wav",
+      "duration": 4.373333
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/fukushima/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "niigata": [
+    {
+      "speaker": "metan",
+      "text": "お米と酒の聖地！『新潟』という名前、実は消えた島のことだった！？",
+      "audio": "v3/niigata/voice_v3_0.wav",
+      "duration": 4.842667
+    },
+    {
+      "speaker": "both",
+      "text": "1分で新潟県を紹介！",
+      "audio": "v3/niigata/voice_v3_1.wav",
+      "duration": 1.792
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、新潟県の名前の由来を知っているかしら？",
+      "audio": "v3/niigata/voice_v3_2.wav",
+      "duration": 3.392
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/niigata/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "信濃川の河口にあった『新しい潟（水たまり）』、あるいはそこに浮かぶ島々が由来と言われているわ。水の都としてのルーツね。",
+      "audio": "v3/niigata/voice_v3_4.wav",
+      "duration": 7.626667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/niigata/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "上杉謙信公の義の精神が流れる土地。1870年に新潟県が誕生し、一時は日本で最も人口が多い県だったこともあるほど、日本の食と物流を支えてきたの。",
+      "audio": "v3/niigata/voice_v3_6.wav",
+      "duration": 11.456
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/niigata/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "コシヒカリ、日本酒、長岡の花火！人口は約211万人。広大な平野と日本海の恵み、そして豪雪をも味方にする力強さがあるわ。",
+      "audio": "v3/niigata/voice_v3_8.wav",
+      "duration": 9.770667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！新潟県、最高なのだ！",
+      "audio": "v3/niigata/voice_v3_9.wav",
+      "duration": 4.352
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/niigata/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "toyama": [
+    {
+      "speaker": "metan",
+      "text": "立山連峰の絶景！『富山』という名前に込められた豊かな願いとは！？",
+      "audio": "v3/toyama/voice_v3_0.wav",
+      "duration": 4.597333
+    },
+    {
+      "speaker": "both",
+      "text": "1分で富山県を紹介！",
+      "audio": "v3/toyama/voice_v3_1.wav",
+      "duration": 1.717333
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、富山県の名前の由来を知っているかしら？",
+      "audio": "v3/toyama/voice_v3_2.wav",
+      "duration": 3.296
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/toyama/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "山の向こうに豊かな土地が広がっている、という意味の『外山（とやま）』が『富山』に転じたという説が有力なのよ。",
+      "audio": "v3/toyama/voice_v3_4.wav",
+      "duration": 7.424
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/toyama/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "加賀藩から分かれた富山藩として発展。1883年に石川県から分離独立して富山県になったわ。薬売りで培った独自の商圏が今の産業の礎ね。",
+      "audio": "v3/toyama/voice_v3_6.wav",
+      "duration": 10.272
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/toyama/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "ホタルイカ、寒ブリ、そして黒部ダム！人口は約100万人。北アルプスの清らかな水と、世界的な製造技術が融合した『水の王国』よ。",
+      "audio": "v3/toyama/voice_v3_8.wav",
+      "duration": 10.016
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！富山県、最高なのだ！",
+      "audio": "v3/toyama/voice_v3_9.wav",
+      "duration": 4.256
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/toyama/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "ishikawa": [
+    {
+      "speaker": "metan",
+      "text": "加賀百万石の誇り！『石川』という名前、実は小さな川の名前だった！？",
+      "audio": "v3/ishikawa/voice_v3_0.wav",
+      "duration": 5.184
+    },
+    {
+      "speaker": "both",
+      "text": "1分で石川県を紹介！",
+      "audio": "v3/ishikawa/voice_v3_1.wav",
+      "duration": 1.824
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、石川県の名前の由来を知っているかしら？",
+      "audio": "v3/ishikawa/voice_v3_2.wav",
+      "duration": 3.509333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/ishikawa/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "県庁が置かれた美川町を流れていた『石川（現在の手取川）』が由来なの。小さな川の名前が、今は百万石の代名詞になったのよ。",
+      "audio": "v3/ishikawa/voice_v3_4.wav",
+      "duration": 9.013333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/ishikawa/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "前田利家公が金沢城に入り、日本屈指の文化都市を築き上げたわ。1872年に石川県が誕生し、伝統を何よりも重んじる今のスタイルが確立されたの。",
+      "audio": "v3/ishikawa/voice_v3_6.wav",
+      "duration": 10.858667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/ishikawa/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "兼六園、金箔、新鮮な海の幸！人口は約110万人。伝統美と現代アートが交差する、日本で最も美しい街の一つとして愛されているわ。",
+      "audio": "v3/ishikawa/voice_v3_8.wav",
+      "duration": 10.272
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！石川県、最高なのだ！",
+      "audio": "v3/ishikawa/voice_v3_9.wav",
+      "duration": 4.437333
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/ishikawa/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "fukui": [
+    {
+      "speaker": "metan",
+      "text": "恐竜と歴史の楽園！『福井』の名前を変えたのは、あの有名武将！？",
+      "audio": "v3/fukui/voice_v3_0.wav",
+      "duration": 4.885333
+    },
+    {
+      "speaker": "both",
+      "text": "1分で福井県を紹介！",
+      "audio": "v3/fukui/voice_v3_1.wav",
+      "duration": 1.717333
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、福井県の名前の由来を知っているかしら？",
+      "audio": "v3/fukui/voice_v3_2.wav",
+      "duration": 3.338667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/fukui/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "江戸時代、越前松平家の藩主が『福の井戸』がある場所として『福居』と名付け、それが『福井』になったと言われているわ。",
+      "audio": "v3/fukui/voice_v3_4.wav",
+      "duration": 8.618667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/fukui/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "柴田勝家公が北ノ庄城を築いた歴史ある土地。1881年に今の福井県が完成。永平寺のような精神文化と、モノづくり精神が共鳴し合っているの。",
+      "audio": "v3/fukui/voice_v3_6.wav",
+      "duration": 10.762667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/fukui/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "恐竜の化石発見数日本一！眼鏡フレームの生産も世界級！人口は約74万人。カニの王様・越前ガニも冬の最高の贅沢ね。",
+      "audio": "v3/fukui/voice_v3_8.wav",
+      "duration": 9.674667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！福井県、最高なのだ！",
+      "audio": "v3/fukui/voice_v3_9.wav",
+      "duration": 4.256
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/fukui/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "yamanashi": [
+    {
+      "speaker": "metan",
+      "text": "富士山の特等席！『山梨』という名前、実は果物の名前だった！？",
+      "audio": "v3/yamanashi/voice_v3_0.wav",
+      "duration": 5.002667
+    },
+    {
+      "speaker": "both",
+      "text": "1分で山梨県を紹介！",
+      "audio": "v3/yamanashi/voice_v3_1.wav",
+      "duration": 1.813333
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、山梨県の名前の由来を知っているかしら？",
+      "audio": "v3/yamanashi/voice_v3_2.wav",
+      "duration": 3.562667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/yamanashi/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "一説には、野生の梨（ヤマナシ）がたくさん自生していたことが由来と言われているわ。昔からフルーツの里だったのね。",
+      "audio": "v3/yamanashi/voice_v3_4.wav",
+      "duration": 7.509333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/yamanashi/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "武田信玄公が『風林火山』の旗の下、最強の軍団を育てた甲斐の国。1871年の廃藩置県で山梨県になり、富士山を仰ぐ誇り高き土地になったわ。",
+      "audio": "v3/yamanashi/voice_v3_6.wav",
+      "duration": 11.381333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/yamanashi/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "ぶどう、桃、ワイン、そしてほうとう！人口は約80万人。リニア実験線など未来の技術も進んでいて、富士山と共に進化し続ける県よ。",
+      "audio": "v3/yamanashi/voice_v3_8.wav",
+      "duration": 9.781333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！山梨県、最高なのだ！",
+      "audio": "v3/yamanashi/voice_v3_9.wav",
+      "duration": 4.405333
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/yamanashi/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "nagano": [
+    {
+      "speaker": "metan",
+      "text": "日本の屋根・信州！『長野』という名前、実は善光寺のおかげ！？",
+      "audio": "v3/nagano/voice_v3_0.wav",
+      "duration": 4.938667
+    },
+    {
+      "speaker": "both",
+      "text": "1分で長野県を紹介！",
+      "audio": "v3/nagano/voice_v3_1.wav",
+      "duration": 1.717333
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、長野県の名前の由来を知っているかしら？",
+      "audio": "v3/nagano/voice_v3_2.wav",
+      "duration": 3.370667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/nagano/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "善光寺周辺の平地が『長い野原』だったことから付いた名前よ。信仰の地として、古くから多くの人々を迎え入れてきた証ね。",
+      "audio": "v3/nagano/voice_v3_4.wav",
+      "duration": 8.266667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/nagano/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "信濃の国は多くの小藩に分かれていたけれど、1876年に長野県と筑摩県が合併して今の形に。峻険な山々に囲まれ、独自の知性が磨かれたの。",
+      "audio": "v3/nagano/voice_v3_6.wav",
+      "duration": 10.506667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/nagano/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "冬季五輪の舞台、信州そば、そして健康長寿日本一！人口は約200万人。精密機械産業も盛んで、自然と知性が調和した美しい県ね。",
+      "audio": "v3/nagano/voice_v3_8.wav",
+      "duration": 10.24
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！長野県、最高なのだ！",
+      "audio": "v3/nagano/voice_v3_9.wav",
+      "duration": 4.266667
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/nagano/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "gifu": [
+    {
+      "speaker": "metan",
+      "text": "信長が名付けた天下の要！『岐阜』の名前に隠された壮大な野望とは！？",
+      "audio": "v3/gifu/voice_v3_0.wav",
+      "duration": 4.661333
+    },
+    {
+      "speaker": "both",
+      "text": "1分で岐阜県を紹介！",
+      "audio": "v3/gifu/voice_v3_1.wav",
+      "duration": 1.632
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、岐阜県の名前の由来を知っているかしら？",
+      "audio": "v3/gifu/voice_v3_2.wav",
+      "duration": 3.232
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/gifu/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "織田信長公が中国の故事にならい、天下統一の拠点として名付けたのが由来よ。まさに歴史を動かすために生まれた名前なの。",
+      "audio": "v3/gifu/voice_v3_4.wav",
+      "duration": 7.733333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/gifu/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "関ヶ原の戦いなど、日本の運命を決める舞台となってきた地。1876年に現在の岐阜県が完成し、山と川に恵まれた『美濃・飛騨』の個性が融合したの。",
+      "audio": "v3/gifu/voice_v3_6.wav",
+      "duration": 11.498667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/gifu/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "世界遺産の白川郷、飛騨高山、そして鵜飼い！人口は約194万人。美濃和紙や刃物など、伝統の技が今も世界を驚かせているわ。",
+      "audio": "v3/gifu/voice_v3_8.wav",
+      "duration": 9.557333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！岐阜県、最高なのだ！",
+      "audio": "v3/gifu/voice_v3_9.wav",
+      "duration": 4.170667
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/gifu/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "shizuoka": [
+    {
+      "speaker": "metan",
+      "text": "富士山とお茶の都！『静岡』という名前、実は最近つけられた！？",
+      "audio": "v3/shizuoka/voice_v3_0.wav",
+      "duration": 4.48
+    },
+    {
+      "speaker": "both",
+      "text": "1分で静岡県を紹介！",
+      "audio": "v3/shizuoka/voice_v3_1.wav",
+      "duration": 1.845333
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、静岡県の名前の由来を知っているかしら？",
+      "audio": "v3/shizuoka/voice_v3_2.wav",
+      "duration": 3.413333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/shizuoka/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "明治時代、徳川家達が静岡藩を立てる際、近くの『賤機山（しずはたやま）』にちなんで『静岡』と名付けたのが始まりなの。",
+      "audio": "v3/shizuoka/voice_v3_4.wav",
+      "duration": 8.938667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/shizuoka/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "家康公が隠居地に選んだほど、気候も風土も素晴らしい土地。1876年に静岡県と浜松県が合併し、日本の東西を結ぶ大動脈として発展したのよ。",
+      "audio": "v3/shizuoka/voice_v3_6.wav",
+      "duration": 10.762667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/shizuoka/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "お茶の生産日本一、プラモデル生産も日本一！人口は約355万人。さわやかのハンバーグや伊豆の温泉など、レジャーも産業も最強の県ね。",
+      "audio": "v3/shizuoka/voice_v3_8.wav",
+      "duration": 10.378667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！静岡県、最高なのだ！",
+      "audio": "v3/shizuoka/voice_v3_9.wav",
+      "duration": 4.373333
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/shizuoka/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ],
+  "aichi": [
+    {
+      "speaker": "metan",
+      "text": "三英傑を生んだ武将の聖地！『愛知』という名前、実は万葉集から！？",
+      "audio": "v3/aichi/voice_v3_0.wav",
+      "duration": 5.130667
+    },
+    {
+      "speaker": "both",
+      "text": "1分で愛知県を紹介！",
+      "audio": "v3/aichi/voice_v3_1.wav",
+      "duration": 1.706667
+    },
+    {
+      "speaker": "metan",
+      "text": "ずんだもん、愛知県の名前の由来を知っているかしら？",
+      "audio": "v3/aichi/voice_v3_2.wav",
+      "duration": 3.242667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "うーん、気になるのだ！教えて、めたん先生！",
+      "audio": "v3/aichi/voice_v3_3.wav",
+      "duration": 3.946667
+    },
+    {
+      "speaker": "metan",
+      "text": "万葉集の歌にある『あゆちの潟』が由来なの。かつては美しい干潟が広がる、詩情豊かな土地だったのよ。",
+      "audio": "v3/aichi/voice_v3_4.wav",
+      "duration": 6.965333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "へぇー！意外なルーツなのだ！成り立ちはどうなのだ？",
+      "audio": "v3/aichi/voice_v3_5.wav",
+      "duration": 4.074667
+    },
+    {
+      "speaker": "metan",
+      "text": "信長・秀吉・家康。日本を変えた三人が駆け抜けた情熱の地。1872年に愛知県と額田県が合併して今の形になり、世界のトヨタを擁する産業王国へ成長したの。",
+      "audio": "v3/aichi/voice_v3_6.wav",
+      "duration": 12.330667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史の深さがすごいのだ！今はどんな県なのだ？",
+      "audio": "v3/aichi/voice_v3_7.wav",
+      "duration": 3.498667
+    },
+    {
+      "speaker": "metan",
+      "text": "名古屋城の金シャチ、味噌カツ、ひつまぶし！人口は約748万人。モノづくりの心と、独自の食文化が爆発する日本の心臓部ね。",
+      "audio": "v3/aichi/voice_v3_8.wav",
+      "duration": 9.557333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史も魅力も濃密すぎるのだ！愛知県、最高なのだ！",
+      "audio": "v3/aichi/voice_v3_9.wav",
+      "duration": 4.256
+    },
+    {
+      "speaker": "metan",
+      "text": "ふふ、また次の授業で会いましょう。",
+      "audio": "v3/aichi/voice_v3_10.wav",
+      "duration": 2.186667
+    }
+  ]
+}

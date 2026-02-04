@@ -1,0 +1,116 @@
+{
+  "kongogumi": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！日本には世界で一番古い会社があるって知ってたのだ？",
+      "audio": "firsts/kongogumi/voice_0.wav",
+      "duration": 5.472
+    },
+    {
+      "speaker": "metan",
+      "text": "大阪の「金剛組」ね。578年創業、1400年以上の歴史がある世界最古の企業よ。",
+      "audio": "firsts/kongogumi/voice_1.wav",
+      "duration": 8.8
+    },
+    {
+      "speaker": "zundamon",
+      "text": "578年！？聖徳太子の時代なのだ！すごすぎるのだ！",
+      "audio": "firsts/kongogumi/voice_2.wav",
+      "duration": 5.749333
+    },
+    {
+      "speaker": "metan",
+      "text": "四天王寺を建てるために百済から招かれたのが始まりなの。今も寺社建築のプロなのよ。",
+      "audio": "firsts/kongogumi/voice_3.wav",
+      "duration": 6.069333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "1400年も続く秘訣が知りたいのだ！",
+      "audio": "firsts/kongogumi/voice_4.wav",
+      "duration": 3.306667
+    },
+    {
+      "speaker": "metan",
+      "text": "職人の技を大切にする「匠の心」が、時代を超えて受け継がれているのね。",
+      "audio": "firsts/kongogumi/voice_5.wav",
+      "duration": 6.304
+    }
+  ],
+  "domdom": [
+    {
+      "speaker": "zundamon",
+      "text": "日本で最初のハンバーガーショップはどこなのだ？マックじゃないのだ？",
+      "audio": "firsts/domdom/voice_0.wav",
+      "duration": 5.28
+    },
+    {
+      "speaker": "metan",
+      "text": "実は「ドムドムハンバーガー」なのよ。1970年に東京の町田で誕生したわ。",
+      "audio": "firsts/domdom/voice_1.wav",
+      "duration": 6.816
+    },
+    {
+      "speaker": "zundamon",
+      "text": "マックより早かったのだ！意外なのだ！",
+      "audio": "firsts/domdom/voice_2.wav",
+      "duration": 3.2
+    },
+    {
+      "speaker": "metan",
+      "text": "丸ごとカニを食べられるバーガーとか、独創的なメニューも魅力の一つね。",
+      "audio": "firsts/domdom/voice_3.wav",
+      "duration": 4.928
+    },
+    {
+      "speaker": "zundamon",
+      "text": "ゾウさんのマークが可愛いのだ！今すぐ食べに行きたいのだ！",
+      "audio": "firsts/domdom/voice_4.wav",
+      "duration": 4.554667
+    },
+    {
+      "speaker": "metan",
+      "text": "独自の道を突き進む姿に、熱狂的なファンも多いのよ。",
+      "audio": "firsts/domdom/voice_5.wav",
+      "duration": 4.48
+    }
+  ],
+  "curry_bread": [
+    {
+      "speaker": "zundamon",
+      "text": "みんな大好きカレーパン！これも日本生まれなのだ？",
+      "audio": "firsts/curry_bread/voice_0.wav",
+      "duration": 4.170667
+    },
+    {
+      "speaker": "metan",
+      "text": "そうよ。1927年に東京の「名花堂」というお店が考案したと言われているわ。",
+      "audio": "firsts/curry_bread/voice_1.wav",
+      "duration": 7.136
+    },
+    {
+      "speaker": "zundamon",
+      "text": "カツレツみたいに揚げたのが大正解だったのだ！",
+      "audio": "firsts/curry_bread/voice_2.wav",
+      "duration": 3.530667
+    },
+    {
+      "speaker": "metan",
+      "text": "当時は「洋食パン」として売り出され、一気に全国へ広がったのね。",
+      "audio": "firsts/curry_bread/voice_3.wav",
+      "duration": 5.408
+    },
+    {
+      "speaker": "zundamon",
+      "text": "外はカリカリ、中はトロトロ！発明した人は天才なのだ！",
+      "audio": "firsts/curry_bread/voice_4.wav",
+      "duration": 5.333333
+    },
+    {
+      "speaker": "metan",
+      "text": "日本の食文化の進化は、本当に面白いわね。",
+      "audio": "firsts/curry_bread/voice_5.wav",
+      "duration": 3.776
+    }
+  ]
+}

@@ -1,0 +1,762 @@
+{
+  "sapporo": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は札幌市の成り立ちを解説するのだ！",
+      "audio": "cities/sapporo/voice_0.wav",
+      "duration": 4.202667
+    },
+    {
+      "speaker": "metan",
+      "text": "札幌市ね。人口は約197万人を誇る、活気ある街よね。",
+      "audio": "cities/sapporo/voice_1.wav",
+      "duration": 5.770667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/sapporo/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品のジンギスカン、味噌ラーメンも有名ね。",
+      "audio": "cities/sapporo/voice_3.wav",
+      "duration": 6.314667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/sapporo/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/sapporo/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "sendai": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は仙台市の成り立ちを解説するのだ！",
+      "audio": "cities/sendai/voice_0.wav",
+      "duration": 4.224
+    },
+    {
+      "speaker": "metan",
+      "text": "仙台市ね。人口は約109万人を誇る、活気ある街よね。",
+      "audio": "cities/sendai/voice_1.wav",
+      "duration": 5.312
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/sendai/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の牛タン、ずんだ餅も有名ね。",
+      "audio": "cities/sendai/voice_3.wav",
+      "duration": 6.208
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/sendai/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/sendai/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "saitama": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日はさいたま市の成り立ちを解説するのだ！",
+      "audio": "cities/saitama/voice_0.wav",
+      "duration": 4.224
+    },
+    {
+      "speaker": "metan",
+      "text": "さいたま市ね。人口は約134万人を誇る、活気ある街よね。",
+      "audio": "cities/saitama/voice_1.wav",
+      "duration": 5.749333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/saitama/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の浦和のうなぎ、岩槻の人形も有名ね。",
+      "audio": "cities/saitama/voice_3.wav",
+      "duration": 6.837333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/saitama/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/saitama/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "chiba": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は千葉市の成り立ちを解説するのだ！",
+      "audio": "cities/chiba/voice_0.wav",
+      "duration": 3.968
+    },
+    {
+      "speaker": "metan",
+      "text": "千葉市ね。人口は約98万人を誇る、活気ある街よね。",
+      "audio": "cities/chiba/voice_1.wav",
+      "duration": 5.290667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/chiba/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の落花生、海苔も有名ね。",
+      "audio": "cities/chiba/voice_3.wav",
+      "duration": 5.792
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/chiba/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/chiba/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "yokohama": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は横浜市の成り立ちを解説するのだ！",
+      "audio": "cities/yokohama/voice_0.wav",
+      "duration": 4.277333
+    },
+    {
+      "speaker": "metan",
+      "text": "横浜市ね。人口は約377万人を誇る、活気ある街よね。",
+      "audio": "cities/yokohama/voice_1.wav",
+      "duration": 5.984
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/yokohama/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品のシュウマイ、家系ラーメンも有名ね。",
+      "audio": "cities/yokohama/voice_3.wav",
+      "duration": 6.261333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/yokohama/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/yokohama/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "kawasaki": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は川崎市の成り立ちを解説するのだ！",
+      "audio": "cities/kawasaki/voice_0.wav",
+      "duration": 4.266667
+    },
+    {
+      "speaker": "metan",
+      "text": "川崎市ね。人口は約154万人を誇る、活気ある街よね。",
+      "audio": "cities/kawasaki/voice_1.wav",
+      "duration": 5.706667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/kawasaki/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品のかわさき名産品、大師巻も有名ね。",
+      "audio": "cities/kawasaki/voice_3.wav",
+      "duration": 6.848
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/kawasaki/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/kawasaki/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "sagamihara": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は相模原市の成り立ちを解説するのだ！",
+      "audio": "cities/sagamihara/voice_0.wav",
+      "duration": 4.373333
+    },
+    {
+      "speaker": "metan",
+      "text": "相模原市ね。人口は約72万人を誇る、活気ある街よね。",
+      "audio": "cities/sagamihara/voice_1.wav",
+      "duration": 5.536
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/sagamihara/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の津久井在来大豆も有名ね。",
+      "audio": "cities/sagamihara/voice_3.wav",
+      "duration": 5.674667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/sagamihara/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/sagamihara/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "niigata": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は新潟市の成り立ちを解説するのだ！",
+      "audio": "cities/niigata/voice_0.wav",
+      "duration": 4.202667
+    },
+    {
+      "speaker": "metan",
+      "text": "新潟市ね。人口は約78万人を誇る、活気ある街よね。",
+      "audio": "cities/niigata/voice_1.wav",
+      "duration": 5.482667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/niigata/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の笹団子、タレかつ丼も有名ね。",
+      "audio": "cities/niigata/voice_3.wav",
+      "duration": 6.272
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/niigata/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/niigata/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "shizuoka": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は静岡市の成り立ちを解説するのだ！",
+      "audio": "cities/shizuoka/voice_0.wav",
+      "duration": 4.245333
+    },
+    {
+      "speaker": "metan",
+      "text": "静岡市ね。人口は約68万人を誇る、活気ある街よね。",
+      "audio": "cities/shizuoka/voice_1.wav",
+      "duration": 5.504
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/shizuoka/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の静岡茶、おでんも有名ね。",
+      "audio": "cities/shizuoka/voice_3.wav",
+      "duration": 5.92
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/shizuoka/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/shizuoka/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "hamamatsu": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は浜松市の成り立ちを解説するのだ！",
+      "audio": "cities/hamamatsu/voice_0.wav",
+      "duration": 4.277333
+    },
+    {
+      "speaker": "metan",
+      "text": "浜松市ね。人口は約79万人を誇る、活気ある街よね。",
+      "audio": "cities/hamamatsu/voice_1.wav",
+      "duration": 5.546667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/hamamatsu/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の浜松餃子、うなぎも有名ね。",
+      "audio": "cities/hamamatsu/voice_3.wav",
+      "duration": 6.218667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/hamamatsu/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/hamamatsu/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "nagoya": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は名古屋市の成り立ちを解説するのだ！",
+      "audio": "cities/nagoya/voice_0.wav",
+      "duration": 4.128
+    },
+    {
+      "speaker": "metan",
+      "text": "名古屋市ね。人口は約233万人を誇る、活気ある街よね。",
+      "audio": "cities/nagoya/voice_1.wav",
+      "duration": 5.76
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/nagoya/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品のひつまぶし、手羽先も有名ね。",
+      "audio": "cities/nagoya/voice_3.wav",
+      "duration": 6.186667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/nagoya/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/nagoya/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "kyoto": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は京都市の成り立ちを解説するのだ！",
+      "audio": "cities/kyoto/voice_0.wav",
+      "duration": 4.128
+    },
+    {
+      "speaker": "metan",
+      "text": "京都市ね。人口は約145万人を誇る、活気ある街よね。",
+      "audio": "cities/kyoto/voice_1.wav",
+      "duration": 5.536
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/kyoto/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の京菓子、八ツ橋も有名ね。",
+      "audio": "cities/kyoto/voice_3.wav",
+      "duration": 6.101333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/kyoto/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/kyoto/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "osaka": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は大阪市の成り立ちを解説するのだ！",
+      "audio": "cities/osaka/voice_0.wav",
+      "duration": 4.224
+    },
+    {
+      "speaker": "metan",
+      "text": "大阪市ね。人口は約275万人を誇る、活気ある街よね。",
+      "audio": "cities/osaka/voice_1.wav",
+      "duration": 5.770667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/osaka/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品のたこ焼き、お好み焼きも有名ね。",
+      "audio": "cities/osaka/voice_3.wav",
+      "duration": 6.133333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/osaka/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/osaka/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "sakai": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は堺市の成り立ちを解説するのだ！",
+      "audio": "cities/sakai/voice_0.wav",
+      "duration": 4.106667
+    },
+    {
+      "speaker": "metan",
+      "text": "堺市ね。人口は約82万人を誇る、活気ある街よね。",
+      "audio": "cities/sakai/voice_1.wav",
+      "duration": 5.322667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/sakai/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の堺打刃物、和菓子も有名ね。",
+      "audio": "cities/sakai/voice_3.wav",
+      "duration": 6.186667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/sakai/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/sakai/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "kobe": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は神戸市の成り立ちを解説するのだ！",
+      "audio": "cities/kobe/voice_0.wav",
+      "duration": 4.064
+    },
+    {
+      "speaker": "metan",
+      "text": "神戸市ね。人口は約151万人を誇る、活気ある街よね。",
+      "audio": "cities/kobe/voice_1.wav",
+      "duration": 5.557333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/kobe/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の神戸牛、スイーツも有名ね。",
+      "audio": "cities/kobe/voice_3.wav",
+      "duration": 6.250667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/kobe/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/kobe/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "okayama": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は岡山市の成り立ちを解説するのだ！",
+      "audio": "cities/okayama/voice_0.wav",
+      "duration": 4.234667
+    },
+    {
+      "speaker": "metan",
+      "text": "岡山市ね。人口は約72万人を誇る、活気ある街よね。",
+      "audio": "cities/okayama/voice_1.wav",
+      "duration": 5.397333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/okayama/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品のきびだんご、白桃も有名ね。",
+      "audio": "cities/okayama/voice_3.wav",
+      "duration": 6.037333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/okayama/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/okayama/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "hiroshima": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は広島市の成り立ちを解説するのだ！",
+      "audio": "cities/hiroshima/voice_0.wav",
+      "duration": 4.224
+    },
+    {
+      "speaker": "metan",
+      "text": "広島市ね。人口は約119万人を誇る、活気ある街よね。",
+      "audio": "cities/hiroshima/voice_1.wav",
+      "duration": 5.493333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/hiroshima/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品のお好み焼き、牡蠣も有名ね。",
+      "audio": "cities/hiroshima/voice_3.wav",
+      "duration": 6.026667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/hiroshima/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/hiroshima/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "kitakyushu": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は北九州市の成り立ちを解説するのだ！",
+      "audio": "cities/kitakyushu/voice_0.wav",
+      "duration": 4.512
+    },
+    {
+      "speaker": "metan",
+      "text": "北九州市ね。人口は約93万人を誇る、活気ある街よね。",
+      "audio": "cities/kitakyushu/voice_1.wav",
+      "duration": 5.770667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/kitakyushu/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の焼きカレー、フグも有名ね。",
+      "audio": "cities/kitakyushu/voice_3.wav",
+      "duration": 5.973333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/kitakyushu/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/kitakyushu/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "fukuoka": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は福岡市の成り立ちを解説するのだ！",
+      "audio": "cities/fukuoka/voice_0.wav",
+      "duration": 4.245333
+    },
+    {
+      "speaker": "metan",
+      "text": "福岡市ね。人口は約163万人を誇る、活気ある街よね。",
+      "audio": "cities/fukuoka/voice_1.wav",
+      "duration": 5.685333
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/fukuoka/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の博多ラーメン、明太子も有名ね。",
+      "audio": "cities/fukuoka/voice_3.wav",
+      "duration": 6.432
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/fukuoka/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/fukuoka/voice_5.wav",
+      "duration": 3.637333
+    }
+  ],
+  "kumamoto": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日は熊本市の成り立ちを解説するのだ！",
+      "audio": "cities/kumamoto/voice_0.wav",
+      "duration": 4.213333
+    },
+    {
+      "speaker": "metan",
+      "text": "熊本市ね。人口は約74万人を誇る、活気ある街よね。",
+      "audio": "cities/kumamoto/voice_1.wav",
+      "duration": 5.472
+    },
+    {
+      "speaker": "zundamon",
+      "text": "もともとはどんな場所だったのか、気になるのだ！",
+      "audio": "cities/kumamoto/voice_2.wav",
+      "duration": 3.658667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を紐解くと面白いわよ。例えば特産品の馬刺し、からし蓮根も有名ね。",
+      "audio": "cities/kumamoto/voice_3.wav",
+      "duration": 6.186667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "歴史と美味しいもの、最強の組み合わせなのだ！",
+      "audio": "cities/kumamoto/voice_4.wav",
+      "duration": 3.850667
+    },
+    {
+      "speaker": "metan",
+      "text": "これから1分で、その魅力をぎゅっとお届けするわ。",
+      "audio": "cities/kumamoto/voice_5.wav",
+      "duration": 3.637333
+    }
+  ]
+}

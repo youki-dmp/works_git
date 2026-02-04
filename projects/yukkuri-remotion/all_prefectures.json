@@ -1,0 +1,1572 @@
+{
+  "tohoku": {
+    "aomori": [
+      {
+        "speaker": "zundamon",
+        "text": "マスター！青森県の成り立ちを教えるのだ！",
+        "audio": "aomori/voice_0.wav",
+        "duration": 3.669333
+      },
+      {
+        "speaker": "metan",
+        "text": "本州最北端。ねぶた祭りの熱気が伝わってくるわね。",
+        "audio": "aomori/voice_1.wav",
+        "duration": 4.170667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "縄文時代の三内丸山遺跡など、古くから人が住んでいたのだ！",
+        "audio": "aomori/voice_2.wav",
+        "duration": 5.536
+      },
+      {
+        "speaker": "metan",
+        "text": "弘前城の桜や、八甲田山の自然、そしてリンゴの生産量は日本一よ。",
+        "audio": "aomori/voice_3.wav",
+        "duration": 6.122667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "冬は雪深いけど、その分、海の幸も最高に美味しいのだ！",
+        "audio": "aomori/voice_4.wav",
+        "duration": 5.557333
+      },
+      {
+        "speaker": "metan",
+        "text": "力強い文化と自然が息づく、北の要所になったわね。",
+        "audio": "aomori/voice_5.wav",
+        "duration": 4.192
+      }
+    ],
+    "iwate": [
+      {
+        "speaker": "zundamon",
+        "text": "岩手県の成り立ちなのだ！",
+        "audio": "iwate/voice_0.wav",
+        "duration": 2.069333
+      },
+      {
+        "speaker": "metan",
+        "text": "宮沢賢治のイーハトーブ。広大な面積を持つ県ね。",
+        "audio": "iwate/voice_1.wav",
+        "duration": 4.085333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "奥州藤原氏が築いた平泉の黄金文化は世界遺産なのだ！",
+        "audio": "iwate/voice_2.wav",
+        "duration": 5.173333
+      },
+      {
+        "speaker": "metan",
+        "text": "三陸海岸の絶景や、盛岡冷麺、わんこそばも有名よ。",
+        "audio": "iwate/voice_3.wav",
+        "duration": 5.205333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "南部鉄器など、伝統工芸も大切に受け継がれているのだ！",
+        "audio": "iwate/voice_4.wav",
+        "duration": 5.066667
+      },
+      {
+        "speaker": "metan",
+        "text": "素朴で温かい、歴史ロマンあふれる県になったわね。",
+        "audio": "iwate/voice_5.wav",
+        "duration": 3.797333
+      }
+    ],
+    "miyagi": [
+      {
+        "speaker": "zundamon",
+        "text": "宮城県の成り立ちなのだ！",
+        "audio": "miyagi/voice_0.wav",
+        "duration": 2.144
+      },
+      {
+        "speaker": "metan",
+        "text": "杜の都・仙台。独眼竜・伊達政宗公が築いた地ね。",
+        "audio": "miyagi/voice_1.wav",
+        "duration": 5.450667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "政宗公が城下町を整えてから、東北の政治・経済の中心になったのだ！",
+        "audio": "miyagi/voice_2.wav",
+        "duration": 7.424
+      },
+      {
+        "speaker": "metan",
+        "text": "日本三景の松島や、美味しい牛タン、ずんだ餅も最高よ。",
+        "audio": "miyagi/voice_3.wav",
+        "duration": 5.141333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "七夕祭りなどの伝統行事も、毎年大盛り上がりなのだ！",
+        "audio": "miyagi/voice_4.wav",
+        "duration": 4.992
+      },
+      {
+        "speaker": "metan",
+        "text": "洗練された都市と豊かな自然が融合した、東北のリーダーね。",
+        "audio": "miyagi/voice_5.wav",
+        "duration": 4.448
+      }
+    ],
+    "akita": [
+      {
+        "speaker": "zundamon",
+        "text": "秋田県の成り立ちを解説するのだ！",
+        "audio": "akita/voice_0.wav",
+        "duration": 2.890667
+      },
+      {
+        "speaker": "metan",
+        "text": "秋田美人や、なまはげ。神秘的な魅力があるわね。",
+        "audio": "akita/voice_1.wav",
+        "duration": 4.202667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "かつては佐竹氏が治める秋田藩として発展したのだ！",
+        "audio": "akita/voice_2.wav",
+        "duration": 4.192
+      },
+      {
+        "speaker": "metan",
+        "text": "日本一深い田沢湖や、きりたんぽ鍋、美味しいお米も有名よ。",
+        "audio": "akita/voice_3.wav",
+        "duration": 5.098667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "大曲の花火大会は、世界中から人が集まるのだ！",
+        "audio": "akita/voice_4.wav",
+        "duration": 4.757333
+      },
+      {
+        "speaker": "metan",
+        "text": "独特の文化と美味しい食に恵まれた、風情ある県になったわね。",
+        "audio": "akita/voice_5.wav",
+        "duration": 4.704
+      }
+    ],
+    "yamagata": [
+      {
+        "speaker": "zundamon",
+        "text": "山形県の成り立ちなのだ！",
+        "audio": "yamagata/voice_0.wav",
+        "duration": 2.250667
+      },
+      {
+        "speaker": "metan",
+        "text": "さくらんぼと、蔵王の樹氷。四季がはっきりしているわ。",
+        "audio": "yamagata/voice_1.wav",
+        "duration": 4.042667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "最上義光公が山形城を拠点に、今の街の基礎を作ったのだ！",
+        "audio": "yamagata/voice_2.wav",
+        "duration": 5.877333
+      },
+      {
+        "speaker": "metan",
+        "text": "山寺（立石寺）の静寂や、米沢牛、芋煮会も大人気よ。",
+        "audio": "yamagata/voice_3.wav",
+        "duration": 6.144
+      },
+      {
+        "speaker": "zundamon",
+        "text": "将棋の駒の生産も日本一で、勝負師の街でもあるのだ！",
+        "audio": "yamagata/voice_4.wav",
+        "duration": 5.045333
+      },
+      {
+        "speaker": "metan",
+        "text": "誠実で温かい、豊かな恵みに満ちた県になったわね。",
+        "audio": "yamagata/voice_5.wav",
+        "duration": 4.256
+      }
+    ],
+    "fukushima": [
+      {
+        "speaker": "zundamon",
+        "text": "最後は福島県の成り立ちなのだ！",
+        "audio": "fukushima/voice_0.wav",
+        "duration": 2.816
+      },
+      {
+        "speaker": "metan",
+        "text": "東北の玄関口。会津、中通り、浜通りの3つの顔があるわね。",
+        "audio": "fukushima/voice_1.wav",
+        "duration": 5.770667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "会津の鶴ヶ城など、武士の精神が今も息づいているのだ！",
+        "audio": "fukushima/voice_2.wav",
+        "duration": 4.970667
+      },
+      {
+        "speaker": "metan",
+        "text": "猪苗代湖の美しさや、喜多方ラーメン、桃の美味しさも絶品よ。",
+        "audio": "fukushima/voice_3.wav",
+        "duration": 5.098667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "今は復興に向けて、みんなで頑張っている最中なのだ！",
+        "audio": "fukushima/voice_4.wav",
+        "duration": 4.544
+      },
+      {
+        "speaker": "metan",
+        "text": "困難を乗り越える強さを持つ、希望あふれる県になったわね。",
+        "audio": "fukushima/voice_5.wav",
+        "duration": 4.266667
+      }
+    ]
+  },
+  "chubu": {
+    "niigata": [
+      {
+        "speaker": "zundamon",
+        "text": "新潟県の成り立ちを教えるのだ！",
+        "audio": "niigata/voice_0.wav",
+        "duration": 2.730667
+      },
+      {
+        "speaker": "metan",
+        "text": "米どころ、酒どころ。雪国情緒あふれる場所ね。",
+        "audio": "niigata/voice_1.wav",
+        "duration": 4.032
+      },
+      {
+        "speaker": "zundamon",
+        "text": "上杉謙信公の拠点として、戦国時代から重要な地だったのだ！",
+        "audio": "niigata/voice_2.wav",
+        "duration": 5.941333
+      },
+      {
+        "speaker": "metan",
+        "text": "佐渡島の金山や、長岡の花火、世界有数の豪雪地帯も有名よ。",
+        "audio": "niigata/voice_3.wav",
+        "duration": 5.856
+      },
+      {
+        "speaker": "zundamon",
+        "text": "今はコシヒカリのブランド力で、日本を支えているのだ！",
+        "audio": "niigata/voice_4.wav",
+        "duration": 4.64
+      },
+      {
+        "speaker": "metan",
+        "text": "豊かな大地と、粘り強い人々が作る素晴らしい県になったわ。",
+        "audio": "niigata/voice_5.wav",
+        "duration": 4.64
+      }
+    ],
+    "toyama": [
+      {
+        "speaker": "zundamon",
+        "text": "富山県の成り立ちなのだ！",
+        "audio": "toyama/voice_0.wav",
+        "duration": 2.144
+      },
+      {
+        "speaker": "metan",
+        "text": "立山黒部アルペンルート。雪の壁は圧巻よね。",
+        "audio": "toyama/voice_1.wav",
+        "duration": 4.032
+      },
+      {
+        "speaker": "zundamon",
+        "text": "富山湾の神秘、ホタルイカや寒ブリも有名なのだ！",
+        "audio": "toyama/voice_2.wav",
+        "duration": 4.490667
+      },
+      {
+        "speaker": "metan",
+        "text": "「越中の薬売り」など、独自の産業が古くから発達してきたわ。",
+        "audio": "toyama/voice_3.wav",
+        "duration": 5.322667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "黒部ダムの迫力も、一生に一度は見たいスポットなのだ！",
+        "audio": "toyama/voice_4.wav",
+        "duration": 4.906667
+      },
+      {
+        "speaker": "metan",
+        "text": "自然の厳しさと、高い技術力が共存する県になったわね。",
+        "audio": "toyama/voice_5.wav",
+        "duration": 4.576
+      }
+    ],
+    "ishikawa": [
+      {
+        "speaker": "zundamon",
+        "text": "石川県の成り立ちなのだ！",
+        "audio": "ishikawa/voice_0.wav",
+        "duration": 2.218667
+      },
+      {
+        "speaker": "metan",
+        "text": "加賀百万石、金沢。華やかな伝統文化が息づくわね。",
+        "audio": "ishikawa/voice_1.wav",
+        "duration": 4.896
+      },
+      {
+        "speaker": "zundamon",
+        "text": "前田利家公が金沢城に入ってから、加賀の文化が花開いたのだ！",
+        "audio": "ishikawa/voice_2.wav",
+        "duration": 5.877333
+      },
+      {
+        "speaker": "metan",
+        "text": "兼六園の美しさや、九谷焼、輪島塗などの工芸も世界的人気よ。",
+        "audio": "ishikawa/voice_3.wav",
+        "duration": 5.898667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "近江町市場の新鮮な海鮮丼も最高なのだ！",
+        "audio": "ishikawa/voice_4.wav",
+        "duration": 4.010667
+      },
+      {
+        "speaker": "metan",
+        "text": "伝統美と現代が調和した、非常に気品ある県になったわね。",
+        "audio": "ishikawa/voice_5.wav",
+        "duration": 4.405333
+      }
+    ],
+    "fukui": [
+      {
+        "speaker": "zundamon",
+        "text": "福井県の成り立ちを解説するのだ！",
+        "audio": "fukui/voice_0.wav",
+        "duration": 2.890667
+      },
+      {
+        "speaker": "metan",
+        "text": "恐竜王国、福井。化石の発見数が日本一なのよね。",
+        "audio": "fukui/voice_1.wav",
+        "duration": 4.917333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "曹洞宗の大本山・永平寺や、東尋坊の絶壁もすごいのだ！",
+        "audio": "fukui/voice_2.wav",
+        "duration": 6.101333
+      },
+      {
+        "speaker": "metan",
+        "text": "眼鏡フレームの生産も世界シェアを誇っているわ。",
+        "audio": "fukui/voice_3.wav",
+        "duration": 3.328
+      },
+      {
+        "speaker": "zundamon",
+        "text": "越前ガニの美味しさは、まさに冬の王者なのだ！",
+        "audio": "fukui/voice_4.wav",
+        "duration": 4.021333
+      },
+      {
+        "speaker": "metan",
+        "text": "確かな技術と、神秘的な歴史が融合した県になったわね。",
+        "audio": "fukui/voice_5.wav",
+        "duration": 4.448
+      }
+    ],
+    "yamanashi": [
+      {
+        "speaker": "zundamon",
+        "text": "山梨県の成り立ちなのだ！",
+        "audio": "yamanashi/voice_0.wav",
+        "duration": 2.24
+      },
+      {
+        "speaker": "metan",
+        "text": "甲斐の虎・武田信玄公の故郷。富士山の麓ね。",
+        "audio": "yamanashi/voice_1.wav",
+        "duration": 4.533333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "信玄公が築いた統治の精神が、今も街の随所に残っているのだ！",
+        "audio": "yamanashi/voice_2.wav",
+        "duration": 6.208
+      },
+      {
+        "speaker": "metan",
+        "text": "富士五湖の絶景や、美味しいワイン、ほうとうも有名よ。",
+        "audio": "yamanashi/voice_3.wav",
+        "duration": 4.277333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "リニア中央新幹線の試験線もあり、未来を感じるのだ！",
+        "audio": "yamanashi/voice_4.wav",
+        "duration": 4.992
+      },
+      {
+        "speaker": "metan",
+        "text": "歴史を誇りに、富士山と共に歩む素晴らしい県になったわね。",
+        "audio": "yamanashi/voice_5.wav",
+        "duration": 4.597333
+      }
+    ],
+    "nagano": [
+      {
+        "speaker": "zundamon",
+        "text": "長野県の成り立ちなのだ！",
+        "audio": "nagano/voice_0.wav",
+        "duration": 2.144
+      },
+      {
+        "speaker": "metan",
+        "text": "日本の屋根、信州。1998年冬季五輪の舞台ね。",
+        "audio": "nagano/voice_1.wav",
+        "duration": 5.429333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "善光寺への参拝客で古くから賑わい、宿場町も多かったのだ！",
+        "audio": "nagano/voice_2.wav",
+        "duration": 5.813333
+      },
+      {
+        "speaker": "metan",
+        "text": "松本城の漆黒の美しさや、上高地の清流、信州そばも絶品よ。",
+        "audio": "nagano/voice_3.wav",
+        "duration": 5.941333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "精密機械産業も盛んで、山々に囲まれた技術立県なのだ！",
+        "audio": "nagano/voice_4.wav",
+        "duration": 5.898667
+      },
+      {
+        "speaker": "metan",
+        "text": "豊かな自然と、高い知性が融合した健康長寿の県ね。",
+        "audio": "nagano/voice_5.wav",
+        "duration": 4.576
+      }
+    ],
+    "gifu": [
+      {
+        "speaker": "zundamon",
+        "text": "岐阜県の成り立ちを教えるのだ！",
+        "audio": "gifu/voice_0.wav",
+        "duration": 2.538667
+      },
+      {
+        "speaker": "metan",
+        "text": "「岐阜」という名は織田信長公が付けたと言われているわね。",
+        "audio": "gifu/voice_1.wav",
+        "duration": 4.245333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "天下分け目の関ヶ原や、世界遺産・白川郷があるのだ！",
+        "audio": "gifu/voice_2.wav",
+        "duration": 5.354667
+      },
+      {
+        "speaker": "metan",
+        "text": "飛騨高山の古い町並みや、鵜飼いで有名な長良川も美しいわ。",
+        "audio": "gifu/voice_3.wav",
+        "duration": 5.045333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "美濃和紙や刃物など、伝統あるものづくりも健在なのだ！",
+        "audio": "gifu/voice_4.wav",
+        "duration": 4.736
+      },
+      {
+        "speaker": "metan",
+        "text": "日本の中心に位置する、歴史と匠の技の県になったわね。",
+        "audio": "gifu/voice_5.wav",
+        "duration": 4.64
+      }
+    ],
+    "shizuoka": [
+      {
+        "speaker": "zundamon",
+        "text": "静岡県の成り立ちなのだ！",
+        "audio": "shizuoka/voice_0.wav",
+        "duration": 2.272
+      },
+      {
+        "speaker": "metan",
+        "text": "富士山とお茶。そして徳川家康公が晩年を過ごした地ね。",
+        "audio": "shizuoka/voice_1.wav",
+        "duration": 4.298667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "駿府城を中心に、江戸時代も政治の重要拠点だったのだ！",
+        "audio": "shizuoka/voice_2.wav",
+        "duration": 5.312
+      },
+      {
+        "speaker": "metan",
+        "text": "伊豆半島の温泉や、浜名湖のウナギ、プラモデル生産も日本一よ。",
+        "audio": "shizuoka/voice_3.wav",
+        "duration": 5.525333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "さわやかのハンバーグも、今や全国区の人気なのだ！",
+        "audio": "shizuoka/voice_4.wav",
+        "duration": 4.437333
+      },
+      {
+        "speaker": "metan",
+        "text": "温和な気候と、多彩な産業が魅力の活力ある県になったわね。",
+        "audio": "shizuoka/voice_5.wav",
+        "duration": 4.810667
+      }
+    ],
+    "aichi": [
+      {
+        "speaker": "zundamon",
+        "text": "最後は愛知県の成り立ちなのだ！",
+        "audio": "aichi/voice_0.wav",
+        "duration": 2.698667
+      },
+      {
+        "speaker": "metan",
+        "text": "信長・秀吉・家康。三英傑を輩出した武将の国ね。",
+        "audio": "aichi/voice_1.wav",
+        "duration": 5.44
+      },
+      {
+        "speaker": "zundamon",
+        "text": "名古屋城の金のシャチホコが、かつての繁栄を物語っているのだ！",
+        "audio": "aichi/voice_2.wav",
+        "duration": 5.162667
+      },
+      {
+        "speaker": "metan",
+        "text": "トヨタ自動車を中心とした、世界的な産業都市でもあるわね。",
+        "audio": "aichi/voice_3.wav",
+        "duration": 4.576
+      },
+      {
+        "speaker": "zundamon",
+        "text": "味噌カツや手羽先など、独自の食文化「名古屋メシ」も最高なのだ！",
+        "audio": "aichi/voice_4.wav",
+        "duration": 6.336
+      },
+      {
+        "speaker": "metan",
+        "text": "伝統と最先端技術が融合した、日本の心臓部の一つになったわ。",
+        "audio": "aichi/voice_5.wav",
+        "duration": 5.312
+      }
+    ]
+  },
+  "chugoku": {
+    "tottori": [
+      {
+        "speaker": "zundamon",
+        "text": "鳥取県の成り立ちを教えるのだ！",
+        "audio": "tottori/voice_0.wav",
+        "duration": 2.784
+      },
+      {
+        "speaker": "metan",
+        "text": "鳥取砂丘。風が描く紋様が幻想的よね。",
+        "audio": "tottori/voice_1.wav",
+        "duration": 3.904
+      },
+      {
+        "speaker": "zundamon",
+        "text": "江戸時代は池田氏が治める鳥取藩として栄えたのだ！",
+        "audio": "tottori/voice_2.wav",
+        "duration": 4.234667
+      },
+      {
+        "speaker": "metan",
+        "text": "「ゲゲゲの鬼太郎」の水木しげるロードや、大山の自然も魅力よ。",
+        "audio": "tottori/voice_3.wav",
+        "duration": 4.864
+      },
+      {
+        "speaker": "zundamon",
+        "text": "二十世紀梨や松葉ガニ、美味しいものがたくさんあるのだ！",
+        "audio": "tottori/voice_4.wav",
+        "duration": 4.64
+      },
+      {
+        "speaker": "metan",
+        "text": "静かだけど、力強い個性を放つ素敵な県になったわね。",
+        "audio": "tottori/voice_5.wav",
+        "duration": 4.437333
+      }
+    ],
+    "shimane": [
+      {
+        "speaker": "zundamon",
+        "text": "島根県の成り立ちなのだ！",
+        "audio": "shimane/voice_0.wav",
+        "duration": 2.112
+      },
+      {
+        "speaker": "metan",
+        "text": "出雲大社。神々が集まる伝説の地ね。",
+        "audio": "shimane/voice_1.wav",
+        "duration": 3.445333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "古代から「国譲り」の神話が残り、歴史の深さは格別なのだ！",
+        "audio": "shimane/voice_2.wav",
+        "duration": 6.261333
+      },
+      {
+        "speaker": "metan",
+        "text": "世界遺産の石見銀山や、松江城の美しい佇まいも有名よ。",
+        "audio": "shimane/voice_3.wav",
+        "duration": 5.162667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "美肌の湯が多い温泉地としても、女性に大人気なのだ！",
+        "audio": "shimane/voice_4.wav",
+        "duration": 4.714667
+      },
+      {
+        "speaker": "metan",
+        "text": "神秘的な空気と、歴史ロマンが漂う神聖な県ね。",
+        "audio": "shimane/voice_5.wav",
+        "duration": 4.106667
+      }
+    ],
+    "okayama": [
+      {
+        "speaker": "zundamon",
+        "text": "岡山県の成り立ちなのだ！",
+        "audio": "okayama/voice_0.wav",
+        "duration": 2.24
+      },
+      {
+        "speaker": "metan",
+        "text": "桃太郎伝説と、晴れの国。瀬戸内海の玄関口ね。",
+        "audio": "okayama/voice_1.wav",
+        "duration": 4.501333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "日本三名園の後楽園や、倉敷美観地区の白壁が美しいのだ！",
+        "audio": "okayama/voice_2.wav",
+        "duration": 6.154667
+      },
+      {
+        "speaker": "metan",
+        "text": "デニムの生産でも有名で、高品質なものづくりが盛んよ。",
+        "audio": "okayama/voice_3.wav",
+        "duration": 4.533333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "マスカットや桃など、フルーツの美味しさは格別なのだ！",
+        "audio": "okayama/voice_4.wav",
+        "duration": 4.512
+      },
+      {
+        "speaker": "metan",
+        "text": "穏やかな気候と、豊かな文化が育んだ住みやすい県ね。",
+        "audio": "okayama/voice_5.wav",
+        "duration": 4.32
+      }
+    ],
+    "hiroshima": [
+      {
+        "speaker": "zundamon",
+        "text": "広島県の成り立ちなのだ！",
+        "audio": "hiroshima/voice_0.wav",
+        "duration": 2.24
+      },
+      {
+        "speaker": "metan",
+        "text": "平和の祈りと、二つの世界遺産がある地ね。",
+        "audio": "hiroshima/voice_1.wav",
+        "duration": 3.530667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "宮島の厳島神社や、原爆ドーム。歴史の重みを感じるのだ！",
+        "audio": "hiroshima/voice_2.wav",
+        "duration": 6.069333
+      },
+      {
+        "speaker": "metan",
+        "text": "広島風お好み焼きや、牡蠣、レモンなど食も充実しているわ。",
+        "audio": "hiroshima/voice_3.wav",
+        "duration": 5.162667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "マツダの車づくりなど、製造業の力もものすごいのなのだ！",
+        "audio": "hiroshima/voice_4.wav",
+        "duration": 5.216
+      },
+      {
+        "speaker": "metan",
+        "text": "力強く復興し、平和へのメッセージを発信する誇り高き県ね。",
+        "audio": "hiroshima/voice_5.wav",
+        "duration": 5.034667
+      }
+    ],
+    "yamaguchi": [
+      {
+        "speaker": "zundamon",
+        "text": "山口県の成り立ちなのだ！",
+        "audio": "yamaguchi/voice_0.wav",
+        "duration": 2.272
+      },
+      {
+        "speaker": "metan",
+        "text": "明治維新の志士たちが駆け抜けた、長州の地ね。",
+        "audio": "yamaguchi/voice_1.wav",
+        "duration": 3.488
+      },
+      {
+        "speaker": "zundamon",
+        "text": "松下村塾から、新しい日本を作るリーダーがたくさん出たのだ！",
+        "audio": "yamaguchi/voice_2.wav",
+        "duration": 5.365333
+      },
+      {
+        "speaker": "metan",
+        "text": "錦帯橋の美しさや、秋芳洞の鍾乳洞、美味しいフグも有名よ。",
+        "audio": "yamaguchi/voice_3.wav",
+        "duration": 5.696
+      },
+      {
+        "speaker": "zundamon",
+        "text": "角島大橋の絶景は、SNSでも大人気なのだ！",
+        "audio": "yamaguchi/voice_4.wav",
+        "duration": 4.917333
+      },
+      {
+        "speaker": "metan",
+        "text": "歴史を動かした情熱と、美しい自然が調和する県ね。",
+        "audio": "yamaguchi/voice_5.wav",
+        "duration": 4.298667
+      }
+    ]
+  },
+  "shikoku": {
+    "tokushima": [
+      {
+        "speaker": "zundamon",
+        "text": "徳島県の成り立ちを教えるのだ！",
+        "audio": "tokushima/voice_0.wav",
+        "duration": 2.773333
+      },
+      {
+        "speaker": "metan",
+        "text": "阿波踊りのリズム。400年続く夏の風物詩ね。",
+        "audio": "tokushima/voice_1.wav",
+        "duration": 3.946667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "鳴門の渦潮の迫力や、大塚国際美術館もすごいのだ！",
+        "audio": "tokushima/voice_2.wav",
+        "duration": 5.301333
+      },
+      {
+        "speaker": "metan",
+        "text": "すだちや藍染め、独自の文化が大切にされているわ。",
+        "audio": "tokushima/voice_3.wav",
+        "duration": 3.786667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "神山町のサテライトオフィスなど、新しい働き方も注目なのだ！",
+        "audio": "tokushima/voice_4.wav",
+        "duration": 5.621333
+      },
+      {
+        "speaker": "metan",
+        "text": "伝統を愛し、新しい風を取り入れる活気ある県になったわね。",
+        "audio": "tokushima/voice_5.wav",
+        "duration": 4.544
+      }
+    ],
+    "kagawa": [
+      {
+        "speaker": "zundamon",
+        "text": "香川県の成り立ちなのだ！",
+        "audio": "kagawa/voice_0.wav",
+        "duration": 2.144
+      },
+      {
+        "speaker": "metan",
+        "text": "「うどん県」。日本で一番小さな面積の県ね。",
+        "audio": "kagawa/voice_1.wav",
+        "duration": 3.669333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "弘法大師空海の生誕地で、金刀比羅宮への参拝も盛んなのだ！",
+        "audio": "kagawa/voice_2.wav",
+        "duration": 5.632
+      },
+      {
+        "speaker": "metan",
+        "text": "栗林公園の美しさや、直島などの現代アートも世界的に有名よ。",
+        "audio": "kagawa/voice_3.wav",
+        "duration": 5.578667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "讃岐うどんのコシの強さは、一度食べたら忘れられないのだ！",
+        "audio": "kagawa/voice_4.wav",
+        "duration": 4.874667
+      },
+      {
+        "speaker": "metan",
+        "text": "小さいけれど、魅力がぎゅっと詰まったアートと食の県ね。",
+        "audio": "kagawa/voice_5.wav",
+        "duration": 4.010667
+      }
+    ],
+    "ehime": [
+      {
+        "speaker": "zundamon",
+        "text": "愛媛県の成り立ちなのだ！",
+        "audio": "ehime/voice_0.wav",
+        "duration": 2.101333
+      },
+      {
+        "speaker": "metan",
+        "text": "日本最古の温泉・道後温泉。そしてみかんの王国ね。",
+        "audio": "ehime/voice_1.wav",
+        "duration": 4.458667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "松山城下町として栄え、正岡子規などの文豪も愛したのだ！",
+        "audio": "ehime/voice_2.wav",
+        "duration": 5.344
+      },
+      {
+        "speaker": "metan",
+        "text": "しまなみ海道のサイクリングや、今治タオルの品質も素晴らしいわ。",
+        "audio": "ehime/voice_3.wav",
+        "duration": 4.874667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "坊っちゃん列車が走る街並みは、とてもレトロで素敵なのだ！",
+        "audio": "ehime/voice_4.wav",
+        "duration": 4.544
+      },
+      {
+        "speaker": "metan",
+        "text": "穏やかな瀬戸内の気候のような、温かい心を持つ県ね。",
+        "audio": "ehime/voice_5.wav",
+        "duration": 4.096
+      }
+    ],
+    "kochi": [
+      {
+        "speaker": "zundamon",
+        "text": "高知県の成り立ちなのだ！",
+        "audio": "kochi/voice_0.wav",
+        "duration": 2.090667
+      },
+      {
+        "speaker": "metan",
+        "text": "幕末の英雄・坂本龍馬公。そして桂浜の太平洋ね。",
+        "audio": "kochi/voice_1.wav",
+        "duration": 5.472
+      },
+      {
+        "speaker": "zundamon",
+        "text": "山内一豊公が築いた高知城は、現存天守の一つなのだ！",
+        "audio": "kochi/voice_2.wav",
+        "duration": 5.664
+      },
+      {
+        "speaker": "metan",
+        "text": "カツオのタタキや、よさこい祭りの情熱も最高よ。",
+        "audio": "kochi/voice_3.wav",
+        "duration": 3.893333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "四万十川の清流など、手つかずの自然が残っているのだ！",
+        "audio": "kochi/voice_4.wav",
+        "duration": 4.885333
+      },
+      {
+        "speaker": "metan",
+        "text": "自由闊達な土佐の気風と、豊かな自然が魅力の県ね。",
+        "audio": "kochi/voice_5.wav",
+        "duration": 4.373333
+      }
+    ]
+  },
+  "kyushu": {
+    "fukuoka": [
+      {
+        "speaker": "zundamon",
+        "text": "福岡県の成り立ちを教えるのだ！",
+        "audio": "fukuoka/voice_0.wav",
+        "duration": 2.741333
+      },
+      {
+        "speaker": "metan",
+        "text": "アジアへの玄関口。屋台文化や活気ある都会ね。",
+        "audio": "fukuoka/voice_1.wav",
+        "duration": 4.032
+      },
+      {
+        "speaker": "zundamon",
+        "text": "古代から大宰府が置かれ、外交の拠点として栄えたのだ！",
+        "audio": "fukuoka/voice_2.wav",
+        "duration": 4.682667
+      },
+      {
+        "speaker": "metan",
+        "text": "博多ラーメン、明太子、もつ鍋。美味しいものが尽きないわね。",
+        "audio": "fukuoka/voice_3.wav",
+        "duration": 4.928
+      },
+      {
+        "speaker": "zundamon",
+        "text": "菅原道真公を祀る太宰府天満宮も、受験生に大人気なのだ！",
+        "audio": "fukuoka/voice_4.wav",
+        "duration": 6.144
+      },
+      {
+        "speaker": "metan",
+        "text": "歴史と未来が交差する、九州一の大都市になったわね。",
+        "audio": "fukuoka/voice_5.wav",
+        "duration": 4.234667
+      }
+    ],
+    "saga": [
+      {
+        "speaker": "zundamon",
+        "text": "佐賀県の成り立ちなのだ！",
+        "audio": "saga/voice_0.wav",
+        "duration": 2.005333
+      },
+      {
+        "speaker": "metan",
+        "text": "有田焼や伊万里焼。陶磁器の歴史が深いわね。",
+        "audio": "saga/voice_1.wav",
+        "duration": 3.68
+      },
+      {
+        "speaker": "zundamon",
+        "text": "幕末には佐賀藩が最新鋭の技術を持ち、近代化をリードしたのだ！",
+        "audio": "saga/voice_2.wav",
+        "duration": 5.866667
+      },
+      {
+        "speaker": "metan",
+        "text": "吉野ヶ里遺跡の弥生ロマンや、佐賀牛の美味しさも絶品よ。",
+        "audio": "saga/voice_3.wav",
+        "duration": 4.512
+      },
+      {
+        "speaker": "zundamon",
+        "text": "バルーンフェスタの空に舞う景色は、圧巻なのだ！",
+        "audio": "saga/voice_4.wav",
+        "duration": 3.968
+      },
+      {
+        "speaker": "metan",
+        "text": "伝統の技と、先取の精神が息づく素晴らしい県ね。",
+        "audio": "saga/voice_5.wav",
+        "duration": 4.224
+      }
+    ],
+    "nagasaki": [
+      {
+        "speaker": "zundamon",
+        "text": "長崎県の成り立ちなのだ！",
+        "audio": "nagasaki/voice_0.wav",
+        "duration": 2.261333
+      },
+      {
+        "speaker": "metan",
+        "text": "鎖国時代も唯一開かれていた、異国情緒あふれる港町ね。",
+        "audio": "nagasaki/voice_1.wav",
+        "duration": 4.608
+      },
+      {
+        "speaker": "zundamon",
+        "text": "グラバー園や軍艦島など、歴史の転換点がたくさんあるのだ！",
+        "audio": "nagasaki/voice_2.wav",
+        "duration": 5.333333
+      },
+      {
+        "speaker": "metan",
+        "text": "カステラやちゃんぽん。和華蘭文化が混ざり合った食も魅力よ。",
+        "audio": "nagasaki/voice_3.wav",
+        "duration": 4.544
+      },
+      {
+        "speaker": "zundamon",
+        "text": "ハウステンボスの美しさや、世界新三大夜景もすごいのだ！",
+        "audio": "nagasaki/voice_4.wav",
+        "duration": 5.12
+      },
+      {
+        "speaker": "metan",
+        "text": "平和の祈りと、多様な文化が共存する誇り高き県ね。",
+        "audio": "nagasaki/voice_5.wav",
+        "duration": 4.405333
+      }
+    ],
+    "kumamoto": [
+      {
+        "speaker": "zundamon",
+        "text": "熊本県の成り立ちなのだ！",
+        "audio": "kumamoto/voice_0.wav",
+        "duration": 2.250667
+      },
+      {
+        "speaker": "metan",
+        "text": "火の国。阿蘇の大パノラマと、難攻不落の熊本城ね。",
+        "audio": "kumamoto/voice_1.wav",
+        "duration": 4.48
+      },
+      {
+        "speaker": "zundamon",
+        "text": "加藤清正公が築いた熊本城の石垣は、まさに芸術なのだ！",
+        "audio": "kumamoto/voice_2.wav",
+        "duration": 5.898667
+      },
+      {
+        "speaker": "metan",
+        "text": "馬刺しや辛子蓮根、くまモンも世界中で大人気よ。",
+        "audio": "kumamoto/voice_3.wav",
+        "duration": 3.946667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "半導体産業の進出で、今また大きく盛り上がっているのだ！",
+        "audio": "kumamoto/voice_4.wav",
+        "duration": 5.269333
+      },
+      {
+        "speaker": "metan",
+        "text": "豊かな水と火の山のパワーに満ちた、活力ある県ね。",
+        "audio": "kumamoto/voice_5.wav",
+        "duration": 4.053333
+      }
+    ],
+    "oita": [
+      {
+        "speaker": "zundamon",
+        "text": "大分県の成り立ちなのだ！",
+        "audio": "oita/voice_0.wav",
+        "duration": 2.144
+      },
+      {
+        "speaker": "metan",
+        "text": "「おんせん県」大分。別府や湯布院は日本一の湧出量ね。",
+        "audio": "oita/voice_1.wav",
+        "duration": 4.853333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "戦国時代はキリシタン大名・大友宗麟公が統治し、南蛮文化が入ったのだ！",
+        "audio": "oita/voice_2.wav",
+        "duration": 7.264
+      },
+      {
+        "speaker": "metan",
+        "text": "とり天や関サバ、関アジなど、美味しいものが目白押しよ。",
+        "audio": "oita/voice_3.wav",
+        "duration": 4.426667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "九重夢大吊橋からの眺めも、最高に気持ちいいのだ！",
+        "audio": "oita/voice_4.wav",
+        "duration": 4.96
+      },
+      {
+        "speaker": "metan",
+        "text": "湯煙とともに、温かいおもてなしの心が溢れる県ね。",
+        "audio": "oita/voice_5.wav",
+        "duration": 4.085333
+      }
+    ],
+    "miyazaki": [
+      {
+        "speaker": "zundamon",
+        "text": "宮崎県の成り立ちなのだ！",
+        "audio": "miyazaki/voice_0.wav",
+        "duration": 2.272
+      },
+      {
+        "speaker": "metan",
+        "text": "南国リゾート。日本神話の舞台でもある、天孫降臨の地ね。",
+        "audio": "miyazaki/voice_1.wav",
+        "duration": 5.002667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "青島や高千穂峡など、神々しいパワースポットがいっぱいなのだ！",
+        "audio": "miyazaki/voice_2.wav",
+        "duration": 5.258667
+      },
+      {
+        "speaker": "metan",
+        "text": "チキン南蛮、マンゴー、宮崎牛。太陽の恵みを感じる食ね。",
+        "audio": "miyazaki/voice_3.wav",
+        "duration": 5.482667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "プロ野球のキャンプ地としても、毎年大賑わいなのだ！",
+        "audio": "miyazaki/voice_4.wav",
+        "duration": 4.362667
+      },
+      {
+        "speaker": "metan",
+        "text": "明るい太陽と、神話のロマンが漂う癒やしの県ね。",
+        "audio": "miyazaki/voice_5.wav",
+        "duration": 3.957333
+      }
+    ],
+    "kagoshima": [
+      {
+        "speaker": "zundamon",
+        "text": "鹿児島県の成り立ちなのだ！",
+        "audio": "kagoshima/voice_0.wav",
+        "duration": 2.272
+      },
+      {
+        "speaker": "metan",
+        "text": "薩摩の地。桜島の雄大な姿がシンボルね。",
+        "audio": "kagoshima/voice_1.wav",
+        "duration": 3.690667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "西郷隆盛公ら多くの偉人を輩出し、日本を変えた拠点なのだ！",
+        "audio": "kagoshima/voice_2.wav",
+        "duration": 6.186667
+      },
+      {
+        "speaker": "metan",
+        "text": "黒豚、焼酎、白熊。個性豊かな食文化も楽しいわ。",
+        "audio": "kagoshima/voice_3.wav",
+        "duration": 4.949333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "屋久島の縄文杉や、種子島の宇宙センターも夢があるのだ！",
+        "audio": "kagoshima/voice_4.wav",
+        "duration": 5.248
+      },
+      {
+        "speaker": "metan",
+        "text": "熱い情熱と、雄大な自然が共存する情熱の県ね。",
+        "audio": "kagoshima/voice_5.wav",
+        "duration": 4.394667
+      }
+    ],
+    "okinawa": [
+      {
+        "speaker": "zundamon",
+        "text": "最後は沖縄県の成り立ちなのだ！",
+        "audio": "okinawa/voice_0.wav",
+        "duration": 2.869333
+      },
+      {
+        "speaker": "metan",
+        "text": "琉球王国。独自の歴史と、青い海が広がる美ら島ね。",
+        "audio": "okinawa/voice_1.wav",
+        "duration": 4.64
+      },
+      {
+        "speaker": "zundamon",
+        "text": "かつては中継貿易で栄え、アジア諸国と深く繋がっていたのだ！",
+        "audio": "okinawa/voice_2.wav",
+        "duration": 5.610667
+      },
+      {
+        "speaker": "metan",
+        "text": "首里城の風格や、沖縄そば、ゴーヤーチャンプルーも絶品よ。",
+        "audio": "okinawa/voice_3.wav",
+        "duration": 4.554667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "伝統の三線の調べが、島全体を優しく包んでいるのだ！",
+        "audio": "okinawa/voice_4.wav",
+        "duration": 5.162667
+      },
+      {
+        "speaker": "metan",
+        "text": "ゆいまーるの心と、美しい自然が輝く楽園ね。",
+        "audio": "okinawa/voice_5.wav",
+        "duration": 3.978667
+      }
+    ]
+  },
+  "hokkaido": {
+    "hokkaido": [
+      {
+        "speaker": "zundamon",
+        "text": "北海道の成り立ちを解説するのだ！",
+        "audio": "hokkaido/voice_0.wav",
+        "duration": 2.986667
+      },
+      {
+        "speaker": "metan",
+        "text": "日本の食糧基地。広大な大地と大自然の宝庫ね。",
+        "audio": "hokkaido/voice_1.wav",
+        "duration": 4.042667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "アイヌ文化が大切にされ、明治以降の開拓使によって発展したのだ！",
+        "audio": "hokkaido/voice_2.wav",
+        "duration": 5.824
+      },
+      {
+        "speaker": "metan",
+        "text": "五稜郭の歴史や、富良野のラベンダー、世界遺産・知床も有名よ。",
+        "audio": "hokkaido/voice_3.wav",
+        "duration": 5.738667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "ジンギスカンや海鮮丼、ラーメン。美味しいものが多すぎるのだ！",
+        "audio": "hokkaido/voice_4.wav",
+        "duration": 5.504
+      },
+      {
+        "speaker": "metan",
+        "text": "開拓の精神と、四季折々の絶景が迎えてくれる魅力あふれる大地ね。",
+        "audio": "hokkaido/voice_5.wav",
+        "duration": 5.514667
+      }
+    ]
+  },
+  "kanto": {
+    "kanagawa": [
+      {
+        "speaker": "zundamon",
+        "text": "マスター！次は神奈川県の成り立ちを解説するのだ！",
+        "audio": "kanagawa/voice_0.wav",
+        "duration": 4.522667
+      },
+      {
+        "speaker": "metan",
+        "text": "横浜や鎌倉など、歴史の宝庫よね。楽しみだわ。",
+        "audio": "kanagawa/voice_1.wav",
+        "duration": 4.32
+      },
+      {
+        "speaker": "zundamon",
+        "text": "かつては鎌倉幕府が置かれた政治の中心地だったのだ！",
+        "audio": "kanagawa/voice_2.wav",
+        "duration": 4.416
+      },
+      {
+        "speaker": "metan",
+        "text": "その後、幕末の1859年に横浜港が開港して、一気に国際都市になったのよね。",
+        "audio": "kanagawa/voice_3.wav",
+        "duration": 7.264
+      },
+      {
+        "speaker": "zundamon",
+        "text": "1871年の廃藩置県で、横浜県が神奈川県に改称されたのだ！",
+        "audio": "kanagawa/voice_4.wav",
+        "duration": 7.04
+      },
+      {
+        "speaker": "metan",
+        "text": "今では人口第2位の、日本を代表する県になったわね。",
+        "audio": "kanagawa/voice_5.wav",
+        "duration": 4.426667
+      }
+    ],
+    "saitama": [
+      {
+        "speaker": "zundamon",
+        "text": "次は埼玉県の成り立ちなのだ！",
+        "audio": "saitama/voice_0.wav",
+        "duration": 2.709333
+      },
+      {
+        "speaker": "metan",
+        "text": "「彩の国」埼玉。意外と歴史が深いのよね。",
+        "audio": "saitama/voice_1.wav",
+        "duration": 3.968
+      },
+      {
+        "speaker": "zundamon",
+        "text": "江戸時代は中山道の宿場町として、江戸の胃袋を支えていたのだ！",
+        "audio": "saitama/voice_2.wav",
+        "duration": 5.632
+      },
+      {
+        "speaker": "metan",
+        "text": "1871年に浦和県などが合併して埼玉県が誕生。その後、秩父地方なども加わったのよ。",
+        "audio": "saitama/voice_3.wav",
+        "duration": 8.010667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "今は東京のベッドタウンとして、ものすごく発展しているのだ！",
+        "audio": "saitama/voice_4.wav",
+        "duration": 4.821333
+      },
+      {
+        "speaker": "metan",
+        "text": "住みやすさ抜群の、活気ある県になったわね。",
+        "audio": "saitama/voice_5.wav",
+        "duration": 3.530667
+      }
+    ],
+    "chiba": [
+      {
+        "speaker": "zundamon",
+        "text": "千葉県の成り立ちを解説するのだ！",
+        "audio": "chiba/voice_0.wav",
+        "duration": 2.816
+      },
+      {
+        "speaker": "metan",
+        "text": "房総半島。海と緑に囲まれた素敵な場所ね。",
+        "audio": "chiba/voice_1.wav",
+        "duration": 3.776
+      },
+      {
+        "speaker": "zundamon",
+        "text": "1873年に木更津県と印旛県が合併して千葉県になったのだ！",
+        "audio": "chiba/voice_2.wav",
+        "duration": 6.133333
+      },
+      {
+        "speaker": "metan",
+        "text": "かつては下総・上総・安房の3つの国に分かれていたのよ。",
+        "audio": "chiba/voice_3.wav",
+        "duration": 4.682667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "成田空港やディズニーランドがあって、日本の玄関口なのだ！",
+        "audio": "chiba/voice_4.wav",
+        "duration": 5.173333
+      },
+      {
+        "speaker": "metan",
+        "text": "農業も工業も盛んな、バランスの取れた県になったわね。",
+        "audio": "chiba/voice_5.wav",
+        "duration": 4.277333
+      }
+    ],
+    "ibaraki": [
+      {
+        "speaker": "zundamon",
+        "text": "茨城県の成り立ちを教えるのだ！",
+        "audio": "ibaraki/voice_0.wav",
+        "duration": 2.698667
+      },
+      {
+        "speaker": "metan",
+        "text": "水戸黄門さまでおなじみの、常陸国（ひたちのくに）ね。",
+        "audio": "ibaraki/voice_1.wav",
+        "duration": 4.693333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "1871年の廃藩置県を経て、1875年に今の茨城県の形になったのだ！",
+        "audio": "ibaraki/voice_2.wav",
+        "duration": 8.512
+      },
+      {
+        "speaker": "metan",
+        "text": "水戸徳川家の本拠地として、江戸時代から重要な場所だったのよ。",
+        "audio": "ibaraki/voice_3.wav",
+        "duration": 4.618667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "今はつくば研究学園都市など、科学の最先端を行く県なのだ！",
+        "audio": "ibaraki/voice_4.wav",
+        "duration": 5.610667
+      },
+      {
+        "speaker": "metan",
+        "text": "メロンや納豆など、美味しいものもいっぱいあるわね。",
+        "audio": "ibaraki/voice_5.wav",
+        "duration": 3.509333
+      }
+    ],
+    "tochigi": [
+      {
+        "speaker": "zundamon",
+        "text": "栃木県の成り立ちなのだ！",
+        "audio": "tochigi/voice_0.wav",
+        "duration": 2.133333
+      },
+      {
+        "speaker": "metan",
+        "text": "日光東照宮。徳川家康公が眠る聖地ね。",
+        "audio": "tochigi/voice_1.wav",
+        "duration": 3.84
+      },
+      {
+        "speaker": "zundamon",
+        "text": "1873年に栃木県と宇都宮県が合併して誕生したのだ！",
+        "audio": "tochigi/voice_2.wav",
+        "duration": 6.016
+      },
+      {
+        "speaker": "metan",
+        "text": "当初は栃木市に県庁があったけど、後に宇都宮市に移ったのよ。",
+        "audio": "tochigi/voice_3.wav",
+        "duration": 4.778667
+      },
+      {
+        "speaker": "zundamon",
+        "text": "世界遺産の日光や、美味しい餃子、イチゴが有名なのだ！",
+        "audio": "tochigi/voice_4.wav",
+        "duration": 5.376
+      },
+      {
+        "speaker": "metan",
+        "text": "観光と産業、どちらも魅力的な県になったわね。",
+        "audio": "tochigi/voice_5.wav",
+        "duration": 3.808
+      }
+    ],
+    "gunma": [
+      {
+        "speaker": "zundamon",
+        "text": "最後は群馬県の成り立ちなのだ！",
+        "audio": "gunma/voice_0.wav",
+        "duration": 2.688
+      },
+      {
+        "speaker": "metan",
+        "text": "上毛三山に囲まれた、歴史と温泉の国ね。",
+        "audio": "gunma/voice_1.wav",
+        "duration": 3.605333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "1871年に誕生。富岡製糸場など、日本の近代化を支えたのだ！",
+        "audio": "gunma/voice_2.wav",
+        "duration": 7.552
+      },
+      {
+        "speaker": "metan",
+        "text": "「かかあ天下と空っ風」と言われるように、力強い文化があるわ。",
+        "audio": "gunma/voice_3.wav",
+        "duration": 4.917333
+      },
+      {
+        "speaker": "zundamon",
+        "text": "草津や伊香保など、日本屈指の温泉地がたくさんあるのだ！",
+        "audio": "gunma/voice_4.wav",
+        "duration": 4.810667
+      },
+      {
+        "speaker": "metan",
+        "text": "大自然と歴史が息づく、素晴らしい県になったわね。",
+        "audio": "gunma/voice_5.wav",
+        "duration": 3.936
+      }
+    ],
+    "tokyo": [
+      {
+        "speaker": "zundamon",
+        "text": "マスター！今日は東京都の成り立ちについて解説するのだ！",
+        "audio": "voice_0.wav",
+        "duration": 4.65
+      },
+      {
+        "speaker": "metan",
+        "text": "あら、面白そうね。お願いするわ、ずんだもん。",
+        "audio": "voice_1.wav",
+        "duration": 3.93
+      },
+      {
+        "speaker": "zundamon",
+        "text": "まずは江戸時代なのだ！1603年に徳川家康が江戸幕府を開いたのが全ての始まりなのだ！",
+        "audio": "voice_2.wav",
+        "duration": 8.05
+      },
+      {
+        "speaker": "metan",
+        "text": "当時はただの小さな漁村だったのよね。そこから世界有数の大都市へ発展したのね。",
+        "audio": "voice_3.wav",
+        "duration": 6.04
+      },
+      {
+        "speaker": "zundamon",
+        "text": "そして1868年、明治維新なのだ！江戸は『東京』に改称されて、京都から天皇陛下がお移りになったのだ！",
+        "audio": "voice_4.wav",
+        "duration": 10.99
+      },
+      {
+        "speaker": "metan",
+        "text": "東の京都、という意味で東京。名実ともに日本の首都になった瞬間ね。",
+        "audio": "voice_5.wav",
+        "duration": 5.76
+      },
+      {
+        "speaker": "zundamon",
+        "text": "さらに1943年、戦時中に『東京府』と『東京市』が合体して、今の『東京都』になったのだ！",
+        "audio": "voice_6.wav",
+        "duration": 11.49
+      },
+      {
+        "speaker": "metan",
+        "text": "都制施行ね。より効率的な統治のために今の形になったのよ。",
+        "audio": "voice_7.wav",
+        "duration": 4.9
+      },
+      {
+        "speaker": "zundamon",
+        "text": "というわけで、東京は400年以上の歴史があるのだ！すごすぎるのだ！",
+        "audio": "voice_8.wav",
+        "duration": 6.03
+      },
+      {
+        "speaker": "metan",
+        "text": "江戸から東京へ。歴史の重みを感じるわね。",
+        "audio": "voice_9.wav",
+        "duration": 3.47
+      },
+      {
+        "speaker": "zundamon",
+        "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+        "audio": "voice_10.wav",
+        "duration": 4
+      },
+      {
+        "speaker": "metan",
+        "text": "また会いましょう。",
+        "audio": "voice_11.wav",
+        "duration": 1.07
+      }
+    ]
+  }
+}

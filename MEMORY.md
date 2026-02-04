@@ -18,8 +18,8 @@
 
 ### Yukkuri Commentary Auto Production Project (2026-02-01)
 - **Goal:** Auto-generate Yukkuri-style videos using Remotion and VOICEVOX.
-- **Progress:** Completed full-length video production for Tokyo (1 min) and Kanto Series (3 min), including character sprites and authentic VOICEVOX audio.
-- **Status:** Rendered `tokyo_history_final.mp4` and `kanto_series_final.mp4`. Ready for distribution.
+- **Progress:** Completed Tohoku (V3) and currently rendering Chubu (V3). Integrated Pattern A (Teacher Metan, Student Zundamon) and 1.2x speed for information density. Consolidated all final outputs into `projects/yukkuri-remotion/FINAL_VIDEOS/`.
+- **Status:** Tohoku V3 and Chubu V3 completed (30 videos total in `FINAL_VIDEOS/`). Ready for strategy meeting.
 - **Workflow:** Script (LLM) -> Voice (VOICEVOX) -> Video (Remotion).
 
 ## Key Context

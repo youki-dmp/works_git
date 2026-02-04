@@ -1,0 +1,40 @@
+{
+  "curry_history": [
+    {
+      "speaker": "zundamon",
+      "text": "マスター！今日はカレーの歴史を解説するのだ！実はカレーはインドから直接日本に来たわけじゃないのだ！",
+      "audio": "speed12/curry_history/voice_0.wav",
+      "duration": 6.848
+    },
+    {
+      "speaker": "metan",
+      "text": "そうね。明治時代にイギリスから「海軍食」として伝わったのが始まりと言われているわ。",
+      "audio": "speed12/curry_history/voice_1.wav",
+      "duration": 5.514667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "イギリス流のカレー粉が小麦粉でとろみをつけた日本独特の「欧風カレー」のベースになったのだ！",
+      "audio": "speed12/curry_history/voice_2.wav",
+      "duration": 6.528
+    },
+    {
+      "speaker": "metan",
+      "text": "その後、ジャガイモや人参を入れるスタイルが定着して、今の国民食になったのよ。",
+      "audio": "speed12/curry_history/voice_3.wav",
+      "duration": 4.938667
+    },
+    {
+      "speaker": "zundamon",
+      "text": "1.2倍速ならもっと詳しく喋れるのだ！カレーパンも、カツカレーも、日本人の発明力はすごすぎるのだ！",
+      "audio": "speed12/curry_history/voice_4.wav",
+      "duration": 7.786667
+    },
+    {
+      "speaker": "metan",
+      "text": "歴史を知ると、いつものカレーがもっと美味しく感じられるわね。",
+      "audio": "speed12/curry_history/voice_5.wav",
+      "duration": 3.488
+    }
+  ]
+}

@@ -1,21 +1,20 @@
 import { AbsoluteFill, Audio, Img, useVideoConfig, useCurrentFrame, Sequence, staticFile, spring, interpolate } from 'remotion';
-import rawData from './data.json';
 
 interface DialogueItem {
     speaker: string;
     text: string;
     audio: string;
-    duration: number;
+    duration?: number;
 }
 
-const data = rawData as DialogueItem[];
+interface YukkuriProps {
+    seriesData: DialogueItem[];
+    prefectureName: string;
+    backgroundUrl: string;
+    bgmFile: string;
+}
 
 const Speaker: React.FC<{ name: string; isActive: boolean; frame: number }> = ({ name, isActive, frame }) => {
-	// Talk bounce animation
-	const bounce = isActive 
-		? Math.sin(frame / 2) * 15 
-		: 0;
-
 	const opacity = isActive ? 1 : 0.4;
 	const scale = isActive ? 1.05 : 0.95;
 	const position = name === 'zundamon' ? { left: 100 } : { right: 100 };
@@ -27,7 +26,7 @@ const Speaker: React.FC<{ name: string; isActive: boolean; frame: number }> = ({
 	return (
 		<div style={{
 			position: 'absolute',
-			bottom: 50 + bounce,
+			bottom: 50, // Removed bounce animation for better visibility
 			...position,
 			opacity,
 			transform: `scale(${scale}) ${flip}`,
@@ -38,7 +37,7 @@ const Speaker: React.FC<{ name: string; isActive: boolean; frame: number }> = ({
 	);
 };
 
-export const Yukkuri: React.FC = () => {
+export const Yukkuri: React.FC<YukkuriProps> = ({ seriesData, prefectureName, backgroundUrl, bgmFile }) => {
 	const frame = useCurrentFrame();
 	const { fps } = useVideoConfig();
 
@@ -46,42 +45,29 @@ export const Yukkuri: React.FC = () => {
 
 	return (
 		<AbsoluteFill style={{ backgroundColor: '#000', fontFamily: 'sans-serif' }}>
-			{/* BGM */}
-			<Audio 
-				src={staticFile('batch-001/audio/Shinjuku Neon Rain（新宿・雨）_1.mp3')} 
-				volume={0.15} 
-				loop 
-			/>
+			<Audio src={staticFile(`batch-001/audio/${bgmFile}`)} volume={0.15} loop />
 
-			{/* Background - Tokyo Landscape with slow zoom */}
-			<AbsoluteFill style={{
-				transform: `scale(${interpolate(frame, [0, 1800], [1, 1.2])})`
-			}}>
-				<Img 
-					src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1920&q=80" 
-					style={{ 
-						width: '100%', 
-						height: '100%', 
-						objectFit: 'cover',
-						opacity: 0.6 
-					}} 
-				/>
+			<AbsoluteFill style={{ transform: `scale(${interpolate(frame, [0, 1800], [1, 1.2])})` }}>
+				<Img src={staticFile(`background/${backgroundUrl}`)} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }} />
 			</AbsoluteFill>
 
-			{/* Dialogue Sequences */}
-			{data.map((item, i) => {
+			{seriesData.map((item, i) => {
+                const itemDuration = item.duration || 4.0;
 				const start = Math.round(currentStart * fps);
-				const duration = Math.round(item.duration * fps);
-				currentStart += item.duration;
+				const duration = Math.round(itemDuration * fps);
+				currentStart += itemDuration;
+
+                // Only apply spring animation for the first item
+                const scaleVal = i === 0 
+                    ? spring({ frame: frame - start, fps, config: { stiffness: 200 } })
+                    : 1;
 
 				return (
 					<Sequence key={i} from={start} durationInFrames={duration}>
 						<AbsoluteFill>
-							{/* Characters */}
 							<Speaker name="zundamon" isActive={item.speaker === 'zundamon'} frame={frame - start} />
 							<Speaker name="metan" isActive={item.speaker === 'metan'} frame={frame - start} />
 
-							{/* Caption Box */}
 							<div style={{
 								position: 'absolute',
 								bottom: 100,
@@ -104,8 +90,8 @@ export const Yukkuri: React.FC = () => {
 									width: '100%',
 									boxShadow: '0 15px 35px rgba(0,0,0,0.4)',
 									position: 'relative',
+                                    transform: `scale(${scaleVal})`,
 								}}>
-									{/* Nameplate - Top Left/Right of the Bubble */}
 									<div style={{
 										position: 'absolute',
 										top: -45,
@@ -122,39 +108,18 @@ export const Yukkuri: React.FC = () => {
 									}}>
 										{item.speaker === 'zundamon' ? 'ずんだもん' : '四国めたん'}
 									</div>
-
 									{item.text}
 								</div>
 							</div>
-
-							{/* Voice */}
 							<Audio src={staticFile(`audio/${item.audio}`)} />
 						</AbsoluteFill>
 					</Sequence>
 				);
 			})}
 
-			{/* Overlay Effects - Vignette */}
-			<AbsoluteFill style={{
-				boxShadow: 'inset 0 0 200px rgba(0,0,0,0.5)',
-				pointerEvents: 'none'
-			}} />
-
-			{/* Header */}
-			<div style={{
-				position: 'absolute',
-				top: 40,
-				left: 40,
-				color: 'white',
-				fontSize: 32,
-				backgroundColor: 'rgba(0,0,0,0.7)',
-				padding: '12px 35px',
-				borderRadius: 15,
-				borderLeft: '12px solid #00ff00',
-				fontWeight: '900',
-				letterSpacing: '0.05em',
-			}}>
-				1分でわかる！東京都の成り立ち
+			<AbsoluteFill style={{ boxShadow: 'inset 0 0 200px rgba(0,0,0,0.5)', pointerEvents: 'none' }} />
+			<div style={{ position: 'absolute', top: 40, left: 40, color: 'white', fontSize: 32, backgroundColor: 'rgba(0,0,0,0.7)', padding: '12px 35px', borderRadius: 15, borderLeft: '12px solid #00ff00', fontWeight: '900', letterSpacing: '0.05em' }}>
+				解説：{prefectureName}
 			</div>
 		</AbsoluteFill>
 	);

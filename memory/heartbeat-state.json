@@ -2,8 +2,11 @@
   "lastChecks": {
     "email": null,
     "calendar": null,
-    "weather": 1769950522687,
-    "projects": 1769950522687,
-    "lastHeartbeat": 1769950522687
-  }
+    "weather": 1738734474000,
+    "projects": 1738734474000,
+    "lastHeartbeat": 1738734474000
+  },
+  "currentWeather": "Tokyo: (timeout)",
+  "lastUpdated": 1738734474000,
+  "alerts": []
 }
