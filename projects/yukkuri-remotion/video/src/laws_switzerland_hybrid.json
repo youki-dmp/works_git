@@ -1,0 +1,38 @@
+[
+  {
+    "speaker": "zundamon",
+    "text": "マスター！スイスの一部のアパートでは、夜10時以降にトイレを流すのが禁止らしいのだ！",
+    "audio": "laws/switzerland_hybrid/voice_0.wav",
+    "duration": 5.64
+  },
+  {
+    "speaker": "master",
+    "text": "えっ、夜ふかししてたらトイレにいけないってこと？！飲み会後とかどうしたらいいの？！",
+    "audio": "laws/switzerland_hybrid/voice_1.wav",
+    "duration": 5
+  },
+  {
+    "speaker": "metan",
+    "text": "ふふ、マスター。実はこれ、騒音トラブルを防ぐためのマナーが法律に近い形で残っているのよ。",
+    "audio": "laws/switzerland_hybrid/voice_2.wav",
+    "duration": 5.83
+  },
+  {
+    "speaker": "zundamon",
+    "text": "流す音が近所迷惑になるかららしいのだ。でも最近は緩和されてる所も多いから安心していいのだ！",
+    "audio": "laws/switzerland_hybrid/voice_3.wav",
+    "duration": 6.6
+  },
+  {
+    "speaker": "metan",
+    "text": "それでも古い建物だと要注意ね。スイスに行くときは気をつけなきゃ。",
+    "audio": "laws/switzerland_hybrid/voice_4.wav",
+    "duration": 3.89
+  },
+  {
+    "speaker": "zundamon",
+    "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+    "audio": "laws/switzerland_hybrid/voice_5.wav",
+    "duration": 3.23
+  }
+]

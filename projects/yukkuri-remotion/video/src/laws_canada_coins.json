@@ -1,0 +1,44 @@
+[
+  {
+    "speaker": "zundamon",
+    "text": "めたん！カナダでは『大量の小銭で払おうとすると拒否される』法律があるのだ！",
+    "audio": "laws/canada_coins/voice_0.wav",
+    "duration": 5.49
+  },
+  {
+    "speaker": "metan",
+    "text": "えっ、お金なのに？何枚からダメなのかしら。",
+    "audio": "laws/canada_coins/voice_1.wav",
+    "duration": 3.14
+  },
+  {
+    "speaker": "zundamon",
+    "text": "10ドル以上の買い物で、1ドル硬貨だけで払うのはダメ、とか細かく決まっているのだ！",
+    "audio": "laws/canada_coins/voice_2.wav",
+    "duration": 5.63
+  },
+  {
+    "speaker": "metan",
+    "text": "レジの人が数えるのが大変だからかしら。合理的な法律ね。",
+    "audio": "laws/canada_coins/voice_3.wav",
+    "duration": 3.48
+  },
+  {
+    "speaker": "zundamon",
+    "text": "通貨法で決まっている正式なルールなのだ。小銭を貯め込みすぎないように注意なのだ！",
+    "audio": "laws/canada_coins/voice_4.wav",
+    "duration": 5.24
+  },
+  {
+    "speaker": "metan",
+    "text": "キャッシュレスが進んでる現代らしい悩みね。勉強になったわ。",
+    "audio": "laws/canada_coins/voice_5.wav",
+    "duration": 3.55
+  },
+  {
+    "speaker": "zundamon",
+    "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+    "audio": "laws/canada_coins/voice_6.wav",
+    "duration": 3.23
+  }
+]

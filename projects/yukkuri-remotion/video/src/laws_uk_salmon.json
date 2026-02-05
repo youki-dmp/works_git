@@ -1,0 +1,44 @@
+[
+  {
+    "speaker": "zundamon",
+    "text": "めたん！イギリスには『怪しい様子でサケを持ってはいけない』という法律があるのだ！",
+    "audio": "laws/uk_salmon/voice_0.wav",
+    "duration": 5.64
+  },
+  {
+    "speaker": "metan",
+    "text": "サケ？魚の鮭のこと？どういうことかしら。",
+    "audio": "laws/uk_salmon/voice_1.wav",
+    "duration": 3.05
+  },
+  {
+    "speaker": "zundamon",
+    "text": "1986年に制定されたサケ法で、密漁されたサケを扱うのを防ぐための法律なのだ！",
+    "audio": "laws/uk_salmon/voice_2.wav",
+    "duration": 6.67
+  },
+  {
+    "speaker": "metan",
+    "text": "『怪しい様子』っていう表現が独特で面白いわね。",
+    "audio": "laws/uk_salmon/voice_3.wav",
+    "duration": 3.32
+  },
+  {
+    "speaker": "zundamon",
+    "text": "実際は密漁対策だけど、言葉だけ見るとシュールなのだ。鮭を持つときは堂々とするのだ！",
+    "audio": "laws/uk_salmon/voice_4.wav",
+    "duration": 6.08
+  },
+  {
+    "speaker": "metan",
+    "text": "そうね、変にコソコソしないように気をつけるわ。",
+    "audio": "laws/uk_salmon/voice_5.wav",
+    "duration": 2.68
+  },
+  {
+    "speaker": "zundamon",
+    "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+    "audio": "laws/uk_salmon/voice_6.wav",
+    "duration": 3.23
+  }
+]

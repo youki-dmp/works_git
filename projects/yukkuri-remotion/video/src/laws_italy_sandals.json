@@ -1,0 +1,44 @@
+[
+  {
+    "speaker": "zundamon",
+    "text": "めたん！イタリアのカプリ島では『音のうるさい履物』が禁止されているのだ！",
+    "audio": "laws/italy_sandals/voice_0.wav",
+    "duration": 5.48
+  },
+  {
+    "speaker": "metan",
+    "text": "ビーチサンダルとか？カプリ島ってリゾート地なのに不思議ね。",
+    "audio": "laws/italy_sandals/voice_1.wav",
+    "duration": 3.32
+  },
+  {
+    "speaker": "zundamon",
+    "text": "観光客が歩くときのパタパタ音が、島民の静かな生活を邪魔するかららしいのだ！",
+    "audio": "laws/italy_sandals/voice_2.wav",
+    "duration": 5.44
+  },
+  {
+    "speaker": "metan",
+    "text": "徹底しているわね。違反すると罰金を取られることもあるのかしら。",
+    "audio": "laws/italy_sandals/voice_3.wav",
+    "duration": 3.71
+  },
+  {
+    "speaker": "zundamon",
+    "text": "そうなのだ。観光に行くなら、音がしない静かな靴を選ぶのが正解なのだ！",
+    "audio": "laws/italy_sandals/voice_4.wav",
+    "duration": 5.09
+  },
+  {
+    "speaker": "metan",
+    "text": "郷に入っては郷に従え、ね。勉強になったわ。",
+    "audio": "laws/italy_sandals/voice_5.wav",
+    "duration": 3.71
+  },
+  {
+    "speaker": "zundamon",
+    "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+    "audio": "laws/italy_sandals/voice_6.wav",
+    "duration": 3.23
+  }
+]

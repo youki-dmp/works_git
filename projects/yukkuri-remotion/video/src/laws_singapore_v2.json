@@ -1,0 +1,68 @@
+[
+  {
+    "speaker": "zundamon",
+    "text": "マスター！シンガポールでガムを噛んだら重罪だって知ってたのだ！？",
+    "audio": "laws/singapore_v2/voice_0.wav",
+    "duration": 4.12
+  },
+  {
+    "speaker": "master",
+    "text": "え？ガムを道端に吐いたらじゃなくて、噛むだけで？？？",
+    "audio": "laws/singapore_v2/voice_1.wav",
+    "duration": 4.16
+  },
+  {
+    "speaker": "metan",
+    "text": "正確には、1992年からガムの輸入と販売が法律で禁止されているのよ。噛むこと自体はグレーだけど、入手ルートがほぼ無いから実質禁止ね。",
+    "audio": "laws/singapore_v2/voice_2.wav",
+    "duration": 9.46
+  },
+  {
+    "speaker": "zundamon",
+    "text": "理由は、地下鉄のドアにガムが挟まって、列車の運行が遅れる事件が多発したのがきっかけなのだ！",
+    "audio": "laws/singapore_v2/voice_3.wav",
+    "duration": 6.75
+  },
+  {
+    "speaker": "metan",
+    "text": "街の清潔さを保つためだけじゃなく、公共インフラを守るための切実な理由があったのね。",
+    "audio": "laws/singapore_v2/voice_4.wav",
+    "duration": 5.33
+  },
+  {
+    "speaker": "zundamon",
+    "text": "もし無許可で持ち込もうとすると、最高1万ドル、日本円で約110万円の罰金や禁錮刑になる可能性があるのだ！",
+    "audio": "laws/singapore_v2/voice_5.wav",
+    "duration": 8.41
+  },
+  {
+    "speaker": "master",
+    "text": "日本円で100万…！とても重い罪だね。実際に罰金刑はあったの？",
+    "audio": "laws/singapore_v2/voice_6.wav",
+    "duration": 4.97
+  },
+  {
+    "speaker": "metan",
+    "text": "実際に数千ドルの罰金を科されたケースはあるわ。特に大量持ち込みや販売は厳格に取り締まられるの。",
+    "audio": "laws/singapore_v2/voice_7.wav",
+    "duration": 6.1
+  },
+  {
+    "speaker": "zundamon",
+    "text": "現在は、禁煙用や歯科用のガムだけは医師の処方があればOKになったのだ。",
+    "audio": "laws/singapore_v2/voice_8.wav",
+    "duration": 5.24
+  },
+  {
+    "speaker": "metan",
+    "text": "徹底したルールが、あの美しい景観を支えているのね。勉強になったわ。",
+    "audio": "laws/singapore_v2/voice_9.wav",
+    "duration": 4.68
+  },
+  {
+    "speaker": "zundamon",
+    "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+    "audio": "laws/singapore_v2/voice_10.wav",
+    "duration": 3.35
+  }
+]

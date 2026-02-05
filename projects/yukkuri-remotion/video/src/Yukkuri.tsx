@@ -4,7 +4,7 @@ interface DialogueItem {
     speaker: string;
     text: string;
     audio: string;
-    duration?: number;
+    duration: number;
 }
 
 interface YukkuriProps {
@@ -15,18 +15,18 @@ interface YukkuriProps {
 }
 
 const Speaker: React.FC<{ name: string; isActive: boolean; frame: number }> = ({ name, isActive, frame }) => {
-	const opacity = isActive ? 1 : 0.4;
+	const opacity = isActive ? 1 : 0.3;
 	const scale = isActive ? 1.05 : 0.95;
 	const position = name === 'zundamon' ? { left: 100 } : { right: 100 };
 	const imgFile = name === 'zundamon' ? 'ずんだもん立ち絵素材2.3.png' : '四国めたん立ち絵素材2.1.png';
-	
-	// Flip Zundamon to face inwards
 	const flip = name === 'zundamon' ? 'scaleX(-1)' : 'none';
+
+    if (name === 'master') return null;
 
 	return (
 		<div style={{
 			position: 'absolute',
-			bottom: 50, // Removed bounce animation for better visibility
+			bottom: 50,
 			...position,
 			opacity,
 			transform: `scale(${scale}) ${flip}`,
@@ -57,10 +57,13 @@ export const Yukkuri: React.FC<YukkuriProps> = ({ seriesData, prefectureName, ba
 				const duration = Math.round(itemDuration * fps);
 				currentStart += itemDuration;
 
-                // Only apply spring animation for the first item
                 const scaleVal = i === 0 
                     ? spring({ frame: frame - start, fps, config: { stiffness: 200 } })
                     : 1;
+
+                const isMaster = item.speaker === 'master';
+                const speakerColor = isMaster ? '#2196F3' : (item.speaker === 'zundamon' ? '#4CAF50' : '#E91E63');
+                const speakerName = isMaster ? 'マスター' : (item.speaker === 'zundamon' ? 'ずんだもん' : '四国めたん');
 
 				return (
 					<Sequence key={i} from={start} durationInFrames={duration}>
@@ -70,7 +73,7 @@ export const Yukkuri: React.FC<YukkuriProps> = ({ seriesData, prefectureName, ba
 
 							<div style={{
 								position: 'absolute',
-								bottom: 100,
+								bottom: isMaster ? 300 : 100,
 								left: '10%',
 								right: '10%',
 								height: 180,
@@ -79,11 +82,11 @@ export const Yukkuri: React.FC<YukkuriProps> = ({ seriesData, prefectureName, ba
 								alignItems: 'center',
 							}}>
 								<div style={{
-									backgroundColor: 'rgba(255, 255, 255, 0.95)',
+									backgroundColor: isMaster ? 'rgba(0, 0, 0, 0.9)' : 'rgba(255, 255, 255, 0.95)',
 									padding: '20px 50px',
 									borderRadius: 20,
-									border: `8px solid ${item.speaker === 'zundamon' ? '#4CAF50' : '#E91E63'}`,
-									color: '#333',
+									border: `8px solid ${speakerColor}`,
+									color: isMaster ? 'white' : '#333',
 									fontSize: 48,
 									fontWeight: '900',
 									textAlign: 'center',
@@ -95,10 +98,10 @@ export const Yukkuri: React.FC<YukkuriProps> = ({ seriesData, prefectureName, ba
 									<div style={{
 										position: 'absolute',
 										top: -45,
-										[item.speaker === 'zundamon' ? 'left' : 'right']: 20,
+										[isMaster ? 'left' : (item.speaker === 'zundamon' ? 'left' : 'right')]: 20,
 										fontSize: 32,
 										color: 'white',
-										backgroundColor: item.speaker === 'zundamon' ? '#4CAF50' : '#E91E63',
+										backgroundColor: speakerColor,
 										padding: '5px 25px',
 										borderRadius: 15,
 										fontWeight: 'bold',
@@ -106,7 +109,7 @@ export const Yukkuri: React.FC<YukkuriProps> = ({ seriesData, prefectureName, ba
 										boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
 										whiteSpace: 'nowrap',
 									}}>
-										{item.speaker === 'zundamon' ? 'ずんだもん' : '四国めたん'}
+										{speakerName}
 									</div>
 									{item.text}
 								</div>
@@ -118,8 +121,8 @@ export const Yukkuri: React.FC<YukkuriProps> = ({ seriesData, prefectureName, ba
 			})}
 
 			<AbsoluteFill style={{ boxShadow: 'inset 0 0 200px rgba(0,0,0,0.5)', pointerEvents: 'none' }} />
-			<div style={{ position: 'absolute', top: 40, left: 40, color: 'white', fontSize: 32, backgroundColor: 'rgba(0,0,0,0.7)', padding: '12px 35px', borderRadius: 15, borderLeft: '12px solid #00ff00', fontWeight: '900', letterSpacing: '0.05em' }}>
-				解説：{prefectureName}
+			<div style={{ position: 'absolute', top: 40, left: 40, color: 'white', fontSize: 32, backgroundColor: 'rgba(0,0,0,0.7)', padding: '12px 35px', borderRadius: 15, borderLeft: '12px solid #00ff00', fontWeight: '900', letterSpacing: '0.05em', zIndex: 100 }}>
+				{prefectureName}
 			</div>
 		</AbsoluteFill>
 	);

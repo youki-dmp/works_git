@@ -15,22 +15,24 @@ interface YukkuriProps {
 }
 
 const Speaker: React.FC<{ name: string; isActive: boolean; frame: number }> = ({ name, isActive, frame }) => {
-	const opacity = isActive ? 1 : 0.4;
-	const baseScale = name === 'zundamon' ? 1.0 : 0.8; // Reduced size slightly to prevent overlap
+	const opacity = isActive ? 1 : 0.2;
+	const baseScale = name === 'zundamon' ? 1.0 : 0.8;
 	const scale = (isActive ? 1.05 : 0.95) * baseScale; 
 	
-	const position = name === 'zundamon' ? { left: -100 } : { right: -100 };
+	const position = name === 'zundamon' ? { left: -150 } : { right: -150 };
 	const imgFile = name === 'zundamon' ? 'ずんだもん立ち絵素材2.3.png' : '四国めたん立ち絵素材2.1.png';
 	const flip = name === 'zundamon' ? 'scaleX(-1)' : 'none';
+
+    if (name === 'master') return null; // Master is just a text box for now
 
 	return (
 		<div style={{
 			position: 'absolute',
-			bottom: -100, // Sunk deeper into the bottom edge
+			bottom: -150,
 			...position,
 			opacity,
 			transform: `scale(${scale}) ${flip}`,
-			width: 650, 
+			width: 750, 
 		}}>
 			<Img src={staticFile(imgFile)} style={{ width: '100%' }} />
 		</div>
@@ -59,6 +61,10 @@ export const VerticalYukkuri: React.FC<YukkuriProps> = ({ seriesData, prefecture
                     ? spring({ frame: frame - start, fps, config: { stiffness: 200 } })
                     : 1;
 
+                const isMaster = item.speaker === 'master';
+                const speakerColor = isMaster ? '#2196F3' : (item.speaker === 'zundamon' ? '#4CAF50' : '#E91E63');
+                const speakerName = isMaster ? 'マスター' : (item.speaker === 'zundamon' ? 'ずんだもん' : '四国めたん');
+
 				return (
 					<Sequence key={i} from={start} durationInFrames={duration}>
 						<AbsoluteFill>
@@ -66,10 +72,10 @@ export const VerticalYukkuri: React.FC<YukkuriProps> = ({ seriesData, prefecture
 							<Speaker name="zundamon" isActive={item.speaker === 'zundamon'} frame={frame - start} />
 							<Speaker name="metan" isActive={item.speaker === 'metan'} frame={frame - start} />
 
-							{/* Vertical Caption Box - MOVED UP and TEXT ADJUSTED */}
+							{/* Vertical Caption Box */}
 							<div style={{
 								position: 'absolute',
-								top: 350, // Moved up from 500 to provide more head space
+								top: isMaster ? 600 : 350, 
 								left: 0,
                                 right: 0,
 								display: 'flex',
@@ -78,12 +84,12 @@ export const VerticalYukkuri: React.FC<YukkuriProps> = ({ seriesData, prefecture
                                 justifyContent: 'center',
 							}}>
 								<div style={{
-									backgroundColor: 'rgba(255, 255, 255, 0.95)',
+									backgroundColor: isMaster ? 'rgba(0, 0, 0, 0.85)' : 'rgba(255, 255, 255, 0.95)',
 									padding: '40px 30px',
 									borderRadius: 30,
-									border: `12px solid ${item.speaker === 'zundamon' ? '#4CAF50' : '#E91E63'}`,
-									color: '#222',
-									fontSize: 64, 
+									border: `12px solid ${speakerColor}`,
+									color: isMaster ? 'white' : '#222',
+									fontSize: isMaster ? 56 : 64, 
 									fontWeight: '900',
 									textAlign: 'center',
 									boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
@@ -96,10 +102,10 @@ export const VerticalYukkuri: React.FC<YukkuriProps> = ({ seriesData, prefecture
 									<div style={{
 										position: 'absolute',
 										top: -65,
-										[item.speaker === 'zundamon' ? 'left' : 'right']: 20,
+										[isMaster ? 'left' : (item.speaker === 'zundamon' ? 'left' : 'right')]: 20,
 										fontSize: 40,
 										color: 'white',
-										backgroundColor: item.speaker === 'zundamon' ? '#4CAF50' : '#E91E63',
+										backgroundColor: speakerColor,
 										padding: '10px 40px',
 										borderRadius: 20,
 										fontWeight: 'bold',
@@ -107,7 +113,7 @@ export const VerticalYukkuri: React.FC<YukkuriProps> = ({ seriesData, prefecture
 										boxShadow: '0 8px 20px rgba(0,0,0,0.4)',
 										whiteSpace: 'nowrap',
 									}}>
-										{item.speaker === 'zundamon' ? 'ずんだもん' : '四国めたん'}
+										{speakerName}
 									</div>
 									{item.text}
 								</div>
@@ -119,7 +125,7 @@ export const VerticalYukkuri: React.FC<YukkuriProps> = ({ seriesData, prefecture
 				);
 			})}
 
-			<div style={{ position: 'absolute', top: 120, left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: 50, backgroundColor: 'rgba(0,0,0,0.8)', padding: '20px 50px', borderRadius: 25, borderBottom: '10px solid #00ff00', fontWeight: '900', whiteSpace: 'nowrap' }}>
+			<div style={{ position: 'absolute', top: 120, left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: 50, backgroundColor: 'rgba(0,0,0,0.8)', padding: '20px 50px', borderRadius: 25, borderBottom: '10px solid #00ff00', fontWeight: '900', whiteSpace: 'nowrap', zIndex: 100 }}>
 				{prefectureName}
 			</div>
 		</AbsoluteFill>

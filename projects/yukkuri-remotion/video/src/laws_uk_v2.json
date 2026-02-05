@@ -1,0 +1,62 @@
+[
+  {
+    "speaker": "zundamon",
+    "text": "マスター！イギリスには『怪しい様子でサケ（鮭）を扱ってはいけない』という法律があるのだ！",
+    "audio": "laws/uk_v2/voice_0.wav",
+    "duration": 7.23
+  },
+  {
+    "speaker": "master",
+    "text": "怪しいってどんな格好でやったらアウトなんだろう",
+    "audio": "laws/uk_v2/voice_1.wav",
+    "duration": 2.91
+  },
+  {
+    "speaker": "metan",
+    "text": "ふふ、想像しちゃうわよね。これは1986年に制定された『サケ法』の第32条に実在する条文なのよ。",
+    "audio": "laws/uk_v2/voice_2.wav",
+    "duration": 8
+  },
+  {
+    "speaker": "zundamon",
+    "text": "実際は格好の問題じゃなくて、密漁されたサケだと知りながら受け取ったり、売買したりするのを防ぐのが目的なのだ！",
+    "audio": "laws/uk_v2/voice_3.wav",
+    "duration": 7.98
+  },
+  {
+    "speaker": "metan",
+    "text": "当時、鮭の密漁が深刻な社会問題になっていたから、流通経路を厳しく制限するために作られたのね。",
+    "audio": "laws/uk_v2/voice_4.wav",
+    "duration": 6.75
+  },
+  {
+    "speaker": "zundamon",
+    "text": "でも条文のタイトルが『Handling Salmon in Suspicious Circumstances』、つまり『怪しい状況下でのサケの取り扱い』だからネタにされまくってるのだ！",
+    "audio": "laws/uk_v2/voice_5.wav",
+    "duration": 18.29
+  },
+  {
+    "speaker": "master",
+    "text": "そういう闇取引の防止ってことね。でもこれだと他にも面白い法律ありそう",
+    "audio": "laws/uk_v2/voice_6.wav",
+    "duration": 5.1
+  },
+  {
+    "speaker": "metan",
+    "text": "さすがマスター。イギリスには他にも『鎧を着て議会に入ってはいけない』とか、歴史を感じるユニークな法律がたくさんあるわよ。",
+    "audio": "laws/uk_v2/voice_7.wav",
+    "duration": 7.73
+  },
+  {
+    "speaker": "zundamon",
+    "text": "古い法律をあえて残しておくのも、伝統を重んじるイギリスらしい文化なのだ！勉強になったのだ！",
+    "audio": "laws/uk_v2/voice_8.wav",
+    "duration": 6.67
+  },
+  {
+    "speaker": "zundamon",
+    "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+    "audio": "laws/uk_v2/voice_9.wav",
+    "duration": 3.35
+  }
+]

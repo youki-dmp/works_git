@@ -1,0 +1,56 @@
+[
+  {
+    "speaker": "zundamon",
+    "text": "マスター！カナダには『大量の小銭で払おうとすると拒否される』法律があるのだ！",
+    "audio": "laws/canada_v2/voice_0.wav",
+    "duration": 5.78
+  },
+  {
+    "speaker": "master",
+    "text": "たくさんの小銭で払われると数えるのも大変だからね。面白い法律だね",
+    "audio": "laws/canada_v2/voice_1.wav",
+    "duration": 4.83
+  },
+  {
+    "speaker": "metan",
+    "text": "ふふ、マスター。これはカナダの『通貨法（Currency Act）』の第8条で定められているれっきとした法律なのよ。",
+    "audio": "laws/canada_v2/voice_2.wav",
+    "duration": 8.65
+  },
+  {
+    "speaker": "zundamon",
+    "text": "例えば、10ドル以上の買い物で『全部1ドル硬貨』で払おうとしても、お店側にはそれを拒否する権利があるのだ！",
+    "audio": "laws/canada_v2/voice_3.wav",
+    "duration": 8.36
+  },
+  {
+    "speaker": "metan",
+    "text": "25セント硬貨なら10ドル分まで、5セント硬貨ならわずか2ドル分まで、といった具合に、硬貨の種類ごとに細かく上限が決まっているの。",
+    "audio": "laws/canada_v2/voice_4.wav",
+    "duration": 8.17
+  },
+  {
+    "speaker": "zundamon",
+    "text": "日本でも『一種類の硬貨は20枚まで』という法律があるけど、カナダは金額ベースで決まっているのが特徴なのだ！",
+    "audio": "laws/canada_v2/voice_5.wav",
+    "duration": 8.25
+  },
+  {
+    "speaker": "master",
+    "text": "日本でも小銭はためすぎずに使っていかないとね",
+    "audio": "laws/canada_v2/voice_6.wav",
+    "duration": 3.09
+  },
+  {
+    "speaker": "metan",
+    "text": "嫌がらせで小銭の山を押し付けるのを防ぐための、合理的なルールね。勉強になったわ。",
+    "audio": "laws/canada_v2/voice_7.wav",
+    "duration": 5.32
+  },
+  {
+    "speaker": "zundamon",
+    "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+    "audio": "laws/canada_v2/voice_8.wav",
+    "duration": 3.35
+  }
+]

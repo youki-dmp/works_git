@@ -1,0 +1,44 @@
+[
+  {
+    "speaker": "zundamon",
+    "text": "めたん！スイスの一部のアパートでは『夜10時以降にトイレを流すのが禁止』らしいのだ！",
+    "audio": "laws/switzerland_toilet/voice_0.wav",
+    "duration": 6.14
+  },
+  {
+    "speaker": "metan",
+    "text": "ええっ！？生理現象なのに。どうしてそんなルールがあるのかしら。",
+    "audio": "laws/switzerland_toilet/voice_1.wav",
+    "duration": 3.84
+  },
+  {
+    "speaker": "zundamon",
+    "text": "騒音に対する規制が厳しくて、排水の音が近所迷惑になると考えられているのだ！",
+    "audio": "laws/switzerland_toilet/voice_2.wav",
+    "duration": 5.69
+  },
+  {
+    "speaker": "metan",
+    "text": "静かな環境を守るためとはいえ、ちょっと不便そうね。",
+    "audio": "laws/switzerland_toilet/voice_3.wav",
+    "duration": 3.15
+  },
+  {
+    "speaker": "zundamon",
+    "text": "最近は緩和されているところも多いけど、古い建物では今もマナーとして重要なのだ！",
+    "audio": "laws/switzerland_toilet/voice_4.wav",
+    "duration": 5.62
+  },
+  {
+    "speaker": "metan",
+    "text": "文化の違いね。スイスに行くときは気をつけなきゃ。",
+    "audio": "laws/switzerland_toilet/voice_5.wav",
+    "duration": 2.88
+  },
+  {
+    "speaker": "zundamon",
+    "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+    "audio": "laws/switzerland_toilet/voice_6.wav",
+    "duration": 3.23
+  }
+]

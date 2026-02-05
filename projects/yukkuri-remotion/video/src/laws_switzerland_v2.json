@@ -1,0 +1,68 @@
+[
+  {
+    "speaker": "zundamon",
+    "text": "マスター！スイスの一部のアパートでは、夜10時以降にトイレを流すのが禁止らしいのだ！",
+    "audio": "laws/switzerland_v2/voice_0.wav",
+    "duration": 5.93
+  },
+  {
+    "speaker": "master",
+    "text": "えっ、夜ふかししてたらトイレにいけないってこと？！飲み会後とかどうしたらいいの？！",
+    "audio": "laws/switzerland_v2/voice_1.wav",
+    "duration": 5.27
+  },
+  {
+    "speaker": "metan",
+    "text": "ふふ、マスター。実はこれ、法律というよりは建物ごとの『管理規約』として厳格に守られているマナーなのよ。",
+    "audio": "laws/switzerland_v2/voice_2.wav",
+    "duration": 7.09
+  },
+  {
+    "speaker": "zundamon",
+    "text": "スイスには『騒音規制法』があって、夜10時から翌朝7時までは『安眠を妨げる音』を出してはいけないことになっているのだ！",
+    "audio": "laws/switzerland_v2/voice_3.wav",
+    "duration": 9.58
+  },
+  {
+    "speaker": "metan",
+    "text": "トイレの排水音だけでなく、シャワーを浴びたり洗濯機を回したりするのもNGな場合が多いわね。",
+    "audio": "laws/switzerland_v2/voice_4.wav",
+    "duration": 5.7
+  },
+  {
+    "speaker": "zundamon",
+    "text": "もし違反して大きな音を立てると、近隣住人からガチで警察に通報されることもあるのだ！恐ろしすぎるのだ！",
+    "audio": "laws/switzerland_v2/voice_5.wav",
+    "duration": 7.56
+  },
+  {
+    "speaker": "master",
+    "text": "警察！？トイレ流しただけで逮捕は勘弁してほしいな...",
+    "audio": "laws/switzerland_v2/voice_6.wav",
+    "duration": 3.8
+  },
+  {
+    "speaker": "metan",
+    "text": "最近の新しいマンションは防音がしっかりしているから大丈夫なことも多いけど、古い建物は要注意ね。",
+    "audio": "laws/switzerland_v2/voice_7.wav",
+    "duration": 6.17
+  },
+  {
+    "speaker": "zundamon",
+    "text": "スイス人は静寂を愛する文化なのだ。郷に入っては郷に従え、なのだ！",
+    "audio": "laws/switzerland_v2/voice_8.wav",
+    "duration": 5.41
+  },
+  {
+    "speaker": "metan",
+    "text": "旅行や留学でスイスに行くときは、事前にその建物のルールを確認しておくのが正解ね。勉強になったわ。",
+    "audio": "laws/switzerland_v2/voice_9.wav",
+    "duration": 6.58
+  },
+  {
+    "speaker": "zundamon",
+    "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+    "audio": "laws/switzerland_v2/voice_10.wav",
+    "duration": 3.35
+  }
+]

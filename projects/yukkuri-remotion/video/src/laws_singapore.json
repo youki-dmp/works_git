@@ -1,0 +1,43 @@
+[
+  {
+    "speaker": "zundamon",
+    "text": "めたん！シンガポールでガムを噛んだら重罪だって知ってたのだ！？",
+    "audio": "laws/singapore/voice_0.wav",
+    "duration": 3.91
+  },
+  {
+    "speaker": "metan",
+    "text": "あら、有名な話ね。でも本当に逮捕されるのかしら？",
+    "audio": "laws/singapore/voice_1.wav",
+    "duration": 3.84
+  },
+  {
+    "speaker": "zundamon",
+    "text": "ガムを持ち込むだけで、最大1万ドルの罰金や禁錮刑になる可能性があるのだ！恐ろしすぎるのだ！",
+    "audio": "laws/singapore/voice_2.wav",
+    "duration": 6.66
+  },
+  {
+    "speaker": "metan",
+    "text": "昔、ガムのポイ捨てが地下鉄のドアを故障させたのがきっかけなのよね。",
+    "audio": "laws/singapore/voice_3.wav",
+    "duration": 3.93
+  },
+  {
+    "speaker": "zundamon", "text": "現在は医療用ならOKだけど、基本は禁止なのだ。街を綺麗に保つための超強力なルールなのだ！",
+    "audio": "laws/singapore/voice_4.wav",
+    "duration": 6.78
+  },
+  {
+    "speaker": "metan",
+    "text": "綺麗な街には厳しいルールがあるってことね。勉強になったわ。",
+    "audio": "laws/singapore/voice_5.wav",
+    "duration": 3.59
+  },
+  {
+    "speaker": "zundamon",
+    "text": "気に入ったらチャンネル登録と高評価よろしくなのだー！",
+    "audio": "laws/singapore/voice_6.wav",
+    "duration": 3.23
+  }
+]
