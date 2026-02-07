@@ -41,15 +41,29 @@ const Speaker: React.FC<{ name: string; isActive: boolean; frame: number }> = ({
 
 export const VerticalYukkuri: React.FC<YukkuriProps> = ({ seriesData, prefectureName, backgroundUrl, bgmFile }) => {
 	const frame = useCurrentFrame();
-	const { fps } = useVideoConfig();
+	const { fps, width, height } = useVideoConfig();
 
 	let currentStart = 0;
 
+    // Enhanced Background Movement for Vertical (Stronger movement)
+    const bgScale = interpolate(frame, [0, 1800], [2.2, 2.6]);
+    const bgTranslateX = interpolate(frame, [0, 1800], [-100, 100]);
+    const bgTranslateY = interpolate(frame, [0, 1800], [-50, 50]);
+
 	return (
-		<AbsoluteFill style={{ backgroundColor: '#000', fontFamily: 'sans-serif' }}>
-			<AbsoluteFill style={{ transform: `scale(${interpolate(frame, [0, 1800], [2, 2.4])})` }}>
-				<Img src={staticFile(`background/${backgroundUrl}`)} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.5 }} />
+		<AbsoluteFill style={{ backgroundColor: '#000', fontFamily: 'sans-serif', overflow: 'hidden' }}>
+			<AbsoluteFill style={{ 
+                transform: `scale(${bgScale}) translateX(${bgTranslateX}px) translateY(${bgTranslateY}px)`,
+                filter: 'blur(3px)'
+            }}>
+				<Img src={staticFile(`background/${backgroundUrl}`)} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} />
 			</AbsoluteFill>
+
+            {/* Moving Grain/Light for Texture */}
+            <AbsoluteFill style={{
+                background: `linear-gradient(${frame % 360}deg, rgba(255,255,255,0.05), transparent)`,
+                mixBlendMode: 'plus-lighter'
+            }} />
 
 			{seriesData.map((item, i) => {
                 const itemDuration = item.duration || 4.0;

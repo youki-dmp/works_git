@@ -39,17 +39,31 @@ const Speaker: React.FC<{ name: string; isActive: boolean; frame: number }> = ({
 
 export const Yukkuri: React.FC<YukkuriProps> = ({ seriesData, prefectureName, backgroundUrl, bgmFile }) => {
 	const frame = useCurrentFrame();
-	const { fps } = useVideoConfig();
+	const { fps, width, height } = useVideoConfig();
 
 	let currentStart = 0;
 
+    // Enhanced Background Movement (Slow Pan + Zoom)
+    const bgScale = interpolate(frame, [0, 1800], [1.1, 1.3]);
+    const bgTranslateX = interpolate(frame, [0, 1800], [-50, 50]);
+    const bgTranslateY = interpolate(frame, [0, 1800], [-30, 30]);
+
 	return (
-		<AbsoluteFill style={{ backgroundColor: '#000', fontFamily: 'sans-serif' }}>
+		<AbsoluteFill style={{ backgroundColor: '#000', fontFamily: 'sans-serif', overflow: 'hidden' }}>
 			<Audio src={staticFile(`batch-001/audio/${bgmFile}`)} volume={0.15} loop />
 
-			<AbsoluteFill style={{ transform: `scale(${interpolate(frame, [0, 1800], [1, 1.2])})` }}>
-				<Img src={staticFile(`background/${backgroundUrl}`)} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }} />
+			<AbsoluteFill style={{ 
+                transform: `scale(${bgScale}) translateX(${bgTranslateX}px) translateY(${bgTranslateY}px)`,
+                filter: 'blur(2px)' // Subtle blur for depth
+            }}>
+				<Img src={staticFile(`background/${backgroundUrl}`)} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.5 }} />
 			</AbsoluteFill>
+
+            {/* Subtle Light Overlay for "Alive" feel */}
+            <AbsoluteFill style={{
+                background: `radial-gradient(circle at ${50 + Math.sin(frame/50)*20}% ${50 + Math.cos(frame/50)*20}%, rgba(255,255,255,0.1) 0%, transparent 70%)`,
+                mixBlendMode: 'overlay'
+            }} />
 
 			{seriesData.map((item, i) => {
                 const itemDuration = item.duration || 4.0;

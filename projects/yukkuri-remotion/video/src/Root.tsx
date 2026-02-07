@@ -2,6 +2,7 @@ import React from 'react';
 import {Composition, staticFile} from 'remotion';
 import {Yukkuri} from './Yukkuri';
 import {VerticalYukkuri} from './VerticalYukkuri';
+import {Thumbnail} from './Thumbnail';
 import {RegionalSeries} from './RegionalSeries';
 import rawDataV3 from '../../all_prefectures_v2.json';
 import rawRegions from '../../region_metadata.json';
@@ -105,6 +106,17 @@ export const RemotionRoot: React.FC = () => {
                     niigata: "新潟県", toyama: "富山県", ishikawa: "石川県", fukui: "福井県", yamanashi: "山梨県", nagano: "長野県", gifu: "岐阜県", shizuoka: "静岡県", aichi: "愛知県"
                 };
                 const title = prefectureNames[prefId] || prefId;
+                
+                const hooks = [
+                    "衝撃の真実！",
+                    "闇が深すぎる歴史",
+                    "教科書にない事実",
+                    "ヤバすぎる成り立ち",
+                    "実は〇〇だった！？",
+                    "驚愕の歴史ミステリー"
+                ];
+                // Select a hook based on prefId length or index to stay deterministic
+                const hookText = hooks[prefId.length % hooks.length];
 
                 return (
                     <React.Fragment key={prefId}>
@@ -134,6 +146,19 @@ export const RemotionRoot: React.FC = () => {
                                 prefectureName: `${title}`,
                                 backgroundUrl: regionInfo.bg,
                                 bgmFile: regionInfo.bgm
+                            }}
+                        />
+                        <Composition
+                            id={`${prefId}-Thumbnail`}
+                            component={Thumbnail}
+                            durationInFrames={30}
+                            fps={fps}
+                            width={1280}
+                            height={720}
+                            defaultProps={{
+                                prefectureName: `${title}`,
+                                backgroundUrl: regionInfo.bg,
+                                hookText: hookText
                             }}
                         />
                     </React.Fragment>

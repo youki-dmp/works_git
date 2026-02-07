@@ -13,25 +13,25 @@
   },
   "chubu": {
     "name": "中部編",
-    "bg": "kyoto.jpg",
+    "bg": "forest.jpg",
     "bgm": "Shinjuku Neon Rain（新宿・雨）_1.mp3",
     "prefectures": ["niigata", "toyama", "ishikawa", "fukui", "yamanashi", "nagano", "gifu", "shizuoka", "aichi"]
   },
   "chugoku": {
     "name": "中国編",
-    "bg": "mountain.jpg",
+    "bg": "coast.jpg",
     "bgm": "Midnight Konbini（深夜のコンビニ）_1.mp3",
     "prefectures": ["tottori", "shimane", "okayama", "hiroshima", "yamaguchi"]
   },
   "shikoku": {
     "name": "四国編",
-    "bg": "mountain.jpg",
+    "bg": "coast.jpg",
     "bgm": "School Rooftop Breeze（放課後の屋上）_2.mp3",
     "prefectures": ["tokushima", "kagawa", "ehime", "kochi"]
   },
   "kyushu": {
     "name": "九州・沖縄編",
-    "bg": "mountain.jpg",
+    "bg": "coast.jpg",
     "bgm": "Tokyo Subway Dreams（地下鉄の旅）_1.mp3",
     "prefectures": ["fukuoka", "saga", "nagasaki", "kumamoto", "oita", "miyazaki", "kagoshima", "okinawa"]
   },
@@ -40,5 +40,11 @@
     "bg": "mountain.jpg",
     "bgm": "Kyoto Sunset Zen（京都・夕暮れ）_2.mp3",
     "prefectures": ["hokkaido"]
+  },
+  "kanto": {
+    "name": "関東編",
+    "bg": "tokyo.jpg",
+    "bgm": "Shinjuku Neon Rain（新宿・雨）_1.mp3",
+    "prefectures": ["tokyo", "kanagawa", "saitama", "chiba", "ibaraki", "tochigi", "gunma"]
   }
 }
