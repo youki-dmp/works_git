@@ -18,8 +18,8 @@
 
 ### Yukkuri Commentary Auto Production Project (2026-02-01)
 - **Goal:** Auto-generate Yukkuri-style videos using Remotion and VOICEVOX.
-- **Progress:** Completed Tohoku (V3) and currently rendering Chubu (V3). Integrated Pattern A (Teacher Metan, Student Zundamon) and 1.2x speed for information density. Consolidated all final outputs into `projects/yukkuri-remotion/FINAL_VIDEOS/`.
-- **Status:** Tohoku V3 and Chubu V3 completed (30 videos total in `FINAL_VIDEOS/`). Ready for strategy meeting.
+- **Progress:** **Completed major regions (Tohoku, Chubu, Kanto, Kansai, Hokkaido).** Integrated Pattern A (Teacher Metan, Student Zundamon) and 1.2x speed for information density.
+- **Status:** **80%+ Prefectures rendered.** Tohoku, Chubu, Kanto, Kansai, and Hokkaido regions completed (approx. 80 videos total in `FINAL_VIDEOS/`). Thumbnails generated for Chugoku, Shikoku, and Kyushu. Ready for the final rendering push.
 - **Workflow:** Script (LLM) -> Voice (VOICEVOX) -> Video (Remotion).
 
 ## Key Context
