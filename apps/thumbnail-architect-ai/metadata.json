@@ -1,0 +1,5 @@
+{
+  "name": "Thumbnail Architect AI",
+  "description": "A professional YouTube thumbnail designer assistant that generates high-CTR design proposals and visual mockups using Gemini 2.5 Flash and Nano Banana models.",
+  "requestFramePermissions": []
+}
