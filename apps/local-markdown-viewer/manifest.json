@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Local Markdown Viewer",
+  "version": "1.0.0",
+  "description": "View local Markdown files with GitHub style and ToC.",
+  "permissions": [],
+  "content_scripts": [
+    {
+      "matches": [
+        "file://*/*.md",
+        "file://*/*.markdown"
+      ],
+      "js": [
+        "lib/marked.min.js",
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "icons": {
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
