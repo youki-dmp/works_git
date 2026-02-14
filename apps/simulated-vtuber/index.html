@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>疑似Vtuber配信シミュレーター v4.0</title>
+    <style>
+        :root {
+            --bg: #050a14;
+            --card-bg: #0f172a;
+            --sidebar-bg: #0f172a;
+            --accent: #ff4d4d;
+            --text: #ffffff;
+            --text-dim: #94a3b8;
+            --btn-green: #00c853;
+            --btn-stop: #fbc02d;
+            
+            /* SC Colors */
+            --sc-1: #1565c0; --sc-2: #00b8d4; --sc-3: #00bfa5;
+            --sc-4: #fbc02d; --sc-5: #e65100; --sc-6: #c2185b; --sc-7: #d32f2f;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+            gap: 20px;
+        }
+
+        /* Video / Stage Section */
+        #main-stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        #video-container {
+            flex: 1;
+            background: #000;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        #camera-feed {
+            width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);
+            display: none; /* Initial state */
+        }
+        /* Character Overlay */
+        #character-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-height: 90%;
+            z-index: 8;
+            pointer-events: none;
+            display: none;
+        }
+        #character-overlay.pos-right { left: auto; right: 20px; transform: none; }
+        #character-overlay.pos-left { left: 20px; transform: none; }
+        #character-overlay.pos-center { left: 50%; transform: translateX(-50%); }
+
+        /* Standby Card / Thumbnail Mode */
+        #standby-card {
+            width: 80%; max-width: 500px;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            z-index: 5;
+        }
+        .standby-tag { color: var(--btn-green); font-size: 14px; font-weight: bold; }
+        .standby-title { font-size: 32px; font-weight: 800; margin: 0; }
+        .standby-desc { color: var(--text-dim); font-size: 16px; }
+        .standby-hashtags { display: flex; gap: 10px; color: #4dabf7; font-size: 14px; }
+
+        /* Overlay UI */
+        .overlay-top {
+            position: absolute; top: 20px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between; align-items: center; z-index: 10;
+        }
+        .live-info { display: flex; gap: 10px; }
+        .live-badge { background: var(--accent); padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; }
+        .stats-badge { background: rgba(0,0,0,0.6); padding: 4px 12px; border-radius: 4px; font-size: 14px; color: #fff; }
+
+        #sc-display-area {
+            position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
+            width: 70%; z-index: 20; pointer-events: none;
+        }
+
+        /* Controls Area */
+        #bottom-bar {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .main-controls { display: flex; gap: 12px; align-items: center; flex: 1; }
+        input {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; flex: 1;
+        }
+        .btn-group { display: flex; gap: 10px; }
+        button {
+            padding: 12px 20px; border-radius: 10px; border: none; font-weight: bold;
+            cursor: pointer; transition: 0.2s; font-size: 14px; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-toggle { background: rgba(255,255,255,0.1); color: white; }
+        .btn-toggle.on { background: #334155; color: #fff; }
+        .btn-toggle.off { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; }
+        .btn-main { background: var(--btn-green); color: white; }
+        .btn-main.active { background: #eab308; }
+
+        .extra-stats { color: var(--text-dim); font-size: 13px; display: flex; gap: 20px; }
+
+        /* Chat Section */
+        #chat-sidebar {
+            width: 400px;
+            background: var(--sidebar-bg);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        #chat-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: bold; }
+        #chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        
+        .msg { display: flex; gap: 12px; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .user-icon { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: #334155; display: grid; place-items: center; font-size: 12px; }
+        .msg-body { display: flex; flex-direction: column; gap: 2px; }
+        .user-name { font-size: 13px; font-weight: bold; color: var(--text-dim); }
+        .msg-content { font-size: 14px; line-height: 1.5; color: #e2e8f0; }
+
+        .msg.sc { background: var(--sc-7); padding: 12px; border-radius: 12px; color: white; flex-direction: column; }
+        .sc-header { display: flex; justify-content: space-between; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; margin-bottom: 6px; }
+
+        #transcript-overlay {
+            position: absolute; bottom: 20px; left: 20px; right: 20px;
+            background: rgba(0,0,0,0.5); color: var(--btn-green);
+            padding: 8px 15px; border-radius: 8px; font-style: italic; font-size: 14px;
+            display: none;
+        }
+
+        .sc-banner {
+            background: var(--sc-7); padding: 20px; border-radius: 15px; text-align: center;
+            animation: scPop 5s forwards; color: white; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+        @keyframes scPop {
+            0% { opacity: 0; transform: translateY(-50px) scale(0.9); }
+            10%, 90% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <div id="main-stage">
+        <div id="video-container">
+            <video id="camera-feed" autoplay playsinline muted></video>
+            <img id="character-overlay" src="" alt="Character">
+            
+            <div id="standby-card">
+                <div class="standby-tag">● 配信枠サムネ（ダミー）</div>
+                <h1 id="standby-title" class="standby-title">雑談配信</h1>
+                <p class="standby-desc">まったり話しつつ、ゆるく作業したり、質問も歓迎の配信枠です。</p>
+                <div class="standby-hashtags">
+                    <span>#雑談枠</span> <span>#配信枠</span> <span>#作業BGM</span>
+                </div>
+            </div>
+
+            <div class="overlay-top">
+                <div class="live-info">
+                    <div class="live-badge">LIVE</div>
+                    <div class="stats-badge" id="v-count">視聴者 120</div>
+                </div>
+                <button id="btn-cam-toggle" class="btn-toggle off">カメラOFF</button>
+            </div>
+
+            <div id="sc-display-area"></div>
+            <div id="transcript-overlay"></div>
+        </div>
+
+        <div id="bottom-bar">
+            <div class="main-controls">
+                <button id="btn-start" class="btn-main">🎙️ 配信開始</button>
+                <button id="btn-mic-toggle" class="btn-toggle off" disabled>マイクOFF</button>
+                <div class="btn-group">
+                    <button id="btn-char-upload" class="btn-toggle">立ち絵選択</button>
+                    <input type="file" id="char-file-input" style="display:none" accept="image/*">
+                    <select id="char-pos-select" style="background:#334155; color:white; border:none; border-radius:10px; padding:0 10px;">
+                        <option value="pos-center">真ん中</option>
+                        <option value="pos-right">右下</option>
+                        <option value="pos-left">左下</option>
+                    </select>
+                </div>
+                <input type="text" id="stream-title" placeholder="配信タイトルを入力 (例: 作業配信...)">
+                <input type="password" id="api-key" placeholder="Gemini API Key" style="width: 130px;">
+                <label style="font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 5px;">
+                    <input type="checkbox" id="offline-mode"> ｵﾌﾗｲﾝ
+                </label>
+            </div>
+            <div class="extra-stats">
+                <div>高評価 <span id="like-count">0</span></div>
+                <div>遅延: 低遅延</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-sidebar">
+        <div id="chat-header">チャット 上位のチャット</div>
+        <div id="chat-messages"></div>
+        <div id="chat-input-area" style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px;">
+            <input type="text" id="user-msg-input" placeholder="メッセージを入力" style="background: rgba(0,0,0,0.3); border-radius: 20px;">
+            <button id="btn-send-msg" style="background: var(--btn-green); width: 40px; height: 40px; padding: 0; border-radius: 50%; display: grid; place-items: center;">✈️</button>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const btnStart = document.getElementById('btn-start');
+        const btnSendMsg = document.getElementById('btn-send-msg');
+        const userMsgInput = document.getElementById('user-msg-input');
+        const btnCam = document.getElementById('btn-cam-toggle');
+        const btnMic = document.getElementById('btn-mic-toggle');
+        const titleInput = document.getElementById('stream-title');
+        const standbyTitle = document.getElementById('standby-title');
+        const standbyCard = document.getElementById('standby-card');
+        const video = document.getElementById('camera-feed');
+        const charOverlay = document.getElementById('character-overlay');
+        const charFileInput = document.getElementById('char-file-input');
+        const charUploadBtn = document.getElementById('btn-char-upload');
+        const charPosSelect = document.getElementById('char-pos-select');
+        const transcriptOverlay = document.getElementById('transcript-overlay');
+        const apiKeyInput = document.getElementById('api-key');
+        const offlineToggle = document.getElementById('offline-mode');
+        const viewerDisplay = document.getElementById('v-count');
+        const likeDisplay = document.getElementById('like-count');
+        const scArea = document.getElementById('sc-display-area');
+
+        let isStreaming = false, isCamOn = false, isMicOn = false;
+        let recognition = null, currentViewers = 120, likes = 0;
+        let lastSpeechTime = Date.now(), streamTitle = "雑談配信";
+
+        // Constants for Offline Mode
+        const genericComments = ["きたあああ", "待ってたｗ", "888888", "たすかる", "草", "てぇてぇ", "かわいい", "わかる", "神配信かよ"];
+        const randomNames = ["名無し", "通りすがり", "常連", "ROM専", "石油王", "切り抜きの人", "海外ニキ", "社畜リスナー"];
+
+        // Web Speech API
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'ja-JP';
+            recognition.onresult = (e) => {
+                let text = '';
+                for (let i = e.resultIndex; i < e.results.length; ++i) text += e.results[i][0].transcript;
+                transcriptOverlay.textContent = text;
+                transcriptOverlay.style.display = 'block';
+                lastSpeechTime = Date.now();
+                if (e.results[e.results.length-1].isFinal) {
+                    if (offlineToggle.checked) generateOfflineResponse(text);
+                    else generateAIResponse(text);
+                }
+            };
+        }
+
+        btnCam.onclick = async () => {
+            if (!isCamOn) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    standbyCard.style.display = 'none';
+                    btnCam.textContent = "カメラON";
+                    btnCam.classList.replace('off', 'on');
+                    isCamOn = true;
+                } catch (e) { alert("カメラが見つかりません"); }
+            } else {
+                const tracks = video.srcObject.getTracks();
+                tracks.forEach(t => t.stop());
+                video.style.display = 'none';
+                standbyCard.style.display = 'flex';
+                btnCam.textContent = "カメラOFF";
+                btnCam.classList.replace('on', 'off');
+                isCamOn = false;
+            }
+        };
+
+        btnMic.onclick = () => {
+            if (!isMicOn) {
+                recognition.start();
+                btnMic.textContent = "マイクON";
+                btnMic.classList.replace('off', 'on');
+                isMicOn = true;
+            } else {
+                recognition.stop();
+                btnMic.textContent = "マイクOFF";
+                btnMic.classList.replace('on', 'off');
+                isMicOn = false;
+                transcriptOverlay.style.display = 'none';
+            }
+        };
+
+        charUploadBtn.onclick = () => charFileInput.click();
+        charFileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                charOverlay.src = url;
+                charOverlay.style.display = 'block';
+            }
+        };
+        charPosSelect.onchange = (e) => {
+            charOverlay.className = e.target.value;
+        };
+
+        btnStart.onclick = () => {
+            if (isStreaming) { location.reload(); return; }
+            if (!offlineToggle.checked && !apiKeyInput.value) { alert("API Keyを入力してください"); return; }
+            
+            isStreaming = true;
+            streamTitle = titleInput.value || "雑談配信";
+            standbyTitle.textContent = streamTitle;
+            btnStart.textContent = "⏹️ 配信終了";
+            btnStart.classList.add('active');
+            btnMic.disabled = false;
+            
+            addMessage("System", `「${streamTitle}」を開始しました。`);
+            startDynamics();
+        };
+
+        btnSendMsg.onclick = () => {
+            const text = userMsgInput.value.trim();
+            if (!text || !isStreaming) return;
+            addMessage("あなた", text, true);
+            userMsgInput.value = "";
+            
+            // Generate listener response after delay
+            setTimeout(() => {
+                if (offlineToggle.checked) generateOfflineResponse(text);
+                else generateAIResponse(`配信者のチャット：「${text}」`);
+            }, 1000 + Math.random() * 2000);
+        };
+
+        userMsgInput.onkeydown = (e) => { if(e.key === 'Enter') btnSendMsg.click(); };
+
+        async function generateAIResponse(text) {
+            const apiKey = apiKeyInput.value;
+            const prompt = `リスナー5人の反応（15字以内）を作れ。タイトル:「${streamTitle}」。発言:「${text}」。たまに「【スパチャ1000円】内容」形式で投げ銭を混ぜろ。ネットスラング(草,w,てぇてぇ等)歓迎。形式「名前：コメント」`;
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                const data = await res.json();
+                const lines = data.candidates[0].content.parts[0].text.split('\n').filter(l => l.includes(':') || l.includes('：'));
+                lines.forEach((l, i) => {
+                    setTimeout(() => {
+                        const [name, content] = l.split(/[：:]/);
+                        processComment(name.trim(), content.trim());
+                    }, i * 800 + Math.random() * 500);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        function generateOfflineResponse(text) {
+            if (Math.random() > 0.8) return; // 20% chance to ignore
+            const responseCount = Math.floor(Math.random() * 3) + 1;
+            for (let i = 0; i < responseCount; i++) {
+                setTimeout(() => {
+                    const name = randomNames[Math.floor(Math.random() * randomNames.length)];
+                    const content = genericComments[Math.floor(Math.random() * genericComments.length)];
+                    processComment(name, content);
+                }, i * 1000 + Math.random() * 1000);
+            }
+        }
+
+        function processComment(name, content) {
+            if (content.includes('【スパチャ')) {
+                const match = content.match(/(\d+)円/);
+                const amount = match ? parseInt(match[1]) : 1000;
+                const clean = content.replace(/【.*?】/, '').trim();
+                if (amount >= 5000 && Math.random() > 0.1) addMessage(name, clean);
+                else addSC(name, amount, clean);
+            } else {
+                addMessage(name, content);
+            }
+            if (Math.random() > 0.7) { likes += Math.floor(Math.random()*3); likeDisplay.textContent = likes; }
+        }
+
+        function addMessage(name, content, isOwner = false) {
+            const div = document.createElement('div');
+            div.className = 'msg';
+            const iconBg = isOwner ? 'var(--accent)' : '#334155';
+            const nameColor = isOwner ? 'var(--accent)' : 'var(--text-dim)';
+            div.innerHTML = `<div class="user-icon" style="background:${iconBg}">${isOwner ? '👑' : name[0]}</div><div class="msg-body"><div class="user-name" style="color:${nameColor}">${name}</div><div class="msg-content">${content}</div></div>`;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addSC(name, amount, content) {
+            const colors = [null, '#1565c0', '#00b8d4', '#00bfa5', '#fbc02d', '#e65100', '#c2185b', '#d32f2f'];
+            let level = 1;
+            if(amount >= 10000) level = 7; else if(amount >= 5000) level = 6; else if(amount >= 2000) level = 5; else if(amount >= 1000) level = 4;
+            const color = colors[level];
+
+            const div = document.createElement('div');
+            div.className = 'msg sc';
+            div.style.background = color;
+            if(level === 4) div.style.color = 'black';
+            div.innerHTML = `<div class="sc-header"><span>${name}</span><span>￥${amount.toLocaleString()}</span></div><div class="msg-content">${content}</div>`;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            const banner = document.createElement('div');
+            banner.className = 'sc-banner';
+            banner.style.background = color;
+            if(level === 4) banner.style.color = 'black';
+            banner.innerHTML = `<div style="font-size:14px">${name}</div><div class="amount">￥${amount.toLocaleString()}</div><div>${content}</div>`;
+            scArea.innerHTML = ''; scArea.appendChild(banner);
+            setTimeout(() => {
+                for(let i=0; i<3; i++) setTimeout(() => addMessage(randomNames[i], "ナイスパ！"), i*400);
+            }, 1000);
+            likes += Math.floor(amount/100); likeDisplay.textContent = likes;
+        }
+
+        function startDynamics() {
+            setInterval(() => {
+                if (!isStreaming) return;
+                const silence = (Date.now() - lastSpeechTime) / 1000;
+                if (silence < 5) currentViewers += Math.floor(Math.random() * 5);
+                else if (silence > 15) currentViewers -= Math.floor(Math.random() * 3);
+                if (currentViewers < 50) currentViewers = 50;
+                viewerDisplay.textContent = `視聴者 ${currentViewers.toLocaleString()}`;
+                if (Math.random() > 0.8) likes++; likeDisplay.textContent = likes;
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
