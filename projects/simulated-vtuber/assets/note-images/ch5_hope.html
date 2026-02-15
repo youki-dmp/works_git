@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body { background: #0c0a09; display: grid; place-items: center; height: 100vh; margin: 0; }
+.window { position: relative; width: 400px; height: 300px; background: #1c1917; border-radius: 10px; border: 4px solid #44403c; overflow: hidden; }
+.city { position: absolute; bottom: 0; width: 100%; height: 60%; background: linear-gradient(transparent, #000); }
+.light { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #fde68a; box-shadow: 0 0 10px #fbbf24; }
+.room-glow { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(251, 191, 36, 0.1), transparent 70%); }
+.hope-text { position: absolute; bottom: 20px; left: 20px; color: #78716c; font-size: 14px; font-family: sans-serif; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="room-glow"></div>
+  <!-- Random lights -->
+  <div class="light" style="bottom: 50px; left: 100px; opacity: 0.8;"></div>
+  <div class="light" style="bottom: 70px; left: 250px; opacity: 0.6;"></div>
+  <div class="light" style="bottom: 30px; left: 180px; opacity: 0.9;"></div>
+  <div class="light" style="bottom: 90px; left: 50px; opacity: 0.5;"></div>
+  <div class="city"></div>
+  <div class="hope-text">"Next stream soon..." The world feels smaller now.</div>
+</div>
+</body>
+</html>

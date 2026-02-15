@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body { background: #0f172a; color: white; font-family: sans-serif; display: grid; place-items: center; height: 100vh; margin: 0; }
+.diagram { display: flex; align-items: center; gap: 40px; }
+.box { border: 2px solid #FFD700; padding: 20px; border-radius: 10px; text-align: center; width: 150px; background: rgba(255, 215, 0, 0.1); }
+.arrow { font-size: 40px; color: #94a3b8; }
+.highlight { color: #FFD700; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="diagram">
+  <div class="box">🎤<br><br>ユーザーの音声<br><span style="font-size: 10px;">(Web Speech API)</span></div>
+  <div class="arrow">→</div>
+  <div class="box">🧠<br><br><span class="highlight">Gemini 1.5 Flash</span><br><span style="font-size: 10px;">AIリスナーの思考</span></div>
+  <div class="arrow">→</div>
+  <div class="box">💬<br><br>リアルタイム<br>チャット演出<br><span style="font-size: 10px;">(Vanilla JS/CSS)</span></div>
+</div>
+</body>
+</html>
