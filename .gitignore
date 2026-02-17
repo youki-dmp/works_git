@@ -4,6 +4,11 @@
 .venv/
 venv/
 .env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Voicevox Changer Models
 apps/voicevox-changer/model/*.pth
