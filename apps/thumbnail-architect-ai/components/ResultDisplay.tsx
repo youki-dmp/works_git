@@ -219,6 +219,27 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
     ? finalImages[selectedFinalIndex].url
     : (finalImages.length > 0 ? finalImages[0].url : (selectedDraftIndex !== null ? draftImages[selectedDraftIndex] : null));
 
+  // 匠のインサイト・ダイレクト・アクション：添削結果を解析してボタン化
+  const parseCritiquePoints = (text: string | null) => {
+    if (!text) return [];
+    // 箇条書きや番号付きリストを抽出（1. XXX, - XXX, ・XXX など）
+    const lines = text.split('\n');
+    return lines
+      .map(line => line.trim())
+      .filter(line => /^(\d+\.|[-・*])\s+/.test(line))
+      .map(line => line.replace(/^(\d+\.|[-・*])\s+/, ''));
+  };
+
+  const applyCritiqueSuggestion = (suggestion: string) => {
+    setBrushupInstruction(prev => {
+      const separator = prev ? "\n" : "";
+      return `${prev}${separator}【添削反映】${suggestion}`;
+    });
+    // スムーズな遷移のため、textareaへスクロール
+    const textarea = document.querySelector('textarea');
+    textarea?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
   const prevLengthRef = useRef(finalImages.length);
   useEffect(() => {
     if (finalImages.length > prevLengthRef.current) {
@@ -230,6 +251,8 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
       setSelectedFinalIndex(0);
     }
   }, [finalImages, selectedFinalIndex]);
+
+  const critiquePoints = parseCritiquePoints(critique);
 
   return (
     <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_30px_60px_rgba(0,0,0,0.05)] h-full flex flex-col overflow-hidden">
@@ -314,6 +337,67 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
                   </div>
                 ))}
               </div>
+
+              {/* AI Critique Section */}
+              {selectedDraftIndex !== null && (
+                <div className="pt-6">
+                  {!critique && !isCritiquing ? (
+                    <button
+                      onClick={handleCritique}
+                      className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm group"
+                    >
+                      <Search className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                      プロ視点でこの案を添削（AI Critique）
+                    </button>
+                  ) : (
+                    <div className="bg-slate-50 border border-slate-100 rounded-[2rem] p-8 space-y-6 animate-in slide-in-from-top-4 duration-500">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center">
+                          <Eye className="w-4 h-4 mr-2 text-indigo-500" /> AI Insights & Critique
+                        </h4>
+                        {isCritiquing && <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />}
+                      </div>
+
+                      {isCritiquing ? (
+                        <div className="flex items-center gap-4 py-4">
+                          <div className="flex gap-1">
+                            <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                            <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '200ms' }}></div>
+                            <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '400ms' }}></div>
+                          </div>
+                          <p className="text-xs font-semibold text-slate-500">匠の視点で微調整ポイントを抽出中...</p>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {critiquePoints.map((point, i) => (
+                            <button
+                              key={i}
+                              onClick={() => applyCritiqueSuggestion(point)}
+                              className="group relative bg-white border border-slate-100 p-5 rounded-2xl text-left hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10 transition-all active:scale-[0.98]"
+                            >
+                              <div className="flex items-start gap-3">
+                                <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                  <CheckCircle className="w-3.5 h-3.5" />
+                                </div>
+                                <p className="text-xs font-bold text-slate-700 leading-relaxed group-hover:text-indigo-900">{point}</p>
+                              </div>
+                              <div className="mt-3 flex items-center justify-end">
+                                <span className="text-[8px] font-black text-slate-300 group-hover:text-indigo-500 uppercase tracking-widest">修正指示に反映</span>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {!isCritiquing && (
+                        <button onClick={handleCritique} className="text-[9px] font-bold text-slate-400 hover:text-indigo-600 flex items-center gap-1 transition-colors">
+                          <RefreshCw className="w-3 h-3" /> 再添削
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
