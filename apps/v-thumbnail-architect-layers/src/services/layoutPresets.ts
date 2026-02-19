@@ -7,6 +7,7 @@ export const LAYOUT_PRESETS: LayoutPreset[] = [
     name: '王道左配置',
     category: 'chat',
     description: '左上に大きくタイトル、右側に立ち絵を配置。',
+    badgeType: 'classic',
     layerStyles: {
       character: { right: '0', bottom: '0', transform: 'scale(1.1)', transformOrigin: 'bottom right' },
       text: { top: '15%', left: '8%', width: '50%', textAlign: 'left', fontSize: '5rem', fontWeight: '900' },
@@ -27,6 +28,7 @@ export const LAYOUT_PRESETS: LayoutPreset[] = [
     name: '垂直和風',
     category: 'chat',
     description: '縦書きの和風レイアウト。',
+    badgeType: 'trend',
     layerStyles: {
       character: { right: '10%', bottom: '0' },
       text: { top: '10%', left: '5%', writingMode: 'vertical-rl', fontSize: '4rem', fontWeight: '900' },
@@ -87,6 +89,7 @@ export const LAYOUT_PRESETS: LayoutPreset[] = [
     name: '斜めストライプ',
     category: 'chat',
     description: '躍動感のあるストライプ背景。',
+    badgeType: 'hi-ctr',
     layerStyles: {
       character: { right: '0', bottom: '0' },
       text: { top: '30%', left: '10%', transform: 'rotate(-10deg)', fontSize: '6rem', backgroundColor: 'yellow', color: 'black' },
@@ -191,6 +194,7 @@ export const LAYOUT_PRESETS: LayoutPreset[] = [
     name: 'アクションスプラッシュ',
     category: 'gaming',
     description: 'ペンキの飛沫と力強い文字。',
+    badgeType: 'hi-ctr',
     layerStyles: {
       character: { right: '5%', bottom: '0', transform: 'rotate(5deg)' },
       text: { top: '15%', left: '5%', fontSize: '6rem', fontWeight: 'black', textShadow: '5px 5px 0 red' },
@@ -303,6 +307,7 @@ export const LAYOUT_PRESETS: LayoutPreset[] = [
     name: '重大発表インパクト',
     category: 'announcement',
     description: '視線を釘付けにする警告色。',
+    badgeType: 'trend',
     layerStyles: {
       character: { left: '50%', bottom: '0', transform: 'translateX(-50%)', zIndex: 1 },
       text: { top: '20%', width: '100%', textAlign: 'center', fontSize: '8rem', backgroundColor: 'black', color: 'yellow', zIndex: 2 },

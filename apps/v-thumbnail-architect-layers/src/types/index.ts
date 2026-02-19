@@ -20,6 +20,7 @@ export interface LayoutPreset {
   name: string;
   category: 'chat' | 'singing' | 'gaming' | 'announcement';
   description: string;
+  badgeType?: 'hi-ctr' | 'trend' | 'classic';
   layerStyles: Record<string, React.CSSProperties>;
 }
 

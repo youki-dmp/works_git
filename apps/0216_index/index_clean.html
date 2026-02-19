@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html><head><!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+<!-- End Google Tag Manager --><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link href="data:," rel="icon"><meta content="noindex,nofollow,noarchive" name="robots"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><script>window.addEventListener('load', function() {
+ const nodelist = document.body.querySelectorAll('.sb-bg-gum-marker');
+ const node = Array.prototype.slice.call(nodelist, 0);
+ if (node.length === 0) { return; }
+ const windowHeight = window.innerHeight || document.body.clientHeight;
+ window.addEventListener('scroll', function (event) {
+ let scroll = (window.pageYOffset !== undefined) ? window.pageYOffset : document.documentElement.scrollTop;
+ node.forEach(function(marker) {
+ let position = marker.offsetTop - windowHeight + 50;
+ if (scroll > position) {
+ marker.classList.add('animated', 'sb-bg-gum-marker-animated');
+ marker.classList.remove('sb-bg-gum-marker');
+ }
+ });
+ }, false);
+});</script><script>(function() {
+'use strict';
+if (typeof window !== 'object') {
+ return;
+}
+if ('IntersectionObserver' in window &&
+ 'IntersectionObserverEntry' in window &&
+ 'intersectionRatio' in window.IntersectionObserverEntry.prototype) {
+ if (!('isIntersecting' in window.IntersectionObserverEntry.prototype)) {
+ Object.defineProperty(window.IntersectionObserverEntry.prototype,
+ 'isIntersecting', {
+ get: function () {
+ return this.intersectionRatio > 0;
+ }
+ });
+ }
+ return;
+}
+var document = window.document;
+var registry = [];
+function IntersectionObserverEntry(entry) {
+ this.time = entry.time;
+ this.target = entry.target;
+ this.rootBounds = entry.rootBounds;
+ this.boundingClientRect = entry.boundingClientRect;
+ this.intersectionRect = entry.intersectionRect || getEmptyRect();
+ this.isIntersecting = !!entry.intersectionRect;
+ var targetRect = this.boundingClientRect;
+ var targetArea = targetRect.width * targetRect.height;
+ var intersectionRect = this.intersectionRect;
+ var intersectionArea = intersectionRect.width * intersectionRect.height;
+ if (targetArea) {
+ this.intersectionRatio = Number((intersectionArea / targetArea).toFixed(4));
+ } else {
+ this.intersectionRatio = this.isIntersecting ? 1 : 0;
+ }
+}
+function IntersectionObserver(callback, opt_options) {
+ var options = opt_options || {};
+ if (typeof callback != 'function') {
+ throw new Error('callback must be a function');
+ }
+ if (options.root && options.root.nodeType != 1) {
+ throw new Error('root must be an Element');
+ }
+ this._checkForIntersections = throttle(
+ this._checkForIntersections.bind(this), this.THROTTLE_TIMEOUT);
+ this._callback = callback;
+ this._observationTargets = [];
+ this._queuedEntries = [];
+ this._rootMarginValues = this._parseRootMargin(options.rootMargin);
+ this.thresholds = this._initThresholds(options.threshold);
+ this.root = options.root || null;
+ this.rootMargin = this._rootMarginValues.map(function(margin) {
+ return margin.value + margin.unit;
+ }).join(' ');
+}
+IntersectionObserver.prototype.THROTTLE_TIMEOUT = 100;
+IntersectionObserver.prototype.POLL_INTERVAL = null;
+IntersectionObserver.prototype.USE_MUTATION_OBSERVER = true;
+IntersectionObserver.prototype.observe = function(target) {
+ var isTargetAlreadyObserved = this._observationTargets.some(function(item) {
+ return item.element == target;
+ });
+ if (isTargetAlreadyObserved) {
+ return;
+ }
+ if (!(target && target.nodeType == 1)) {
+ throw new Error('target must be an Element');
+ }
+ this._registerInstance();
+ this._observationTargets.push({element: target, entry: null});
+ this._monitorIntersections();
+ this._checkForIntersections();
+};
+IntersectionObserver.prototype.unobserve = function(target) {
+ this._observationTargets =
+ this._observationTargets.filter(function(item) {
+ return item.element != target;
+ });
+ if (!this._observationTargets.length) {
+ this._unmonitorIntersections();
+ this._unregisterInstance();
+ }
+};
+IntersectionObserver.prototype.disconnect = function() {
+ this._observationTargets = [];
+ this._unmonitorIntersections();
+ this._unregisterInstance();
+};
+IntersectionObserver.prototype.takeRecords = function() {
+ var records = this._queuedEntries.slice();
+ this._queuedEntries = [];
+ return records;
+};
+IntersectionObserver.prototype._initThresholds = function(opt_threshold) {
+ var threshold = opt_threshold || [0];
+ if (!Array.isArray(threshold)) threshold = [threshold];
+ return threshold.sort().filter(function(t, i, a) {
+ if (typeof t != 'number' || isNaN(t) || t < 0 || t > 1) {
+ throw new Error('threshold must be a number between 0 and 1 inclusively');
+ }
+ return t !== a[i - 1];
+ });
+};
+IntersectionObserver.prototype._parseRootMargin = function(opt_rootMargin) {
+ var marginString = opt_rootMargin || '0px';
+ var margins = marginString.split(/\s+/).map(function(margin) {
+ var parts = /^(-?\d*\.?\d+)(px|%)$/.exec(margin);
+ if (!parts) {
+ throw new Error('rootMargin must be specified in pixels or percent');
+ }
+ return {value: parseFloat(parts[1]), unit: parts[2]};
+ });
+ margins[1] = margins[1] || margins[0];
+ margins[2] = margins[2] || margins[0];
+ margins[3] = margins[3] || margins[1];
+ return margins;
+};
+IntersectionObserver.prototype._monitorIntersections = function() {
+ if (!this._monitoringIntersections) {
+ this._monitoringIntersections = true;
+ if (this.POLL_INTERVAL) {
+ this._monitoringInterval = setInterval(
+ this._checkForIntersections, this.POLL_INTERVAL);
+ }
+ else {
+ addEvent(window, 'resize', this._checkForIntersections, true);
+ addEvent(document, 'scroll', this._checkForIntersections, true);
+ if (this.USE_MUTATION_OBSERVER && 'MutationObserver' in window) {
+ this._domObserver = new MutationObserver(this._checkForIntersections);
+ this._domObserver.observe(document, {
+ attributes: true,
+ childList: true,
+ characterData: true,
+ subtree: true
+ });
+ }
+ }
+ }
+};
+IntersectionObserver.prototype._unmonitorIntersections = function() {
+ if (this._monitoringIntersections) {
+ this._monitoringIntersections = false;
+ clearInterval(this._monitoringInterval);
+ this._monitoringInterval = null;
+ removeEvent(window, 'resize', this._checkForIntersections, true);
+ removeEvent(document, 'scroll', this._checkForIntersections, true);
+ if (this._domObserver) {
+ this._domObserver.disconnect();
+ this._domObserver = null;
+ }
+ }
+};
+IntersectionObserver.prototype._checkForIntersections = function() {
+ var rootIsInDom = this._rootIsInDom();
+ var rootRect = rootIsInDom ? this._getRootRect() : getEmptyRect();
+ this._observationTargets.forEach(function(item) {
+ var target = item.element;
+ var targetRect = getBoundingClientRect(target);
+ var rootContainsTarget = this._rootContainsTarget(target);
+ var oldEntry = item.entry;
+ var intersectionRect = rootIsInDom && rootContainsTarget &&
+ this._computeTargetAndRootIntersection(target, rootRect);
+ var newEntry = item.entry = new IntersectionObserverEntry({
+ time: now(),
+ target: target,
+ boundingClientRect: targetRect,
+ rootBounds: rootRect,
+ intersectionRect: intersectionRect
+ });
+ if (!oldEntry) {
+ this._queuedEntries.push(newEntry);
+ } else if (rootIsInDom && rootContainsTarget) {
+ if (this._hasCrossedThreshold(oldEntry, newEntry)) {
+ this._queuedEntries.push(newEntry);
+ }
+ } else {
+ if (oldEntry && oldEntry.isIntersecting) {
+ this._queuedEntries.push(newEntry);
+ }
+ }
+ }, this);
+ if (this._queuedEntries.length) {
+ this._callback(this.takeRecords(), this);
+ }
+};
+IntersectionObserver.prototype._computeTargetAndRootIntersection =
+ function(target, rootRect) {
+ if (window.getComputedStyle(target).display == 'none') return;
+ var targetRect = getBoundingClientRect(target);
+ var intersectionRect = targetRect;
+ var parent = getParentNode(target);
+ var atRoot = false;
+ while (!atRoot) {
+ var parentRect = null;
+ var parentComputedStyle = parent.nodeType == 1 ?
+ window.getComputedStyle(parent) : {};
+ if (parentComputedStyle.display == 'none') return;
+ if (parent == this.root || parent == document) {
+ atRoot = true;
+ parentRect = rootRect;
+ } else {
+ if (parent != document.body &&
+ parent != document.documentElement &&
+ parentComputedStyle.overflow != 'visible') {
+ parentRect = getBoundingClientRect(parent);
+ }
+ }
+ if (parentRect) {
+ intersectionRect = computeRectIntersection(parentRect, intersectionRect);
+ if (!intersectionRect) break;
+ }
+ parent = getParentNode(parent);
+ }
+ return intersectionRect;
+};
+IntersectionObserver.prototype._getRootRect = function() {
+ var rootRect;
+ if (this.root) {
+ rootRect = getBoundingClientRect(this.root);
+ } else {
+ var html = document.documentElement;
+ var body = document.body;
+ rootRect = {
+ top: 0,
+ left: 0,
+ right: html.clientWidth || body.clientWidth,
+ width: html.clientWidth || body.clientWidth,
+ bottom: html.clientHeight || body.clientHeight,
+ height: html.clientHeight || body.clientHeight
+ };
+ }
+ return this._expandRectByRootMargin(rootRect);
+};
+IntersectionObserver.prototype._expandRectByRootMargin = function(rect) {
+ var margins = this._rootMarginValues.map(function(margin, i) {
+ return margin.unit == 'px' ? margin.value :
+ margin.value * (i % 2 ? rect.width : rect.height) / 100;
+ });
+ var newRect = {
+ top: rect.top - margins[0],
+ right: rect.right + margins[1],
+ bottom: rect.bottom + margins[2],
+ left: rect.left - margins[3]
+ };
+ newRect.width = newRect.right - newRect.left;
+ newRect.height = newRect.bottom - newRect.top;
+ return newRect;
+};
+IntersectionObserver.prototype._hasCrossedThreshold =
+ function(oldEntry, newEntry) {
+ var oldRatio = oldEntry && oldEntry.isIntersecting ?
+ oldEntry.intersectionRatio || 0 : -1;
+ var newRatio = newEntry.isIntersecting ?
+ newEntry.intersectionRatio || 0 : -1;
+ if (oldRatio === newRatio) return;
+ for (var i = 0; i < this.thresholds.length; i++) {
+ var threshold = this.thresholds[i];
+ if (threshold == oldRatio || threshold == newRatio ||
+ threshold < oldRatio !== threshold < newRatio) {
+ return true;
+ }
+ }
+};
+IntersectionObserver.prototype._rootIsInDom = function() {
+ return !this.root || containsDeep(document, this.root);
+};
+IntersectionObserver.prototype._rootContainsTarget = function(target) {
+ return containsDeep(this.root || document, target);
+};
+IntersectionObserver.prototype._registerInstance = function() {
+ if (registry.indexOf(this) < 0) {
+ registry.push(this);
+ }
+};
+IntersectionObserver.prototype._unregisterInstance = function() {
+ var index = registry.indexOf(this);
+ if (index != -1) registry.splice(index, 1);
+};
+function now() {
+ return window.performance && performance.now && performance.now();
+}
+function throttle(fn, timeout) {
+ var timer = null;
+ return function () {
+ if (!timer) {
+ timer = setTimeout(function() {
+ fn();
+ timer = null;
+ }, timeout);
+ }
+ };
+}
+function addEvent(node, event, fn, opt_useCapture) {
+ if (typeof node.addEventListener == 'function') {
+ node.addEventListener(event, fn, opt_useCapture || false);
+ }
+ else if (typeof node.attachEvent == 'function') {
+ node.attachEvent('on' + event, fn);
+ }
+}
+function removeEvent(node, event, fn, opt_useCapture) {
+ if (typeof node.removeEventListener == 'function') {
+ node.removeEventListener(event, fn, opt_useCapture || false);
+ }
+ else if (typeof node.detatchEvent == 'function') {
+ node.detatchEvent('on' + event, fn);
+ }
+}
+function computeRectIntersection(rect1, rect2) {
+ var top = Math.max(rect1.top, rect2.top);
+ var bottom = Math.min(rect1.bottom, rect2.bottom);
+ var left = Math.max(rect1.left, rect2.left);
+ var right = Math.min(rect1.right, rect2.right);
+ var width = right - left;
+ var height = bottom - top;
+ return (width >= 0 && height >= 0) && {
+ top: top,
+ bottom: bottom,
+ left: left,
+ right: right,
+ width: width,
+ height: height
+ };
+}
+function getBoundingClientRect(el) {
+ var rect;
+ try {
+ rect = el.getBoundingClientRect();
+ } catch (err) {
+ }
+ if (!rect) return getEmptyRect();
+ if (!(rect.width && rect.height)) {
+ rect = {
+ top: rect.top,
+ right: rect.right,
+ bottom: rect.bottom,
+ left: rect.left,
+ width: rect.right - rect.left,
+ height: rect.bottom - rect.top
+ };
+ }
+ return rect;
+}
+function getEmptyRect() {
+ return {
+ top: 0,
+ bottom: 0,
+ left: 0,
+ right: 0,
+ width: 0,
+ height: 0
+ };
+}
+function containsDeep(parent, child) {
+ var node = child;
+ while (node) {
+ if (node == parent) return true;
+ node = getParentNode(node);
+ }
+ return false;
+}
+function getParentNode(node) {
+ var parent = node.parentNode;
+ if (parent && parent.nodeType == 11 && parent.host) {
+ return parent.host;
+ }
+ if (parent && parent.assignedSlot) {
+ return parent.assignedSlot.parentNode;
+ }
+ return parent;
+}
+window.IntersectionObserver = IntersectionObserver;
+window.IntersectionObserverEntry = IntersectionObserverEntry;
+}());</script><script>!function(t,n){"object"==typeof exports&&"undefined"!=typeof module?module.exports=n():"function"==typeof define&&define.amd?define(n):(t=t||self).LazyLoad=n()}(this,(function(){"use strict";function t(){return(t=Object.assign||function(t){for(var n=1;n<arguments.length;n++){var e=arguments[n];for(var i in e)Object.prototype.hasOwnProperty.call(e,i)&&(t[i]=e[i])}return t}).apply(this,arguments)}var n="undefined"!=typeof window,e=n&&!("onscroll"in window)||"undefined"!=typeof navigator&&/(gle|ing|ro)bot|crawl|spider/i.test(navigator.userAgent),i=n&&"IntersectionObserver"in window,o=n&&"classList"in document.createElement("p"),r=n&&window.devicePixelRatio>1,a={elements_selector:".lazy",container:e||n?document:null,threshold:300,thresholds:null,data_src:"src",data_srcset:"srcset",data_sizes:"sizes",data_bg:"bg",data_bg_hidpi:"bg-hidpi",data_bg_multi:"bg-multi",data_bg_multi_hidpi:"bg-multi-hidpi",data_poster:"poster",class_applied:"applied",class_loading:"loading",class_loaded:"loaded",class_error:"error",class_entered:"entered",class_exited:"exited",unobserve_completed:!0,unobserve_entered:!1,cancel_on_exit:!0,callback_enter:null,callback_exit:null,callback_applied:null,callback_loading:null,callback_loaded:null,callback_error:null,callback_finish:null,callback_cancel:null,use_native:!1},c=function(n){return t({},a,n)},s=function(t,n){var e,i="LazyLoad::Initialized",o=new t(n);try{e=new CustomEvent(i,{detail:{instance:o}})}catch(t){(e=document.createEvent("CustomEvent")).initCustomEvent(i,!1,!1,{instance:o})}window.dispatchEvent(e)},l="loading",u="loaded",d="applied",f="error",_="native",g="data-",v="ll-status",p=function(t,n){return t.getAttribute(g+n)},b=function(t){return p(t,v)},h=function(t,n){return function(t,n,e){var i="data-ll-status";null!==e?t.setAttribute(i,e):t.removeAttribute(i)}(t,0,n)},m=function(t){return h(t,null)},E=function(t){return null===b(t)},y=function(t){return b(t)===_},A=[l,u,d,f],I=function(t,n,e,i){t&&(void 0===i?void 0===e?t(n):t(n,e):t(n,e,i))},L=function(t,n){o?t.classList.add(n):t.className+=(t.className?" ":"")+n},w=function(t,n){o?t.classList.remove(n):t.className=t.className.replace(new RegExp("(^|\\s+)"+n+"(\\s+|$)")," ").replace(/^\s+/,"").replace(/\s+$/,"")},k=function(t){return t.llTempImage},O=function(t,n){if(n){var e=n._observer;e&&e.unobserve(t)}},x=function(t,n){t&&(t.loadingCount+=n)},z=function(t,n){t&&(t.toLoadCount=n)},C=function(t){for(var n,e=[],i=0;n=t.children[i];i+=1)"SOURCE"===n.tagName&&e.push(n);return e},N=function(t,n,e){e&&t.setAttribute(n,e)},M=function(t,n){t.removeAttribute(n)},R=function(t){return!!t.llOriginalAttrs},G=function(t){if(!R(t)){var n={};n.src=t.getAttribute("src"),n.srcset=t.getAttribute("srcset"),n.sizes=t.getAttribute("sizes"),t.llOriginalAttrs=n}},T=function(t){if(R(t)){var n=t.llOriginalAttrs;N(t,"src",n.src),N(t,"srcset",n.srcset),N(t,"sizes",n.sizes)}},j=function(t,n){N(t,"sizes",p(t,n.data_sizes)),N(t,"srcset",p(t,n.data_srcset)),N(t,"src",p(t,n.data_src))},D=function(t){M(t,"src"),M(t,"srcset"),M(t,"sizes")},F=function(t,n){var e=t.parentNode;e&&"PICTURE"===e.tagName&&C(e).forEach(n)},P={IMG:function(t,n){F(t,(function(t){G(t),j(t,n)})),G(t),j(t,n)},IFRAME:function(t,n){N(t,"src",p(t,n.data_src))},VIDEO:function(t,n){!function(t,e){C(t).forEach((function(t){N(t,"src",p(t,n.data_src))}))}(t),N(t,"poster",p(t,n.data_poster)),N(t,"src",p(t,n.data_src)),t.load()}},S=function(t,n){var e=P[t.tagName];e&&e(t,n)},V=function(t,n,e){x(e,1),L(t,n.class_loading),h(t,l),I(n.callback_loading,t,e)},U=["IMG","IFRAME","VIDEO"],$=function(t,n){!n||function(t){return t.loadingCount>0}(n)||function(t){return t.toLoadCount>0}(n)||I(t.callback_finish,n)},q=function(t,n,e){t.addEventListener(n,e),t.llEvLisnrs[n]=e},H=function(t,n,e){t.removeEventListener(n,e)},B=function(t){return!!t.llEvLisnrs},J=function(t){if(B(t)){var n=t.llEvLisnrs;for(var e in n){var i=n[e];H(t,e,i)}delete t.llEvLisnrs}},K=function(t,n,e){!function(t){delete t.llTempImage}(t),x(e,-1),function(t){t&&(t.toLoadCount-=1)}(e),w(t,n.class_loading),n.unobserve_completed&&O(t,e)},Q=function(t,n,e){var i=k(t)||t;B(i)||function(t,n,e){B(t)||(t.llEvLisnrs={});var i="VIDEO"===t.tagName?"loadeddata":"load";q(t,i,n),q(t,"error",e)}(i,(function(o){!function(t,n,e,i){var o=y(n);K(n,e,i),L(n,e.class_loaded),h(n,u),I(e.callback_loaded,n,i),o||$(e,i)}(0,t,n,e),J(i)}),(function(o){!function(t,n,e,i){var o=y(n);K(n,e,i),L(n,e.class_error),h(n,f),I(e.callback_error,n,i),o||$(e,i)}(0,t,n,e),J(i)}))},W=function(t,n,e){!function(t){t.llTempImage=document.createElement("IMG")}(t),Q(t,n,e),function(t,n,e){var i=p(t,n.data_bg),o=p(t,n.data_bg_hidpi),a=r&&o?o:i;a&&(t.style.backgroundImage='url("'.concat(a,'")'),k(t).setAttribute("src",a),V(t,n,e))}(t,n,e),function(t,n,e){var i=p(t,n.data_bg_multi),o=p(t,n.data_bg_multi_hidpi),a=r&&o?o:i;a&&(t.style.backgroundImage=a,function(t,n,e){L(t,n.class_applied),h(t,d),n.unobserve_completed&&O(t,n),I(n.callback_applied,t,e)}(t,n,e))}(t,n,e)},X=function(t,n,e){!function(t){return U.indexOf(t.tagName)>-1}(t)?W(t,n,e):function(t,n,e){Q(t,n,e),S(t,n),V(t,n,e)}(t,n,e)},Y=["IMG","IFRAME"],Z=function(t){return t.use_native&&"loading"in HTMLImageElement.prototype},tt=function(t,n,e){t.forEach((function(t){return function(t){return t.isIntersecting||t.intersectionRatio>0}(t)?function(t,n,e,i){h(t,"entered"),L(t,e.class_entered),w(t,e.class_exited),function(t,n,e){n.unobserve_entered&&O(t,e)}(t,e,i),I(e.callback_enter,t,n,i),function(t){return A.indexOf(b(t))>=0}(t)||X(t,e,i)}(t.target,t,n,e):function(t,n,e,i){E(t)||(L(t,e.class_exited),function(t,n,e,i){e.cancel_on_exit&&function(t){return b(t)===l}(t)&&"IMG"===t.tagName&&(J(t),function(t){F(t,(function(t){D(t)})),D(t)}(t),function(t){F(t,(function(t){T(t)})),T(t)}(t),w(t,e.class_loading),x(i,-1),m(t),I(e.callback_cancel,t,n,i))}(t,n,e,i),I(e.callback_exit,t,n,i))}(t.target,t,n,e)}))},nt=function(t){return Array.prototype.slice.call(t)},et=function(t){return t.container.querySelectorAll(t.elements_selector)},it=function(t){return function(t){return b(t)===f}(t)},ot=function(t,n){return function(t){return nt(t).filter(E)}(t||et(n))},rt=function(t,e){var o=c(t);this._settings=o,this.loadingCount=0,function(t,n){i&&!Z(t)&&(n._observer=new IntersectionObserver((function(e){tt(e,t,n)}),function(t){return{root:t.container===document?null:t.container,rootMargin:t.thresholds||t.threshold+"px"}}(t)))}(o,this),function(t,e){n&&window.addEventListener("online",(function(){!function(t,n){var e;(e=et(t),nt(e).filter(it)).forEach((function(n){w(n,t.class_error),m(n)})),n.update()}(t,e)}))}(o,this),this.update(e)};return rt.prototype={update:function(t){var n,o,r=this._settings,a=ot(t,r);z(this,a.length),!e&&i?Z(r)?function(t,n,e){t.forEach((function(t){-1!==Y.indexOf(t.tagName)&&(t.setAttribute("loading","lazy"),function(t,n,e){Q(t,n,e),S(t,n),h(t,_)}(t,n,e))})),z(e,0)}(a,r,this):(o=a,function(t){t.disconnect()}(n=this._observer),function(t,n){n.forEach((function(n){t.observe(n)}))}(n,o)):this.loadAll(a)},destroy:function(){this._observer&&this._observer.disconnect(),et(this._settings).forEach((function(t){delete t.llOriginalAttrs})),delete this._observer,delete this._settings,delete this.loadingCount,delete this.toLoadCount},loadAll:function(t){var n=this,e=this._settings;ot(t,e).forEach((function(t){O(t,n),X(t,e,n)}))}},rt.load=function(t,n){var e=c(n);X(t,e)},rt.resetStatus=function(t){m(t)},n&&function(t,n){if(n)if(n.length)for(var e,i=0;e=n[i];i+=1)s(t,e);else s(t,n)}(rt,window.lazyLoadOptions),rt}));</script><script>window.addEventListener('load', function() {
+ var scroll = new SmoothScroll('a[href*="#"]', {
+ speed:1000
+ });
+});</script><style>body { cursor: default; } html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0;word-wrap:break-word}article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background-color:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:700}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-.5em}sub{bottom:-.25em}img{border:0}svg:not(:root){overflow:hidden}figure{margin:0}hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}pre{overflow:auto}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type="button"],</style><style>body { cursor: default; } body{font-size:17px;background-color:#F4F4F4;}@media screen and (min-width: 920px){body{width:620px;margin:0 auto}}body .article-header-wrapper img{max-width:100%}body .article-body{position:relative;font-size:17px;line-height:1.8;padding:15px 20px;background-color:#ffffff}body .article-body span,body .article-body p,body .article-body div,body .article-body h1,body .article-body h2,body .article-body h3,body .article-body h4,body .article-body h5,body .article-body h6{max-width:100%}body .article-body .sb-font-bold{font-weight:bold}body .article-body .sb-color-black{color:#000}body .article-body .sb-color-red{color:#ff0000}body .article-body .sb-color-blue{color:#0000ff}body .article-body .sb-align-left{display:block;text-align:left}body .article-body .sb-align-center{display:block;text-align:center}body .article-body .sb-align-right{display:block;text-align:right}body .article-body .sb-bg-gray{background:linear-gradient(to right, #eee 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, #eee 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out;background-position:bottom 0 right 100%}body .article-body .sb-bg-white{background:linear-gradient(to right, #fff 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, #fff 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out;background-position:bottom 0 right 100%}body .article-body .sb-bg-black{background:linear-gradient(to right, #000 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, #000 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out;background-position:bottom 0 right 100%}body .article-body .sb-bg-red{background:linear-gradient(to right, red 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, red 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out;background-position:bottom 0 right 100%}body .article-body .sb-bg-green{background:linear-gradient(to right, lime 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, lime 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out;background-position:bottom 0 right 100%}body .article-body .sb-bg-yellow{background:linear-gradient(to right, #ffee57 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, #ffee57 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out;background-position:bottom 0 right 100%}body .article-body .sb-bg-blue{background:linear-gradient(to right, blue 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, blue 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out;background-position:bottom 0 right 100%}body .article-body .sb-fs-10{font-size:10px}body .article-body .sb-fs-13{font-size:13px}body .article-body .sb-fs-15{font-size:15px}body .article-body .sb-fs-17{font-size:17px}body .article-body .sb-fs-19{font-size:19px}body .article-body .sb-fs-21{font-size:21px}body .article-body .sb-fs-23{font-size:23px}body .article-body .sb-fs-25{font-size:25px}body .article-body .sb-fs-27{font-size:27px}body .article-body .sb-fs-29{font-size:29px}body .article-body h2{font-size:27px;margin:0}body .article-body p{margin:0}body .article-body a{text-decoration:underline;color:#4682b4}body .article-body iframe{display:block;max-width:100%;margin-top:20px !important;margin-bottom:20px !important}body .article-body video{display:block;max-width:100%;margin-top:20px !important;margin-bottom:20px !important}body .article-body video:not(.lazyload){height:auto !important}body .article-body img:not(.lazyload){height:auto !important}body .article-body img{display:block;max-width:100%;margin-top:20px !important;margin-bottom:20px !important}body .article-body img.sb-fl{float:left;margin-right:10px}body .article-body img.sb-fc{display:block;float:none;margin:0 auto}body .article-body img.sb-fr{float:right;margin-left:10px}body .article-body img.sb-img-move-side{animation:sb_img_move_side 1s ease-in-out infinite alternate !important}@keyframes sb_img_move_side{0%{transform:translateX(-5px)}100%{transform:translateX(5px)}}body .article-body .sb-bg-gum-marker,body .article-body .sb-bg-gum-marker-animated{background:linear-gradient(to right, #ffee57 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, #ffee57 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out}body .article-body .sb-bg-gum-marker.animated,body .article-body .sb-bg-gum-marker-animated.animated{background-position:bottom 0 right 100% !important}body .article-body .sb-bg-gum-marker.sb-bg-gray,body .article-body .sb-bg-gum-marker-animated.sb-bg-gray{background:linear-gradient(to right, #eee 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, #eee 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out}body .article-body .sb-bg-gum-marker.sb-bg-gray.animated,body .article-body .sb-bg-gum-marker-animated.sb-bg-gray.animated{background-position:bottom 0 right 100%}body .article-body .sb-bg-gum-marker.sb-bg-white,body .article-body .sb-bg-gum-marker-animated.sb-bg-white{background:linear-gradient(to right, #fff 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, #fff 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out}body .article-body .sb-bg-gum-marker.sb-bg-white.animated,body .article-body .sb-bg-gum-marker-animated.sb-bg-white.animated{background-position:bottom 0 right 100%}body .article-body .sb-bg-gum-marker.sb-bg-black,body .article-body .sb-bg-gum-marker-animated.sb-bg-black{background:linear-gradient(to right, #000 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, #000 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out}body .article-body .sb-bg-gum-marker.sb-bg-black.animated,body .article-body .sb-bg-gum-marker-animated.sb-bg-black.animated{background-position:bottom 0 right 100%}body .article-body .sb-bg-gum-marker.sb-bg-red,body .article-body .sb-bg-gum-marker-animated.sb-bg-red{background:linear-gradient(to right, red 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, red 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out}body .article-body .sb-bg-gum-marker.sb-bg-red.animated,body .article-body .sb-bg-gum-marker-animated.sb-bg-red.animated{background-position:bottom 0 right 100%}body .article-body .sb-bg-gum-marker.sb-bg-green,body .article-body .sb-bg-gum-marker-animated.sb-bg-green{background:linear-gradient(to right, lime 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, lime 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out}body .article-body .sb-bg-gum-marker.sb-bg-green.animated,body .article-body .sb-bg-gum-marker-animated.sb-bg-green.animated{background-position:bottom 0 right 100%}body .article-body .sb-bg-gum-marker.sb-bg-yellow,body .article-body .sb-bg-gum-marker-animated.sb-bg-yellow{background:linear-gradient(to right, #ffee57 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, #ffee57 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out}body .article-body .sb-bg-gum-marker.sb-bg-yellow.animated,body .article-body .sb-bg-gum-marker-animated.sb-bg-yellow.animated{background-position:bottom 0 right 100%}body .article-body .sb-bg-gum-marker.sb-bg-blue,body .article-body .sb-bg-gum-marker-animated.sb-bg-blue{background:linear-gradient(to right, blue 50%, transparent 50%) 100% 0%/200% 70% no-repeat;background:-webkit-linear-gradient(left, blue 50%, transparent 50%) 100% 0%/200% 70% no-repeat;transition:background-position 1s ease-out;-webkit-transition:background-position 1s ease-out}body .article-body .sb-bg-gum-marker.sb-bg-blue.animated,body .article-body .sb-bg-gum-marker-animated.sb-bg-blue.animated{background-position:bottom 0 right 100%}body .article-body .article-body-comment{display:table;margin-bottom:1.5em;padding-bottom:1em;width:100% !important;max-width:100% !important}body .article-body .article-body-comment .comment-image,body .article-body .article-body-comment .comment-content{display:table-cell;vertical-align:top}body .article-body .article-body-comment .comment-image{padding-right:1em}body .article-body .article-body-comment .comment-image>img{display:block;height:auto;max-width:none;margin-top:0 !important;margin-bottom:0 !important}body .article-body .article-body-comment .comment-content{width:100%}body .article-body .article-body-comment .comment-content .comment-title{font-size:1em;margin:0 0 0.5em 0;font-weight:bold}body .article-body .article-body-comment .comment-content p{line-height:1.5em;margin-bottom:0.5em}body .article-body .article-body-comment .comment-content p.comment-detail{color:rgba(51,51,51,0.5);font-size:0.9em;font-style:italic}body .article-body .sb-custom img{display:block !important}body .article-body .sb-form iframe{height:0;margin:0 auto !important}</style><script>(function(self, undefined) {Object.defineProperty(Array.prototype,"values",{value:Array.prototype[Symbol.iterator],enumerable:!1,writable:!1});})('object' === typeof window && window || 'object' === typeof self && self || 'object' === typeof global && global || {});</script><style id="css-loader-styles">:root{--translate-position:var(--translate-position)}.index__overlay__jQZq-{opacity:0;background-color:#46464699;height:1px;display:flex;position:absolute;inset:-9999px 0 0;overflow:hidden}.index__overlay__jQZq-.index__active__Ts0Qr{opacity:1;z-index:999999;height:unset;position:fixed;top:0}.index__overlay__jQZq-.index__loading__kcT7C{opacity:0!important}.index__overlay__jQZq-.index__center__NfhKw{justify-content:center;align-items:center}.index__overlay__jQZq-.index__center__NfhKw .index__popupWrapper__lsUgH{margin:0 1rem}.index__overlay__jQZq-.index__top__Q1Vil{justify-content:center;align-items:flex-start}.index__overlay__jQZq-.index__top__Q1Vil .index__popupWrapper__lsUgH{margin:0 1rem}.index__overlay__jQZq-.index__top__Q1Vil .index__btnClose__rUVFZ{bottom:-10px;right:-10px;top:unset}.index__overlay__jQZq-.index__bottom__1n-ff{justify-content:center;align-items:flex-end}.index__overlay__jQZq-.index__bottom__1n-ff .index__popupWrapper__lsUgH{margin:0 1rem}.index__overlay__jQZq-.index__left__ovhyF{justify-content:flex-start;align-items:center}.index__overlay__jQZq-.index__left__ovhyF .index__popupWrapper__lsUgH{margin:0 1rem 0 0}.index__overlay__jQZq-.index__right__wBraZ{justify-content:flex-end;align-items:center}.index__overlay__jQZq-.index__right__wBraZ .index__popupWrapper__lsUgH{margin:0 0 0 1rem}.index__overlay__jQZq-.index__right__wBraZ .index__btnClose__rUVFZ{left:-10px;right:unset}.index__overlay__jQZq-.index__leftTop__PVxd1{justify-content:flex-start;align-items:flex-start}.index__overlay__jQZq-.index__leftTop__PVxd1 .index__popupWrapper__lsUgH{margin:0 1rem 0 0}.index__overlay__jQZq-.index__leftTop__PVxd1 .index__btnClose__rUVFZ{bottom:-10px;right:-10px;top:unset}.index__overlay__jQZq-.index__rightTop__-ZyRV{justify-content:flex-end;align-items:flex-start}.index__overlay__jQZq-.index__rightTop__-ZyRV .index__popupWrapper__lsUgH{margin:0 0 0 1rem}.index__overlay__jQZq-.index__rightTop__-ZyRV .index__btnClose__rUVFZ{bottom:-10px;left:-10px;right:unset;top:unset}.index__overlay__jQZq-.index__leftBottom__36pwv{justify-content:flex-start;align-items:flex-end}.index__overlay__jQZq-.index__leftBottom__36pwv .index__popupWrapper__lsUgH{margin:0 1rem 0 0}.index__overlay__jQZq-.index__rightBottom__QIwc9{justify-content:flex-end;align-items:flex-end}.index__overlay__jQZq-.index__rightBottom__QIwc9 .index__popupWrapper__lsUgH{margin:0 0 0 1rem}.index__overlay__jQZq-.index__rightBottom__QIwc9 .index__btnClose__rUVFZ{left:-10px;right:unset}.index__popupWrapper__lsUgH{max-height:100%;position:relative}.index__popupWrapper__lsUgH .index__popupAnchor__I-Y8k{display:block}.index__popupWrapper__lsUgH iframe{pointer-events:none;border:none;width:100%;max-width:100%}.index__popupWrapper__lsUgH img,.index__popupWrapper__lsUgH video{max-width:100%;height:auto}.index__btnClose__rUVFZ{text-align:center;color:#fff;z-index:100001;background-color:#0000004d;border:1px solid #fff;border-radius:24px;width:24px;height:24px;line-height:22px;position:absolute;top:-10px;right:-10px}.index__btnClose__rUVFZ:before{content:"×"}.index__btnClose__rUVFZ:hover{cursor:pointer}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy{pointer-events:all;opacity:0;width:100%;height:1px;position:fixed;top:-9999px;margin:0!important}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__active__Ts0Qr{opacity:1;z-index:999998;height:unset;top:0;top:unset;position:fixed}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__loading__kcT7C{opacity:0!important}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__center__NfhKw{top:50%;left:50%;transform:translate(-50%,-50%)}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__top__Q1Vil{top:0;left:50%;transform:translate(-50%)}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__top__Q1Vil .index__btnClose__rUVFZ{bottom:-10px;right:-10px;top:unset}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__bottom__1n-ff{bottom:0;left:50%;transform:translate(-50%)}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__left__ovhyF{top:50%;left:0;transform:translateY(-50%)}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__right__wBraZ{top:50%;right:0;transform:translateY(-50%)}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__right__wBraZ .index__btnClose__rUVFZ{left:-10px;right:unset}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__leftTop__PVxd1{top:0;left:0}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__leftTop__PVxd1 .index__btnClose__rUVFZ{bottom:-10px;right:-10px;top:unset}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__rightTop__-ZyRV{top:0;right:0}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__rightTop__-ZyRV .index__btnClose__rUVFZ{bottom:-10px;left:-10px;right:unset;top:unset}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__leftBottom__36pwv{bottom:0;left:0}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__rightBottom__QIwc9{bottom:0;right:0}.index__popupWrapper__lsUgH.index__fixedPopup__TrIiy.index__rightBottom__QIwc9 .index__btnClose__rUVFZ{left:-10px;right:unset}.index__popupAnchor__I-Y8k{display:flex}.index__blind__oN0ou .index__blindCell__wAAci:first-child,.index__blind__oN0ou .index__blindCell__wAAci:nth-child(11){clip-path:polygon(-5% -5%,25% 0%,25% 120%,-4% 100%);transform-origin:12.5% 0;animation:forwards index__blind__oN0ou}.index__blind__oN0ou .index__blindCell__wAAci:nth-child(2),.index__blind__oN0ou .index__blindCell__wAAci:nth-child(12){clip-path:polygon(25% 0,50% 0,50% 100%,24% 100%);transform-origin:25% 0;animation:forwards index__blind__oN0ou}.index__blind__oN0ou .index__blindCell__wAAci:nth-child(3),.index__blind__oN0ou .index__blindCell__wAAci:nth-child(13){clip-path:polygon(50% 0,75% 0,75% 100%,49% 100%);transform-origin:50% 0;animation:forwards index__blind__oN0ou}.index__blind__oN0ou .index__blindCell__wAAci:nth-child(4),.index__blind__oN0ou .index__blindCell__wAAci:nth-child(14){clip-path:polygon(75% -20%,105% 0,105% 100%,74% 120%);transform-origin:75% 0;animation:forwards index__blind__oN0ou}.index__blindCell__wAAci{position:absolute;top:0;left:0;transform:rotateY(270deg)}@keyframes index__blind__oN0ou{0%{transform:rotateY(270deg)}50%{transform:rotateY(380deg)}to{transform:rotateY(360deg)}}.index__entrance__K2X5f .index__entranceCell__SCTX3:first-child{clip-path:polygon(0 0,50% 0,50% 100%,0 100%);transform:var(--translate-position);transform-origin:0 0}.index__entrance__K2X5f .index__entranceCell__SCTX3:nth-child(2){clip-path:polygon(50% 0,100% 0,100% 100%,50% 100%);transform:var(--translate-position);transform-origin:100% 0}.index__entranceCell__SCTX3{transform:var(--translate-position)rotateY(360deg);animation:index__entrance__K2X5f;position:absolute;top:0;left:0}@keyframes index__entrance__K2X5f{0%{transform:var(--translate-position)rotateY(-90deg)}to{transform:var(--translate-position)rotateY(0deg)}}.index__mosaicCell__MmXZY{position:absolute;top:0;left:0;transform:rotateY(180deg)}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:first-child,.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(11){clip-path:polygon(-5% -5%,25% 0,25% 26%,0 25%);transform-origin:12.5% 0;animation:0s .52s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(2),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(12){clip-path:polygon(50% 0,25% 0,25% 26%,50% 25%);transform-origin:37.5% 0;animation:0s .32s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(3),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(13){clip-path:polygon(50% 0,75% 0,75% 26%,50% 25%);transform-origin:62.5% 0;animation:0s .35s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(4),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(14){clip-path:polygon(100% -5%,75% 0,75% 26%,115% 25%);transform-origin:87.5% 0;animation:0s 50ms forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(5),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(15){clip-path:polygon(0 50%,0 25%,25% 25%,25% 50%);transform-origin:12.5% 0;animation:0s .45s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(6),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(16){clip-path:polygon(50% 50%,50% 25%,25% 25%,25% 50%);transform-origin:37.5% 0;animation:0s .35s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(7),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(17){clip-path:polygon(50% 50%,50% 25%,75% 25%,75% 50%);transform-origin:62.5% 0;animation:0s .3s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(8),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(18){clip-path:polygon(100% 50%,100% 25%,75% 25%,75% 50%);transform-origin:87.5% 0;animation:0s 80ms forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(9),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(19){clip-path:polygon(25% 75%,25% 50%,0 50%,0 75%);transform-origin:12.5% 0;animation:0s .54s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(10),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(20){clip-path:polygon(25% 75%,25% 50%,50% 50%,50% 75%);transform-origin:37.5% 0;animation:0s .57s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(11),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(21){clip-path:polygon(75% 75%,75% 50%,50% 50%,50% 75%);transform-origin:62.5% 0;animation:0s .22s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(12),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(22){clip-path:polygon(75% 75%,75% 50%,100% 50%,100% 75%);transform-origin:87.5% 0;animation:forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(13),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(23){clip-path:polygon(25% 100%,-5% 105%,0 75%,25% 75%);transform-origin:12.5% 0;animation:0s .4s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(14),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(24){clip-path:polygon(25% 100%,50% 100%,50% 75%,25% 75%);transform-origin:37.5% 0;animation:0s .32s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(15),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(25){clip-path:polygon(75% 100%,50% 100%,50% 75%,75% 75%);transform-origin:62.5% 0;animation:0s .18s forwards index__mosaic__Bs-F9}.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(16),.index__mosaic__Bs-F9 .index__mosaicCell__MmXZY:nth-child(26){clip-path:polygon(75% 100%,100% 100%,115% 75%,75% 75%);transform-origin:87.5% 0;animation:0s .1s forwards index__mosaic__Bs-F9}@keyframes index__mosaic__Bs-F9{0%{transform:rotateY(180deg)}to{transform:rotateY(0)}}.index__swing__tOIrH{transform-origin:top;animation:index__swing__tOIrH}@keyframes index__swing__tOIrH{0%{transform:rotateX(0)}20%{transform:rotateX(480deg)}50%{transform:rotateX(300deg)}80%{transform:rotateX(400deg)}to{transform:rotateX(360deg)}}.index__twist__B-Djq .index__twistCell__55n89:first-child,.index__twist__B-Djq .index__twistCell__55n89:nth-child(11){clip-path:polygon(-5% -5%,25% 0%,25% 115%,-5% 100%);transform-origin:12.5% 0;animation:cubic-bezier(.25,.46,.45,.94) both index__twist__B-Djq;transform:rotateY(360deg)}.index__twist__B-Djq .index__twistCell__55n89:nth-child(2),.index__twist__B-Djq .index__twistCell__55n89:nth-child(12){clip-path:polygon(25% 0,50% 0,50% 100%,25% 100%);transform-origin:25% 0;animation:0s cubic-bezier(.25,.46,.45,.94) .1s both index__twist__B-Djq;transform:rotateY(360deg)}.index__twist__B-Djq .index__twistCell__55n89:nth-child(3),.index__twist__B-Djq .index__twistCell__55n89:nth-child(13){clip-path:polygon(50% 0,75% 0,75% 100%,50% 100%);transform-origin:50% 0;animation:0s cubic-bezier(.25,.46,.45,.94) .15s both index__twist__B-Djq;transform:rotateY(360deg)}.index__twist__B-Djq .index__twistCell__55n89:nth-child(4),.index__twist__B-Djq .index__twistCell__55n89:nth-child(14){clip-path:polygon(75% -15%,105% 0,105% 100%,75% 100%);transform-origin:75% 0;animation:0s cubic-bezier(.25,.46,.45,.94) 50ms both index__twist__B-Djq;transform:rotateY(360deg)}.index__twistCell__55n89{opacity:0;position:absolute;top:0;left:0}@keyframes index__twist__B-Djq{0%{opacity:0;transform:translateZ(700px)translateY(400px)translate(-800px)}to{opacity:1}}.index__swirl__Jk2-6{animation:forwards index__swirl__Jk2-6}@keyframes index__swirl__Jk2-6{0%{transform:rotate(0)}to{transform:rotate(360deg)}}</style><style>html, body, * { cursor: default !important; caret-color: transparent !important; outline: none !important; }</style></head><body><!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) --><script>function getSbCookie(name) {
+ const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+ if (match) return match[2];
+}
+function generateArticleUrl(articleUid) {
+ const currentUrl = new URL(window.location.href);
+ const currentHost = currentUrl.host;
+ const newPath = '/articles/' + articleUid;
+ const newUrl = new URL(newPath, 'https:
+ currentUrl.searchParams.forEach((value, key) => {
+ newUrl.searchParams.set(key, value);
+ });
+ return newUrl.toString();
+}
+const articleUid = "bsLi-hqTfvGOxmDog"
+window.sb_global_id = getSbCookie('_sb_global');
+window.sb_visitor_id = getSbCookie('_sb_tu');
+window.sb_article_url = generateArticleUrl(articleUid);</script><script>document.addEventListener("DOMContentLoaded", function() {
+ document.querySelector('.js-v-id').dataset.value = window.sb_visitor_id;
+});</script><div class="js-t-id" data-value="f6c17eff-3b17-4aad-89f2-23c5811fdbfe"></div><div class="js-m-id" data-value="55"></div><div class="js-v-id" data-value="64730adf-8983-4198-a5d3-75e08c3e7fe9"></div><div class="js-a-id" data-value="bsLi-hqTfvGOxmDog"></div><div class="js-ab-id" data-value="CmUIN_gBjfQThh-rYw"></div><div class="js-f-id" data-value="10e22c05-1bdc-4754-9237-d9a31dad6eb2"></div><div class="js-asp-session" data-value="{" session_id":"sad"}"="None"></div><div class="js-folder-form-host" data-value="sb-form.mysquadbeyond.com"></div><div class="js-has-funnel" data-value="false"></div><style></style><style>body { cursor: default; } 
+ body {
+}
+ .article-body {
+ font-size: 17px !important;
+ font-family: Hiragino Sans, Arial, sans-serif !important;
+ color: #000000 !important;
+ line-height: 1.8 !important;
+ padding-top: 15px !important;
+ padding-bottom: 15px !important;
+ padding-left: 20px !important;
+ padding-right: 20px !important;
+}
+ body .article-body iframe {
+}
+ body .article-body img {
+ display: unset !important;
+ margin-top: 0px !important;
+ margin-bottom: 0px !important;
+ }
+ body .article-body video {
+ display: unset !important;
+ }
+ body .article-body .sb-custom {
+ font-size: 17px !important;
+ font-family: Hiragino Sans, Arial, sans-serif !important;
+ color: #000000 !important;
+ line-height: 1.8 !important;
+ }
+ body .article-body .sb-custom img {
+ margin-top: 0px !important;
+ margin-bottom: 0px !important;
+ }</style>
+<div class="article-body">
+<div style="text-align: center;; cursor: default;"><video class="ql-video entered loaded" height="946" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/726e7e25-1c02-458d-a01e-02410b1a9d08.mp4" src="./img/726e7e25-1c02-458d-a01e-02410b1a9d08.mp4"></video></div>
+<div><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-ml0yk40pltzya3trl4j"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※成分に対して<br>※ヘアカラーロング剤の分類名であり、染色効果は2ヵ月程度。新たに生えてくる白髪には染色効果はありません。
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-ml0yk40pltzya3trl4j div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-6d40216e-7fff-4729-908b-1f8340849e28" style="text-align: center;; cursor: default;"><picture><img src="./img/8275294f-9d39-48b0-b67e-53cdbea621a6.png" class="entered loaded" height="162" width="570" data-src="./img/8275294f-9d39-48b0-b67e-53cdbea621a6.png" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-6d40216e-7fff-4729-908b-1f8340849e28"><br></div>
+<div id="docs-internal-guid-6d40216e-7fff-4729-908b-1f8340849e28" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">アンケートに答えるだけで、</span></div>
+<div id="docs-internal-guid-6d40216e-7fff-4729-908b-1f8340849e28" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">色落ちしないと話題の永久染毛剤</strong><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">が</span>
+</div>
+<div id="docs-internal-guid-6d40216e-7fff-4729-908b-1f8340849e28" style="text-align: center;; cursor: default;">
+<strong style="color: rgb(250, 87, 204); font-size: 17px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">通常の半額程度の金額</span></strong><strong style="color: rgb(0, 0, 0); font-size: 17px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">で手に入ります！</span></strong>
+</div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/22076dba-312d-4aa3-979e-8772ef6c37fb.webp" srcset="./img/22076dba-312d-4aa3-979e-8772ef6c37fb.webp"><source type="image/avif" data-srcset="./img/22076dba-312d-4aa3-979e-8772ef6c37fb.avif" srcset="./img/22076dba-312d-4aa3-979e-8772ef6c37fb.avif"><img src="./img/22076dba-312d-4aa3-979e-8772ef6c37fb.jpg" class="entered loaded" height="439" width="570" data-src="./img/22076dba-312d-4aa3-979e-8772ef6c37fb.jpg" data-ll-status="loaded"></picture></div>
+<div><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mlgaivnpert2o8r44dj"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※ヘアカラーロング剤の分類名であり、染色効果は2ヵ月程度。新たに生えてくる白髪には染色効果はありません。
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mlgaivnpert2o8r44dj div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div><div class="sb-custom"><span><div id="sb-part-4836" class="sb-custom-part-mletnmlllbvcgsq9q9b"><p class="head"><span class="point"><img src="./img/81caf2a7-d537-4872-b2a1-b145b62ab2af.png" draggable="false" height="16" width="13" class="entered loaded" data-src="./img/81caf2a7-d537-4872-b2a1-b145b62ab2af.png" data-ll-status="loaded">質問①
+ </span>白髪が気になるのはどんな時ですか？</p></div>
+<style>#sb-part-4836.sb-custom-part-mletnmlllbvcgsq9q9b .head {
+ position: relative;
+ border-top: solid 2px #f30368;
+ border-bottom: solid 2px #f30368;
+ background: #fff;
+ line-height: 2em;
+ padding: 4px 5px;
+ margin: 22px 0 5px;
+ text-align: left;
+ font-size: 24px;
+ font-weight: bold;
+}
+#sb-part-4836.sb-custom-part-mletnmlllbvcgsq9q9b .point {
+ position: absolute;
+ left: 0px;
+ bottom: 100%;
+ background: #f30368;
+ color: #fff;
+ border-radius: 5px 5px 0 0;
+ padding: 5px 7px 3px;
+ font-size: 16px;
+ font-weight: bold;
+ line-height: 1;
+ letter-spacing: 0.05em;
+ display: flex;
+ justify-content: flex-start;
+ align-items: center;
+}
+#sb-part-4836.sb-custom-part-mletnmlllbvcgsq9q9b .point img {
+ width: 13px;
+ height: 16px;
+ margin-right: 6px;
+ image-rendering: -webkit-optimize-contrast;
+}
+@media screen and (max-width:600px) {
+ #sb-part-4836.sb-custom-part-mletnmlllbvcgsq9q9b .head {
+ font-size: 20px;
+ line-height: 1.3em;
+ border-top: solid 1px #f30368;
+ border-bottom: solid 1px #f30368;
+ padding: 8px 10px;
+ }
+ #sb-part-4836.sb-custom-part-mletnmlllbvcgsq9q9b .point {
+ padding: 3px 4px 2px;
+ font-size: 11px;
+ }
+ #sb-part-4836.sb-custom-part-mletnmlllbvcgsq9q9b .point img {
+ transform: scale(0.8);
+ margin-right: 3px;
+ }
+}</style></span></div></div>
+<div><div class="sb-custom"><span><div id="sb-part-15162" class="sb-custom-part-mlevt522dh94k3ygy26"><div class="question-reveal-multi">
+<div class="questionArea"><div class="linkbox">
+<input id="q0-1" type="checkbox" name="q0"><label for="q0-1"><div class="btn">鏡を見たとき</div></label><input id="q0-2" type="checkbox" name="q0"><label for="q0-2"><div class="btn">お辞儀をしたとき</div></label><input id="q0-3" type="checkbox" name="q0"><label for="q0-3"><div class="btn">誰かに指摘されたとき</div></label>
+</div></div>
+</div></div>
+<style>#sb-part-15162.sb-custom-part-mlevt522dh94k3ygy26 .question-reveal-multi {
+ width: 750px;
+ max-width: 100%;
+ background-color: #fff;
+ margin: 0 auto;
+ padding: 16px;
+ box-sizing: border-box;
+}
+#sb-part-15162.sb-custom-part-mlevt522dh94k3ygy26 .question-reveal-multi .linkbox {
+ width: 90%;
+ text-align: left;
+ margin: 48px auto 0;
+ padding: 0;
+ box-sizing: border-box;
+}
+#sb-part-15162.sb-custom-part-mlevt522dh94k3ygy26 .question-reveal-multi input {
+ display: none;
+}
+#sb-part-15162.sb-custom-part-mlevt522dh94k3ygy26 .question-reveal-multi .linkbox input+label {
+ background: #ffffff;
+ border: 1px solid #ccc;
+ padding: 5px;
+ margin-bottom: 20px;
+ border-radius: 40px;
+ cursor: pointer;
+ box-sizing: border-box;
+ transition: background-color 0.7s;
+ display: block;
+ text-align: center;
+}
+#sb-part-15162.sb-custom-part-mlevt522dh94k3ygy26 .question-reveal-multi .linkbox input[type='radio']:checked+label,
+#sb-part-15162.sb-custom-part-mlevt522dh94k3ygy26 .question-reveal-multi .linkbox input[type='checkbox']:checked+label {
+ background: #feb8a5;
+}
+#sb-part-15162.sb-custom-part-mlevt522dh94k3ygy26 .question-reveal-multi .linkbox input+label .btn {
+ padding: 12px 8px;
+ font-weight: bold;
+ text-align: center;
+ font-size: 24px;
+ color: #5f5f5f;
+ display: inline-block;
+ box-sizing: border-box;
+ cursor: pointer;
+}
+@media screen and (max-width: 768px) {
+ #sb-part-15162.sb-custom-part-mlevt522dh94k3ygy26 .question-reveal-multi .questionArea {
+ margin-bottom: 0;
+ }
+ #sb-part-15162.sb-custom-part-mlevt522dh94k3ygy26 .question-reveal-multi .linkbox {
+ width: 100%;
+ margin: 24px auto 0;
+ }
+ #sb-part-15162.sb-custom-part-mlevt522dh94k3ygy26 .question-reveal-multi .linkbox input+label .btn {
+ font-size: 19px;
+ }
+}</style></span></div></div>
+<div><div class="sb-custom"><span><div id="sb-part-4836" class="sb-custom-part-mletzjraw6aw1n536fr"><p class="head"><span class="point"><img src="./img/81caf2a7-d537-4872-b2a1-b145b62ab2af.png" draggable="false" height="16" width="13" class="entered loaded" data-src="./img/81caf2a7-d537-4872-b2a1-b145b62ab2af.png" data-ll-status="loaded">質問②
+ </span>どんな染毛剤が欲しいですか？</p></div>
+<style>#sb-part-4836.sb-custom-part-mletzjraw6aw1n536fr .head {
+ position: relative;
+ border-top: solid 2px #f30368;
+ border-bottom: solid 2px #f30368;
+ background: #fff;
+ line-height: 2em;
+ padding: 4px 5px;
+ margin: 22px 0 5px;
+ text-align: left;
+ font-size: 24px;
+ font-weight: bold;
+}
+#sb-part-4836.sb-custom-part-mletzjraw6aw1n536fr .point {
+ position: absolute;
+ left: 0px;
+ bottom: 100%;
+ background: #f30368;
+ color: #fff;
+ border-radius: 5px 5px 0 0;
+ padding: 5px 7px 3px;
+ font-size: 16px;
+ font-weight: bold;
+ line-height: 1;
+ letter-spacing: 0.05em;
+ display: flex;
+ justify-content: flex-start;
+ align-items: center;
+}
+#sb-part-4836.sb-custom-part-mletzjraw6aw1n536fr .point img {
+ width: 13px;
+ height: 16px;
+ margin-right: 6px;
+ image-rendering: -webkit-optimize-contrast;
+}
+@media screen and (max-width:600px) {
+ #sb-part-4836.sb-custom-part-mletzjraw6aw1n536fr .head {
+ font-size: 20px;
+ line-height: 1.3em;
+ border-top: solid 1px #f30368;
+ border-bottom: solid 1px #f30368;
+ padding: 8px 10px;
+ }
+ #sb-part-4836.sb-custom-part-mletzjraw6aw1n536fr .point {
+ padding: 3px 4px 2px;
+ font-size: 11px;
+ }
+ #sb-part-4836.sb-custom-part-mletzjraw6aw1n536fr .point img {
+ transform: scale(0.8);
+ margin-right: 3px;
+ }
+}</style></span></div></div>
+<div><div class="sb-custom"><span><div id="sb-part-15162" class="sb-custom-part-mlevtzod8rotkedlzhu"><div class="question-reveal-multi">
+<div class="questionArea"><div class="linkbox">
+<input id="q1-1" type="checkbox" name="q1"><label for="q1-1"><div class="btn">手軽にすぐ染まる</div></label><input id="q1-2" type="checkbox" name="q1"><label for="q1-2"><div class="btn">髪が痛みにくい</div></label><input id="q1-3" type="checkbox" name="q1"><label for="q1-3"><div class="btn">長期間色落ちしない</div></label>
+</div></div>
+</div></div>
+<style>#sb-part-15162.sb-custom-part-mlevtzod8rotkedlzhu .question-reveal-multi {
+ width: 750px;
+ max-width: 100%;
+ background-color: #fff;
+ margin: 0 auto;
+ padding: 16px;
+ box-sizing: border-box;
+}
+#sb-part-15162.sb-custom-part-mlevtzod8rotkedlzhu .question-reveal-multi .linkbox {
+ width: 90%;
+ text-align: left;
+ margin: 48px auto 0;
+ padding: 0;
+ box-sizing: border-box;
+}
+#sb-part-15162.sb-custom-part-mlevtzod8rotkedlzhu .question-reveal-multi input {
+ display: none;
+}
+#sb-part-15162.sb-custom-part-mlevtzod8rotkedlzhu .question-reveal-multi .linkbox input+label {
+ background: #ffffff;
+ border: 1px solid #ccc;
+ padding: 5px;
+ margin-bottom: 20px;
+ border-radius: 40px;
+ cursor: pointer;
+ box-sizing: border-box;
+ transition: background-color 0.7s;
+ display: block;
+ text-align: center;
+}
+#sb-part-15162.sb-custom-part-mlevtzod8rotkedlzhu .question-reveal-multi .linkbox input[type='radio']:checked+label,
+#sb-part-15162.sb-custom-part-mlevtzod8rotkedlzhu .question-reveal-multi .linkbox input[type='checkbox']:checked+label {
+ background: #feb8a5;
+}
+#sb-part-15162.sb-custom-part-mlevtzod8rotkedlzhu .question-reveal-multi .linkbox input+label .btn {
+ padding: 12px 8px;
+ font-weight: bold;
+ text-align: center;
+ font-size: 24px;
+ color: #5f5f5f;
+ display: inline-block;
+ box-sizing: border-box;
+ cursor: pointer;
+}
+@media screen and (max-width: 768px) {
+ #sb-part-15162.sb-custom-part-mlevtzod8rotkedlzhu .question-reveal-multi .questionArea {
+ margin-bottom: 0;
+ }
+ #sb-part-15162.sb-custom-part-mlevtzod8rotkedlzhu .question-reveal-multi .linkbox {
+ width: 100%;
+ margin: 24px auto 0;
+ }
+ #sb-part-15162.sb-custom-part-mlevtzod8rotkedlzhu .question-reveal-multi .linkbox input+label .btn {
+ font-size: 19px;
+ }
+}</style></span></div></div>
+<div><div class="sb-custom"><span><div id="sb-part-4836" class="sb-custom-part-mleu0fd9292unrl7ktr"><p class="head"><span class="point"><img src="./img/81caf2a7-d537-4872-b2a1-b145b62ab2af.png" draggable="false" height="16" width="13" class="entered loaded" data-src="./img/81caf2a7-d537-4872-b2a1-b145b62ab2af.png" data-ll-status="loaded">質問③
+ </span>どの色の染毛剤を試したいですか？</p></div>
+<style>#sb-part-4836.sb-custom-part-mleu0fd9292unrl7ktr .head {
+ position: relative;
+ border-top: solid 2px #f30368;
+ border-bottom: solid 2px #f30368;
+ background: #fff;
+ line-height: 2em;
+ padding: 4px 5px;
+ margin: 22px 0 5px;
+ text-align: left;
+ font-size: 24px;
+ font-weight: bold;
+}
+#sb-part-4836.sb-custom-part-mleu0fd9292unrl7ktr .point {
+ position: absolute;
+ left: 0px;
+ bottom: 100%;
+ background: #f30368;
+ color: #fff;
+ border-radius: 5px 5px 0 0;
+ padding: 5px 7px 3px;
+ font-size: 16px;
+ font-weight: bold;
+ line-height: 1;
+ letter-spacing: 0.05em;
+ display: flex;
+ justify-content: flex-start;
+ align-items: center;
+}
+#sb-part-4836.sb-custom-part-mleu0fd9292unrl7ktr .point img {
+ width: 13px;
+ height: 16px;
+ margin-right: 6px;
+ image-rendering: -webkit-optimize-contrast;
+}
+@media screen and (max-width:600px) {
+ #sb-part-4836.sb-custom-part-mleu0fd9292unrl7ktr .head {
+ font-size: 20px;
+ line-height: 1.3em;
+ border-top: solid 1px #f30368;
+ border-bottom: solid 1px #f30368;
+ padding: 8px 10px;
+ }
+ #sb-part-4836.sb-custom-part-mleu0fd9292unrl7ktr .point {
+ padding: 3px 4px 2px;
+ font-size: 11px;
+ }
+ #sb-part-4836.sb-custom-part-mleu0fd9292unrl7ktr .point img {
+ transform: scale(0.8);
+ margin-right: 3px;
+ }
+}</style></span></div></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/cc0d9405-0f76-447b-bd5b-d7a8563c3f7e.webp" srcset="./img/cc0d9405-0f76-447b-bd5b-d7a8563c3f7e.webp"><source type="image/avif" data-srcset="./img/cc0d9405-0f76-447b-bd5b-d7a8563c3f7e.avif" srcset="./img/cc0d9405-0f76-447b-bd5b-d7a8563c3f7e.avif"><img src="./img/cc0d9405-0f76-447b-bd5b-d7a8563c3f7e.jpg" class="entered loaded" height="360" width="570" data-src="./img/cc0d9405-0f76-447b-bd5b-d7a8563c3f7e.jpg" data-ll-status="loaded"></picture></div>
+<div><div class="sb-custom"><span><div id="sb-part-15162" class="sb-custom-part-mlevupjxxsym986efor"><div class="question-reveal-multi">
+<div class="questionArea"><div class="linkbox">
+<input id="q2-1" type="checkbox" name="q2"><label for="q2-1"><div class="btn">ブラック</div></label><input id="q2-2" type="checkbox" name="q0"><label for="q2-2"><div class="btn">ダークブラウン</div></label><input id="q2-3" type="checkbox" name="q0"><label for="q2-3"><div class="btn">ライトブラウン</div></label>
+</div></div>
+</div></div>
+<style>#sb-part-15162.sb-custom-part-mlevupjxxsym986efor .question-reveal-multi {
+ width: 750px;
+ max-width: 100%;
+ background-color: #fff;
+ margin: 0 auto;
+ padding: 16px;
+ box-sizing: border-box;
+}
+#sb-part-15162.sb-custom-part-mlevupjxxsym986efor .question-reveal-multi .linkbox {
+ width: 90%;
+ text-align: left;
+ margin: 48px auto 0;
+ padding: 0;
+ box-sizing: border-box;
+}
+#sb-part-15162.sb-custom-part-mlevupjxxsym986efor .question-reveal-multi input {
+ display: none;
+}
+#sb-part-15162.sb-custom-part-mlevupjxxsym986efor .question-reveal-multi .linkbox input+label {
+ background: #ffffff;
+ border: 1px solid #ccc;
+ padding: 5px;
+ margin-bottom: 20px;
+ border-radius: 40px;
+ cursor: pointer;
+ box-sizing: border-box;
+ transition: background-color 0.7s;
+ display: block;
+ text-align: center;
+}
+#sb-part-15162.sb-custom-part-mlevupjxxsym986efor .question-reveal-multi .linkbox input[type='radio']:checked+label,
+#sb-part-15162.sb-custom-part-mlevupjxxsym986efor .question-reveal-multi .linkbox input[type='checkbox']:checked+label {
+ background: #feb8a5;
+}
+#sb-part-15162.sb-custom-part-mlevupjxxsym986efor .question-reveal-multi .linkbox input+label .btn {
+ padding: 12px 8px;
+ font-weight: bold;
+ text-align: center;
+ font-size: 24px;
+ color: #5f5f5f;
+ display: inline-block;
+ box-sizing: border-box;
+ cursor: pointer;
+}
+@media screen and (max-width: 768px) {
+ #sb-part-15162.sb-custom-part-mlevupjxxsym986efor .question-reveal-multi .questionArea {
+ margin-bottom: 0;
+ }
+ #sb-part-15162.sb-custom-part-mlevupjxxsym986efor .question-reveal-multi .linkbox {
+ width: 100%;
+ margin: 24px auto 0;
+ }
+ #sb-part-15162.sb-custom-part-mlevupjxxsym986efor .question-reveal-multi .linkbox input+label .btn {
+ font-size: 19px;
+ }
+}</style></span></div></div>
+<div><div class="sb-custom"><span><div id="sb-part-14643" class="sb-custom-part-mlor5ouyw9qvhzyc7g9"><div class="bound2__btnArea">
+<a href="https://sb-bris-airycoloringfoam.discover-news.tokyo/ab/CmUIN_gBjfQThh-rYw" class="boundImg__link" draggable="false"><picture><img src="./img/e789a69a-5cd5-4e56-902a-dee913d65ccc.png" width="700" height="85" draggable="false" class="entered loaded" data-src="./img/e789a69a-5cd5-4e56-902a-dee913d65ccc.png" data-ll-status="loaded"></picture></a>
+</div></div>
+<style>#sb-part-14643.sb-custom-part-mlor5ouyw9qvhzyc7g9 .bound2__btnArea {
+ margin-top: 30px;
+}
+#sb-part-14643.sb-custom-part-mlor5ouyw9qvhzyc7g9 .bound2__btnArea .boundImg__link {
+ display: block;
+ width: 600px;
+ max-width: 100%;
+ height: auto;
+ margin: 0 auto;
+}
+#sb-part-14643.sb-custom-part-mlor5ouyw9qvhzyc7g9 .bound2__btnArea .boundImg__link img,
+#sb-part-14643.sb-custom-part-mlor5ouyw9qvhzyc7g9 .bound2__btnArea .boundImg__link video {
+ width: 100%;
+ height: auto;
+ animation: bound2Btn 2s ease infinite;
+}
+@keyframes bound2Btn {
+ 0% {
+ transform: translateY(0);
+ }
+ 15% {
+ transform: translateY(-30px);
+ }
+ 30% {
+ transform: translateY(0);
+ }
+ 45% {
+ transform: translateY(-30px);
+ }
+ 60% {
+ transform: translateY(0);
+ }
+ 100% {
+ transform: translateY(0);
+ }
+}</style></span></div></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/83a96a60-16c4-462e-bf72-92873f9d37c1.webp" srcset="./img/83a96a60-16c4-462e-bf72-92873f9d37c1.webp"><source type="image/avif" data-srcset="./img/83a96a60-16c4-462e-bf72-92873f9d37c1.avif" srcset="./img/83a96a60-16c4-462e-bf72-92873f9d37c1.avif"><img src="./img/83a96a60-16c4-462e-bf72-92873f9d37c1.jpg" class="entered loaded" height="166" width="570" data-src="./img/83a96a60-16c4-462e-bf72-92873f9d37c1.jpg" data-ll-status="loaded"></picture></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/a628665d-b727-4e13-95a9-39e5a6e1a388.webp"><source type="image/avif" data-srcset="./img/a628665d-b727-4e13-95a9-39e5a6e1a388.avif"><img class="lazyload entered exited" height="495" width="570" data-src="./img/a628665d-b727-4e13-95a9-39e5a6e1a388.jpg" src="./img/lazy.png"></picture></div>
+<div><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mlgajyf6hob1iy8wpyt"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※成分に対して
+</span></div></div>
+<style>#sb-part-17965.sb-custom-part-mlgajyf6hob1iy8wpyt div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div style="text-align: center;; cursor: default;">アンケートにご回答いただいた方へ</div>
+<div style="text-align: center;; cursor: default;"><strong style="background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">今だけ特別キャンペーンのご案内</span></strong></div>
+<div><div class="sb-custom"><span><div id="sb-part-1449" class="sb-custom-part-mleva417zofnmfqkra"><div class="cp_arrows">
+<div class="cp_arrow cp_arrowfirst"></div>
+<div class="cp_arrow cp_arrowsecond"></div>
+</div></div>
+<style>#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows {
+ position: relative;
+ height: 50px;
+ margin-top: 1em;
+ margin-bottom: 1em;
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra
+.cp_arrows .cp_arrowfirst {
+ animation: arrow-move08 2s ease-in-out infinite;
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra
+.cp_arrows .cp_arrowsecond {
+ animation: arrow-move08 2s 1s ease-in-out infinite;
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra
+.cp_arrows .cp_arrow {
+ position: absolute;
+ top: 100%;
+ left: 45%;
+ transform: translate(-50%, -50%);
+ transform-origin: 50% 50%;
+ opacity: 0;
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .content :first-child {
+ margin-top: 0;
+}
+@keyframes arrow-move08 {
+ 0% {
+ top: 40%;
+ opacity: 0;
+ }
+ 70% {
+ opacity: 1;
+ }
+ 100% {
+ opacity: 0;
+ }
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows .cp_arrow:before {
+ transform: rotate(30deg) translateX(-39%);
+ transform-origin: top left;
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows .cp_arrow:after {
+ transform: rotate(-30deg) translateX(39%);
+ transform-origin: top right;
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows .cp_arrow:before,
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows .cp_arrow:after {
+ position: absolute;
+ top: 0;
+ left: 0;
+ display: block;
+ width: 40px;
+ height: 3px;
+ content: '';
+ background: #E91E63;
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows *,
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows *:before,
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows *:after {
+ -webkit-box-sizing: border-box;
+ box-sizing: border-box;
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows *,
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows *:before,
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .cp_arrows *:after {
+ box-sizing: border-box;
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra content div:after,
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .content p:after {
+ clear: both;
+}
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .content div :after,
+#sb-part-1449.sb-custom-part-mleva417zofnmfqkra .content p:after {
+ display: block;
+ content: "";
+ clear: both;
+}</style></span></div></div>
+<div><br></div>
+<div style="text-align: center;; cursor: default;">あなたにぴったりの</div>
+<div style="text-align: center;; cursor: default;">b.risのエアリーカラーリングフォームを</div>
+<div style="text-align: center;; cursor: default;">
+<strong style="color: rgb(255, 0, 0); background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">どこよりも安くお届け</span></strong><strong style="background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">します！</span></strong>
+</div>
+<div draggable="false" class=""><div class="sb-custom"><span><div id="sb-part-18160" class="sb-custom-part-mlord9c7758d4p0x8uo"><div class="puyoBtn__area">
+ <a href="https://trc.a-msp.jp/ad/p/r?medium=254&ad=517&creative=2217" class="btn cta_link" draggable="false">
+ <picture>
+ <source type="image/webp" data-srcset="./img/76bcaa01-c718-4de4-bfdf-4a6b060cd63a.webp">
+ <source type="image/avif" data-srcset="./img/76bcaa01-c718-4de4-bfdf-4a6b060cd63a.avif"><img width="500" height="177" draggable="false" class="lazyload entered exited" data-src="./img/76bcaa01-c718-4de4-bfdf-4a6b060cd63a.png" src="./img/lazy.png">
+ </picture>
+ </a>
+</div></div>
+<style>#sb-part-18160.sb-custom-part-mlord9c7758d4p0x8uo
+.puyoBtn__area {
+ width: 500px;
+ max-width: 95%;
+ height: auto;
+ margin: 30px auto;
+}
+#sb-part-18160.sb-custom-part-mlord9c7758d4p0x8uo
+.puyoBtn__area .btn {
+ display: block;
+ width: 100%;
+ height: auto;
+}
+#sb-part-18160.sb-custom-part-mlord9c7758d4p0x8uo
+.puyoBtn__area .btn img {
+ width: 100%;
+ height: auto;
+ animation: puyoBtn 1.6s ease-in infinite;
+}
+@keyframes puyoBtn {
+ 0% {
+ transform: scale(1.09);
+ }
+ 10% {
+ transform: scale(1.09);
+ }
+ 30% {
+ transform: scale(1.01);
+ }
+ 40% {
+ transform: scale(1.01);
+ }
+ 50% {
+ transform: scale(1, 1.04);
+ }
+ 60% {
+ transform: scale(1.09);
+ }
+ 70% {
+ transform: scale(1.02);
+ }
+ 100% {
+ transform: scale(1.09);
+ }
+}</style></span></div></div>
+<div style="text-align: center;; cursor: default;">こんなにお得に手に入るのは</div>
+<div style="text-align: center;; cursor: default;"><strong>今だけ！</strong></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;">
+<strong style="color: rgb(255, 0, 0);; cursor: default;">二度と無いチャンス</strong>なので</div>
+<div style="text-align: center;; cursor: default;">早めにゲットしてください！</div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><img class="lazyload entered exited" height="514" width="570" data-src="./img/995e8908-588d-4b99-86fa-2d66d43d1a78.jpg" src="./img/lazy.png"></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;">実際に</div>
+<div style="text-align: center;; cursor: default;">
+<strong style="font-size: 19px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">b.risを使った後の写真がこちら</span></strong><span style="font-size: 19px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">！！</span></span>
+</div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/d434bf2b-d280-4c1d-ab18-4b007af38e09.webp"><source type="image/avif" data-srcset="./img/d434bf2b-d280-4c1d-ab18-4b007af38e09.avif"><img class="lazyload entered exited" height="360" width="570" data-src="./img/d434bf2b-d280-4c1d-ab18-4b007af38e09.jpg" src="./img/lazy.png"></picture></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;">
+<strong style="font-size: 21px; color: rgb(250, 87, 204); background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">こんなに色落ちしないのは初めて！</span></strong><strong style="font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">と、</span></strong>
+</div>
+<div style="text-align: center;; cursor: default;"><strong style="font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">喜びの声が絶えません！！</span></strong></div>
+<div style="text-align: center;; cursor: default;"><video class="ql-video entered exited loaded" height="570" width="570" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/4d5e6a94-bea1-49e9-8814-f635c515366d.mp4" src="./img/4d5e6a94-bea1-49e9-8814-f635c515366d.mp4"></video></div>
+<div><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mlhf7yauoc7un8svy2"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">＃PR
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mlhf7yauoc7un8svy2 div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div style="text-align: center;; cursor: default;"><video class="ql-video entered exited loaded" height="570" width="570" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/1776635a-f9bd-4b2b-ab42-870f62620510.mp4" src="./img/1776635a-f9bd-4b2b-ab42-870f62620510.mp4"></video></div>
+<div><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mlhf8m5yo7a79lwlu2o"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">#PR
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mlhf8m5yo7a79lwlu2o div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div style="text-align: center;; cursor: default;">実はこの染毛剤</div>
+<div style="text-align: center;; cursor: default;">
+<strong style="background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">東大卒の医師も注目</span></strong><span style="background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">していて</span></span>
+</div>
+<div><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mlgaku8mur1nxlathgd"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※成分に対して
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mlgaku8mur1nxlathgd div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/a3901806-6d0d-441f-8050-c316766aa822.webp"><source type="image/avif" data-srcset="./img/a3901806-6d0d-441f-8050-c316766aa822.avif"><img class="lazyload entered exited" height="374" width="570" data-src="./img/a3901806-6d0d-441f-8050-c316766aa822.jpg" src="./img/lazy.png"></picture></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><strong>有名美容師も絶賛の</strong></div>
+<div style="text-align: center;; cursor: default;"><strong>お墨付き商品なんです！</strong></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/d2fdab2b-432b-4220-8cb7-ed4151a450bc.webp"><source type="image/avif" data-srcset="./img/d2fdab2b-432b-4220-8cb7-ed4151a450bc.avif"><img class="lazyload entered exited" height="374" width="570" data-src="./img/d2fdab2b-432b-4220-8cb7-ed4151a450bc.jpg" src="./img/lazy.png"></picture></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;">しかも、</div>
+<div style="text-align: center;; cursor: default;">
+<strong>国が成分を認めている</strong>ほど！</div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/cc2b57ce-c614-4f2d-b7a3-195a36fa9c96.webp"><source type="image/avif" data-srcset="./img/cc2b57ce-c614-4f2d-b7a3-195a36fa9c96.avif"><img class="lazyload entered exited" height="446" width="570" data-src="./img/cc2b57ce-c614-4f2d-b7a3-195a36fa9c96.jpg" src="./img/lazy.png"></picture></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;">だから、</div>
+<div id="docs-internal-guid-c5c892e9-7fff-b108-88af-625c2dd00372" style="text-align: center;; cursor: default;">
+<strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">楽天でも堂々の1位</span></strong><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">だし</span></strong>
+</div>
+<div id="docs-internal-guid-c5c892e9-7fff-b108-88af-625c2dd00372" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-c5c892e9-7fff-b108-88af-625c2dd00372" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/21d2f33e-b49c-44e4-ad75-5d7510f437ff.webp"><source type="image/avif" data-srcset="./img/21d2f33e-b49c-44e4-ad75-5d7510f437ff.avif"><img class="lazyload entered exited" height="331" width="571" data-src="./img/21d2f33e-b49c-44e4-ad75-5d7510f437ff.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-c5c892e9-7fff-b108-88af-625c2dd00372" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-c5c892e9-7fff-b108-88af-625c2dd00372" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">累計販売数は</strong></div>
+<div id="docs-internal-guid-c5c892e9-7fff-b108-88af-625c2dd00372" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(250, 87, 204); font-size: 21px;; cursor: default;">400万個</strong><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">を突破している</strong>
+</div>
+<div id="docs-internal-guid-c5c892e9-7fff-b108-88af-625c2dd00372" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">大人気商品なんです！</strong></div>
+<div id="docs-internal-guid-c5c892e9-7fff-b108-88af-625c2dd00372"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mlhf456kuvd9xtbx0w8"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※2026年1月末　b.risシリーズ累計出荷実績
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mlhf456kuvd9xtbx0w8 div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-c5c892e9-7fff-b108-88af-625c2dd00372" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/edf2eef0-97bd-4007-9027-5c98f3750eb1.webp"><source type="image/avif" data-srcset="./img/edf2eef0-97bd-4007-9027-5c98f3750eb1.avif"><img class="lazyload entered exited" height="411" width="570" data-src="./img/edf2eef0-97bd-4007-9027-5c98f3750eb1.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-c5c892e9-7fff-b108-88af-625c2dd00372"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mlhf456kuvd9xtbx0w8"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※2026年1月末　b.risシリーズ累計出荷実績
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mlhf456kuvd9xtbx0w8 div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 17px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">実際に使った人が</span></strong></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">「全く色落ちしない」</span></strong></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 17px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">と大絶賛の、</span></strong></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/974c9c44-ee1c-4ebd-af78-6002632f260d.webp"><source type="image/avif" data-srcset="./img/974c9c44-ee1c-4ebd-af78-6002632f260d.avif"><img class="lazyload entered exited" height="956" width="571" data-src="./img/974c9c44-ee1c-4ebd-af78-6002632f260d.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-ml0yl4lz495srq27y2v"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※染料効果による<br>
+ ※画像はイメージ"
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-ml0yl4lz495srq27y2v div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">いま話題の</strong><strong style="background-color: transparent; color: rgb(255, 0, 255); font-size: 21px;; cursor: default;">永久染毛剤</strong>
+</div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-ml0yl1asqhhe3ch2zjg"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※ヘアカラーロング剤の分類名であり、染色効果は2ヵ月程度。新たに生えてくる白髪には染色効果はありません。
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-ml0yl1asqhhe3ch2zjg div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><video class="ql-video entered exited loaded" height="571" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/c9ca784c-87ea-4cac-881d-3848b2c763cc.mp4" src="./img/c9ca784c-87ea-4cac-881d-3848b2c763cc.mp4"></video></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;">ぶっちゃけ白髪で悩んでるなら</div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;">使わない理由ないですよね？</div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;">私みたいに</strong></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">白髪の悩みから解放されたい人は</span></strong></div>
+<div id="docs-internal-guid-5dd23eb9-7fff-e497-4bcf-4b4aef674033" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">絶対見てください！</span></strong></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/a41285d9-c53a-411f-8b80-d995a60d0bd9.webp"><source type="image/avif" data-srcset="./img/a41285d9-c53a-411f-8b80-d995a60d0bd9.avif"><img src="./img/lazy.png" class="lazyload" height="152" width="571" data-src="./img/a41285d9-c53a-411f-8b80-d995a60d0bd9.png"></picture></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">もしあなたが今、</span></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(255, 0, 0); font-size: 17px;; cursor: default;">市販の白髪染め</strong><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">を使っているなら、</span>
+</div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;"><strong style="color: rgb(255, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">今すぐやめたほうがいいです⚠️</span></strong></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620"><br></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/e2f08e4f-e335-4e3a-9c5e-8bbe4ee3e9b5.webp"><source type="image/avif" data-srcset="./img/e2f08e4f-e335-4e3a-9c5e-8bbe4ee3e9b5.avif"><img src="./img/lazy.png" class="lazyload" height="253" width="570" data-src="./img/e2f08e4f-e335-4e3a-9c5e-8bbe4ee3e9b5.jpg"></picture></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">なぜかと言うと…</span></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620"><br></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">市販の白髪染めは</strong></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(255, 0, 0); font-size: 21px;; cursor: default;">キューティクルを破壊してしまう</strong><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">から。</strong>
+</div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/814fc03e-ec4b-4cfc-ad6e-bf8d43f427c4.webp"><source type="image/avif" data-srcset="./img/814fc03e-ec4b-4cfc-ad6e-bf8d43f427c4.avif"><img src="./img/lazy.png" class="lazyload" height="495" width="571" data-src="./img/814fc03e-ec4b-4cfc-ad6e-bf8d43f427c4.jpg"></picture></div>
+<div id="docs-internal-guid-75a2db76-7fff-85eb-e18b-c9f5b6cf0710" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-75a2db76-7fff-85eb-e18b-c9f5b6cf0710" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">だから、</span></div>
+<div id="docs-internal-guid-75a2db76-7fff-85eb-e18b-c9f5b6cf0710" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">使えば使うほど</strong></div>
+<div id="docs-internal-guid-75a2db76-7fff-85eb-e18b-c9f5b6cf0710" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(255, 0, 0); font-size: 21px;; cursor: default;">髪がボロボロ</strong><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">に…</strong>
+</div>
+<div id="docs-internal-guid-75a2db76-7fff-85eb-e18b-c9f5b6cf0710" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-75a2db76-7fff-85eb-e18b-c9f5b6cf0710" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/36151870-65d9-4e1a-9f24-d1a494d9b08f.webp"><source type="image/avif" data-srcset="./img/36151870-65d9-4e1a-9f24-d1a494d9b08f.avif"><img class="lazyload entered exited" height="656" width="541" data-src="./img/36151870-65d9-4e1a-9f24-d1a494d9b08f.png" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-75a2db76-7fff-85eb-e18b-c9f5b6cf0710"><br></div>
+<div id="docs-internal-guid-75a2db76-7fff-85eb-e18b-c9f5b6cf0710" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(255, 0, 0); font-size: 21px;; cursor: default;">傷んだ髪は色落ちしやすい</strong><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">ので、</strong>
+</div>
+<div id="docs-internal-guid-75a2db76-7fff-85eb-e18b-c9f5b6cf0710" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">負の連鎖が止まりません😱</strong></div>
+<div id="docs-internal-guid-75a2db76-7fff-85eb-e18b-c9f5b6cf0710" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/557ae5f5-2b05-4bdb-8be6-f50cfeb3a377.webp"><source type="image/avif" data-srcset="./img/557ae5f5-2b05-4bdb-8be6-f50cfeb3a377.avif"><img class="lazyload entered exited" height="432" width="571" data-src="./img/557ae5f5-2b05-4bdb-8be6-f50cfeb3a377.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">こんな状態だから、</span></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><strong style="color: rgb(255, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">染めてもすぐに</span></strong></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><strong style="color: rgb(255, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">白髪が目立っちゃうんです…</span></strong></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/5ef07ff5-8f9e-40e1-ae04-feed5c51ec4b.webp"><source type="image/avif" data-srcset="./img/5ef07ff5-8f9e-40e1-ae04-feed5c51ec4b.avif"><img src="./img/lazy.png" class="lazyload" height="331" width="571" data-src="./img/5ef07ff5-8f9e-40e1-ae04-feed5c51ec4b.jpg"></picture></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77"><br></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;">こうならないためにも、</div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;">
+<strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">いつまでも若々しい髪でいたい</span></strong><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">なら</span></strong>
+</div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">キューティクルを守るのが最重要！</span></strong></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77"><br></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/1b92def5-6c04-4a6c-984a-96ed4c4904bc.webp"><source type="image/avif" data-srcset="./img/1b92def5-6c04-4a6c-984a-96ed4c4904bc.avif"><img class="lazyload entered exited" height="152" width="571" data-src="./img/1b92def5-6c04-4a6c-984a-96ed4c4904bc.png" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mky13ygzzsmlm489r7o"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※ヘアカラーロング剤の分類名であり、染色効果は2ヵ月程度。
+新たに生えてくる白髪には染色効果はありません。
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mky13ygzzsmlm489r7o div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-fad8fa30-7fff-dff5-b620-3271ee192a77" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">そこで、</span></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><span style="background-color: rgb(255, 255, 255); font-size: 17px; color: rgb(0, 0, 0);; cursor: default;">最近開発されたのが…</span></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mkz9mqvomg9rgqws9m"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※成分に対して
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mkz9mqvomg9rgqws9m div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><strong style="font-size: 21px; background-color: transparent; color: rgb(0, 0, 0);; cursor: default;">東大卒の医師も注目の</strong></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><strong style="background-color: rgba(0, 0, 0, 0); color: rgb(250, 87, 204); font-size: 21px;; cursor: default;">\白髪の永久染毛剤/</strong></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><strong style="background-color: rgba(0, 0, 0, 0); color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">b.ris（ビーリス）</strong></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-ml0yofd9jjpdtdrzewr"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※ヘアカラーロング剤の分類名であり、染色効果は2ヵ月程度。<br>新たに生えてくる白髪には染色効果はありません。
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-ml0yofd9jjpdtdrzewr div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/7fb3f632-d03b-4473-9bb5-90e232950ddb.webp"><source type="image/avif" data-srcset="./img/7fb3f632-d03b-4473-9bb5-90e232950ddb.avif"><img class="lazyload entered exited" height="380" width="571" data-src="./img/7fb3f632-d03b-4473-9bb5-90e232950ddb.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">永久に染めることができるので、</strong></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2"><br></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">いつまでも</span></strong></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">綺麗な髪をキープできる</span></strong></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><strong style="background-color: rgba(0, 0, 0, 0); color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">と話題なんです！</strong></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><video class="ql-video entered exited loaded" height="571" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/ae7b0d4a-fe44-4041-8e05-2a887aabd87b.mp4" src="./img/ae7b0d4a-fe44-4041-8e05-2a887aabd87b.mp4"></video></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(250, 87, 204); font-size: 21px;; cursor: default;">有名女性誌CLASSY.</strong></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">にも取り上げられ、</strong></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-8a191dfe-7fff-fd93-e6d7-f69ec3ef14e2" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/b4dc74a4-d29c-40ce-ba90-4a0cbf45f4d8.webp"><source type="image/avif" data-srcset="./img/b4dc74a4-d29c-40ce-ba90-4a0cbf45f4d8.avif"><img class="lazyload entered exited" height="786" width="570" data-src="./img/b4dc74a4-d29c-40ce-ba90-4a0cbf45f4d8.png" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394"><br></div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394" style="text-align: center;; cursor: default;">
+<strong style="color: rgb(255, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">過去4回も完売</span></strong><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">するほど</span></strong>
+</div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">大人気！</span></strong></div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/88661c07-657d-469e-8539-d76922750660.webp"><source type="image/avif" data-srcset="./img/88661c07-657d-469e-8539-d76922750660.avif"><img src="./img/lazy.png" class="lazyload" height="331" width="571" data-src="./img/88661c07-657d-469e-8539-d76922750660.jpg"></picture></div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mky159bez3f9b3j7ppl"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※2024年1月9日、2025年3月11日、5月23日、9月5日
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mky159bez3f9b3j7ppl div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 17px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">その実力の高さから、</span></strong></div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">効果を国に認められた</span></strong></div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">“医薬部外品”に指定されています！</span></strong></div>
+<div id="docs-internal-guid-b19090e5-7fff-1a66-ad60-cd351d81e394" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/3b903895-62ae-4f99-a6e1-cfdf5cd02cca.webp"><source type="image/avif" data-srcset="./img/3b903895-62ae-4f99-a6e1-cfdf5cd02cca.avif"><img src="./img/lazy.png" class="lazyload" height="446" width="571" data-src="./img/3b903895-62ae-4f99-a6e1-cfdf5cd02cca.jpg"></picture></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><strong style="font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">国も認めた成分だから</span></strong></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><strong style="font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">しっかりと髪を染められるんです！</span></strong></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/c0ad0f5c-1864-43e3-9795-7efd0661ea39.webp"><source type="image/avif" data-srcset="./img/c0ad0f5c-1864-43e3-9795-7efd0661ea39.avif"><img src="./img/lazy.png" class="lazyload" height="152" width="571" data-src="./img/c0ad0f5c-1864-43e3-9795-7efd0661ea39.png"></picture></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">そんなb.risの最大の特徴は、</strong></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(250, 87, 204); font-size: 21px;; cursor: default;">ナノサイズの独自成分！</strong></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/08c855c0-eb58-466f-ad68-84845d015717.webp"><source type="image/avif" data-srcset="./img/08c855c0-eb58-466f-ad68-84845d015717.avif"><img class="lazyload entered exited" height="1131" width="570" data-src="./img/08c855c0-eb58-466f-ad68-84845d015717.png" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mky1bg2hfqoo6ax78sj"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※染料効果による
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mky1bg2hfqoo6ax78sj div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b"><br></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">髪の100万分の1の大きさの成分が、</strong></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">キューティクルを壊すことなく</span></strong></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">髪の内部に浸透するから</span></strong></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><video class="ql-video entered exited loaded" height="339" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/adda9ab5-a0b6-486b-b3a5-e63c7afa4972.mp4" src="./img/adda9ab5-a0b6-486b-b3a5-e63c7afa4972.mp4"></video></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">市販の白髪染めと違って、</span></strong></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">髪を傷めずに</span></strong></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">染めることができるんです！</span></strong></div>
+<div id="docs-internal-guid-249d9e15-7fff-3658-5413-c22ff74dda2b" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/96dcca76-76ac-4a27-b120-096b915cb325.webp"><source type="image/avif" data-srcset="./img/96dcca76-76ac-4a27-b120-096b915cb325.avif"><img class="lazyload entered exited" height="455" width="571" data-src="./img/96dcca76-76ac-4a27-b120-096b915cb325.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mlgam5bp694a0ufkehl"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※継続利用による
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mlgam5bp694a0ufkehl div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">だから1度染めれば、</strong></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(250, 87, 204); font-size: 21px;; cursor: default;">もう白髪の心配は不要！</strong></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/d882e81a-33a5-4650-952d-6eddf23209a9.webp"><source type="image/avif" data-srcset="./img/d882e81a-33a5-4650-952d-6eddf23209a9.avif"><img class="lazyload entered exited" height="505" width="570" data-src="./img/d882e81a-33a5-4650-952d-6eddf23209a9.png" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1"><br></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">「2ヶ月経っても余裕」</span></strong></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">「市販の白髪染めは卒業した」</span></strong></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">と感動する人が続出してます✨️</span></strong></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mkz9nfn3ijvumypfeil"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※継続利用による
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mkz9nfn3ijvumypfeil div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-b8ae4ec1-7fff-50bb-dc7c-977d0f0c21b1" style="text-align: center;; cursor: default;"><video class="ql-video entered exited loaded" height="571" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/f87c69bc-03ad-471b-a617-4bace78695b2.mp4" src="./img/f87c69bc-03ad-471b-a617-4bace78695b2.mp4"></video></div>
+<div id="docs-internal-guid-f0e779d8-7fff-68e3-6793-a04ca366c03a" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">さらに！</strong></div>
+<div id="docs-internal-guid-f0e779d8-7fff-68e3-6793-a04ca366c03a"><br></div>
+<div id="docs-internal-guid-f0e779d8-7fff-68e3-6793-a04ca366c03a" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">トリートメント成分を</span></strong></div>
+<div id="docs-internal-guid-f0e779d8-7fff-68e3-6793-a04ca366c03a" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">たっぷり配合しているので</span></strong></div>
+<div id="docs-internal-guid-f0e779d8-7fff-68e3-6793-a04ca366c03a" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-6e23c7c2-7fff-feef-91b3-2e4fa0d10620" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/0b51f4ee-cd53-4c04-94d1-d104f948cc07.webp"><source type="image/avif" data-srcset="./img/0b51f4ee-cd53-4c04-94d1-d104f948cc07.avif"><img class="lazyload entered exited" height="794" width="570" data-src="./img/0b51f4ee-cd53-4c04-94d1-d104f948cc07.png" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-8b7dfb29-7fff-8141-53c9-eb204ec8a820"><br></div>
+<div id="docs-internal-guid-8b7dfb29-7fff-8141-53c9-eb204ec8a820" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">キューティクルが補修されて</span></strong></div>
+<div id="docs-internal-guid-8b7dfb29-7fff-8141-53c9-eb204ec8a820" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">ツヤツヤの髪に💕</span></strong></div>
+<div id="docs-internal-guid-8b7dfb29-7fff-8141-53c9-eb204ec8a820" style="text-align: center;; cursor: default;"><video class="ql-video lazyload" height="571" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline=""><source type="video/mp4" data-src="./img/6897fdfb-a805-48e5-aa21-76ac92ebde0d.mp4"></video></div>
+<div id="docs-internal-guid-8b7dfb29-7fff-8141-53c9-eb204ec8a820" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-8b7dfb29-7fff-8141-53c9-eb204ec8a820" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">まるで20代の頃ような</span></strong></div>
+<div id="docs-internal-guid-8b7dfb29-7fff-8141-53c9-eb204ec8a820" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">若見え髪</span></strong></div>
+<div id="docs-internal-guid-8b7dfb29-7fff-8141-53c9-eb204ec8a820" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">が手に入っちゃうんです✨️</span></strong></div>
+<div id="docs-internal-guid-8b7dfb29-7fff-8141-53c9-eb204ec8a820" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-8b7dfb29-7fff-8141-53c9-eb204ec8a820" style="text-align: center;; cursor: default;"><video class="ql-video lazyload" height="571" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline=""><source type="video/mp4" data-src="./img/fb372e1b-b361-4fa3-93ca-7097a6aaec9a.mp4"></video></div>
+<div id="docs-internal-guid-140f2611-7fff-9547-bccf-576aa6749d2d"><br></div>
+<div id="docs-internal-guid-140f2611-7fff-9547-bccf-576aa6749d2d" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">仕上がりは超サロンクオリティで</strong></div>
+<div id="docs-internal-guid-140f2611-7fff-9547-bccf-576aa6749d2d" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">「美容師泣かせ」と</strong></div>
+<div id="docs-internal-guid-140f2611-7fff-9547-bccf-576aa6749d2d" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(250, 87, 204); font-size: 21px;; cursor: default;">プロも絶賛</strong><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">するほど！</strong>
+</div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/5d5b07f2-d3d9-4496-9af9-3be9f9e90338.webp"><source type="image/avif" data-srcset="./img/5d5b07f2-d3d9-4496-9af9-3be9f9e90338.avif"><img src="./img/lazy.png" class="lazyload" height="601" width="571" data-src="./img/5d5b07f2-d3d9-4496-9af9-3be9f9e90338.png"></picture></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">実際に使っている人も、</strong></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">みんな大満足しています！</strong></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/8a9b1720-5663-4997-9249-3990752c8675.webp"><source type="image/avif" data-srcset="./img/8a9b1720-5663-4997-9249-3990752c8675.avif"><img src="./img/lazy.png" class="lazyload" height="457" width="571" data-src="./img/8a9b1720-5663-4997-9249-3990752c8675.jpg"></picture></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/fd109f5c-c1cf-4601-96ff-821d829a6d4a.webp"><source type="image/avif" data-srcset="./img/fd109f5c-c1cf-4601-96ff-821d829a6d4a.avif"><img class="lazyload entered exited" height="410" width="571" data-src="./img/fd109f5c-c1cf-4601-96ff-821d829a6d4a.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/0014f0cf-8784-47be-ab0e-3a29d6302b84.webp"><source type="image/avif" data-srcset="./img/0014f0cf-8784-47be-ab0e-3a29d6302b84.avif"><img class="lazyload entered exited" height="457" width="571" data-src="./img/0014f0cf-8784-47be-ab0e-3a29d6302b84.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mky1d5o8slxo2z8m3ng"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">"※個人の感想です。効果効能を保証するものではありません。
+<br>※弊社より依頼をして、頂いたコメントを編集しています
+<br>※PR
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mky1d5o8slxo2z8m3ng div {
+ line-height: 1.0;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8"><br></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">とはいえ、実際どうなの…？</span></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8"><br></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">という方のために、</span></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">白髪に悩んでいた私が</strong></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">レビューしてみました！</strong></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8"><br></div>
+<h2 id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/77f96bfc-af10-4a9c-9177-86199143ddd0.webp"><source type="image/avif" data-srcset="./img/77f96bfc-af10-4a9c-9177-86199143ddd0.avif"><img class="lazyload entered exited" height="152" width="571" data-src="./img/77f96bfc-af10-4a9c-9177-86199143ddd0.png" src="./img/lazy.png"></picture></h2>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">カラーは3色</strong><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">ありました</span><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">✨️</strong>
+</div>
+<div id="docs-internal-guid-319e6dfe-7fff-ac35-aede-baa6ad1451e8" style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/88537a1a-62ae-4cc8-bd25-54168b4bccc8.webp"><source type="image/avif" data-srcset="./img/88537a1a-62ae-4cc8-bd25-54168b4bccc8.avif"><img class="lazyload entered exited" height="335" width="547" data-src="./img/88537a1a-62ae-4cc8-bd25-54168b4bccc8.png" src="./img/lazy.png"></picture></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-523b4f5f-7fff-c3d7-ee9b-2544a1246f78" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">私が注文したのは、</span></div>
+<div id="docs-internal-guid-523b4f5f-7fff-c3d7-ee9b-2544a1246f78" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(250, 87, 204); font-size: 21px;; cursor: default;">一番人気の</strong></div>
+<div id="docs-internal-guid-523b4f5f-7fff-c3d7-ee9b-2544a1246f78" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(250, 87, 204); font-size: 21px;; cursor: default;">ダークブラウン！</strong></div>
+<div id="docs-internal-guid-523b4f5f-7fff-c3d7-ee9b-2544a1246f78" style="text-align: center;; cursor: default;"><video class="ql-video entered exited loaded" height="571" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/1d1d0126-7f57-45ec-b1cf-14571dab5683.mp4" src="./img/1d1d0126-7f57-45ec-b1cf-14571dab5683.mp4"></video></div>
+<div id="docs-internal-guid-523b4f5f-7fff-c3d7-ee9b-2544a1246f78" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">サイズは大きめで、</strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(250, 87, 204); font-size: 21px;; cursor: default;">4回は使えそうでした♪</strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/d3d2e9df-f432-4e2d-b63d-342119fa9c29.webp"><source type="image/avif" data-srcset="./img/d3d2e9df-f432-4e2d-b63d-342119fa9c29.avif"><img class="lazyload entered exited" height="380" width="571" data-src="./img/d3d2e9df-f432-4e2d-b63d-342119fa9c29.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">中身はもっちりした濃密泡！</strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><video class="ql-video entered exited loaded" height="321" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/665ae4ec-2f43-4dcf-b0fd-6c5987246b7e.mp4" src="./img/665ae4ec-2f43-4dcf-b0fd-6c5987246b7e.mp4"></video></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">泡が垂れてくることもなく、</span></strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">不器用な私でも簡単に塗れました！</span></strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><video class="ql-video entered exited loaded" height="571" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/01e118a9-3d40-4aff-ae65-90f718e80454.mp4" src="./img/01e118a9-3d40-4aff-ae65-90f718e80454.mp4"></video></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">5分ほど放置したら、</strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">洗い流します✨️</strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/45596029-72c3-4fe5-bc31-7835d75de411.webp"><source type="image/avif" data-srcset="./img/45596029-72c3-4fe5-bc31-7835d75de411.avif"><img class="lazyload entered exited" height="571" width="571" data-src="./img/45596029-72c3-4fe5-bc31-7835d75de411.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">そして</span></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">ドライヤーで乾かすと…</strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/e9e36c7c-a0bd-4985-bd57-b9e836848137.webp"><source type="image/avif" data-srcset="./img/e9e36c7c-a0bd-4985-bd57-b9e836848137.avif"><img class="lazyload entered exited" height="273" width="571" data-src="./img/e9e36c7c-a0bd-4985-bd57-b9e836848137.jpg" src="./img/lazy.png"></picture></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">根本から</span></strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">しっかり染まってる✨️</span></strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">ボロボロだった私の髪も、</span></strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">まるでサロン帰りみたい♪</span></strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><video class="ql-video entered loaded" height="571" width="571" autoplay="" oncanplay="this.muted=true" muted="true" loop="" allowfullscreen="true" controlslist="nodownload" name="media" playsinline="" data-ll-status="loaded"><source type="video/mp4" data-src="./img/8b8e52ec-6def-48b9-96e6-8f66c0691e55.mp4" src="./img/8b8e52ec-6def-48b9-96e6-8f66c0691e55.mp4"></video></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">今までの白髪染めと</span></strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">比べ物にならない仕上がりでした！</span></strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/c6a22611-f244-4753-b43c-1a08bc15c0e1.webp" srcset="./img/c6a22611-f244-4753-b43c-1a08bc15c0e1.webp"><source type="image/avif" data-srcset="./img/c6a22611-f244-4753-b43c-1a08bc15c0e1.avif" srcset="./img/c6a22611-f244-4753-b43c-1a08bc15c0e1.avif"><img class="entered loaded" height="571" width="571" data-src="./img/c6a22611-f244-4753-b43c-1a08bc15c0e1.jpg" src="./img/c6a22611-f244-4753-b43c-1a08bc15c0e1.jpg" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;">
+<span style="font-size: 17px;; cursor: default;">そんなb.ris</span><span style="font-size: 17px; color: rgb(0, 0, 0); background-color: transparent;; cursor: default;">（ビーリス）が、</span>
+</div>
+<div style="text-align: center;; cursor: default;"><strong style="font-size: 21px; color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">今なら最安値で手に入るので</span></strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">ここから先は絶対読んでください！</span></strong></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-482fc1ca-7fff-e341-6226-eb526a1bee94" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/96f95b5b-f4a0-432b-8364-356f1c24d369.webp" srcset="./img/96f95b5b-f4a0-432b-8364-356f1c24d369.webp"><source type="image/avif" data-srcset="./img/96f95b5b-f4a0-432b-8364-356f1c24d369.avif" srcset="./img/96f95b5b-f4a0-432b-8364-356f1c24d369.avif"><img class="entered loaded" height="152" width="571" data-src="./img/96f95b5b-f4a0-432b-8364-356f1c24d369.png" src="./img/96f95b5b-f4a0-432b-8364-356f1c24d369.png" data-ll-status="loaded"></picture></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">b.ris（ビーリス）は、</strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">美容師も認める</span></strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">サロン品質の永久染毛剤</span></strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mky1e7i66s9djqc58i4"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※ヘアカラーロング剤の分類名であり、染色効果は2ヵ月程度。新たに生えてくる白髪には染色効果はありません。
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mky1e7i66s9djqc58i4 div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/d75c9ad0-2983-42df-8996-7bc76f769d5e.webp" srcset="./img/d75c9ad0-2983-42df-8996-7bc76f769d5e.webp"><source type="image/avif" data-srcset="./img/d75c9ad0-2983-42df-8996-7bc76f769d5e.avif" srcset="./img/d75c9ad0-2983-42df-8996-7bc76f769d5e.avif"><img class="entered loaded" height="380" width="571" data-src="./img/d75c9ad0-2983-42df-8996-7bc76f769d5e.jpg" src="./img/d75c9ad0-2983-42df-8996-7bc76f769d5e.jpg" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">普通に買うと、</strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(255, 0, 0); font-size: 17px;; cursor: default;">通常価格4,689円</strong><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">と、</strong>
+</div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">決して安くはありません…</strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/a9669b77-418c-498a-bd7d-a82a52f14dee.webp" srcset="./img/a9669b77-418c-498a-bd7d-a82a52f14dee.webp"><source type="image/avif" data-srcset="./img/a9669b77-418c-498a-bd7d-a82a52f14dee.avif" srcset="./img/a9669b77-418c-498a-bd7d-a82a52f14dee.avif"><img class="entered loaded" height="316" width="571" data-src="./img/a9669b77-418c-498a-bd7d-a82a52f14dee.png" src="./img/a9669b77-418c-498a-bd7d-a82a52f14dee.png" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">これの価格でも</strong><strong style="background-color: transparent; color: rgb(255, 0, 0); font-size: 21px;; cursor: default;">過去4度完売</strong>
+</div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">するほど人気なんですが、</strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mky1etb8gjbv12o7uhs"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※2024年1月9日、2025年3月11日、5月23日、9月5日
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mky1etb8gjbv12o7uhs div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/6799f10f-ea3b-45ec-b768-2136e70ce491.webp" srcset="./img/6799f10f-ea3b-45ec-b768-2136e70ce491.webp"><source type="image/avif" data-srcset="./img/6799f10f-ea3b-45ec-b768-2136e70ce491.avif" srcset="./img/6799f10f-ea3b-45ec-b768-2136e70ce491.avif"><img class="entered loaded" height="298" width="571" data-src="./img/6799f10f-ea3b-45ec-b768-2136e70ce491.jpg" src="./img/6799f10f-ea3b-45ec-b768-2136e70ce491.jpg" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;">正直高いですよね。</div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">しかし！</strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">これを読んでいるあなたはラッキー！</strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/8275294f-9d39-48b0-b67e-53cdbea621a6.webp" srcset="./img/8275294f-9d39-48b0-b67e-53cdbea621a6.webp"><source type="image/avif" data-srcset="./img/8275294f-9d39-48b0-b67e-53cdbea621a6.avif" srcset="./img/8275294f-9d39-48b0-b67e-53cdbea621a6.avif"><img class="entered loaded" height="162" width="571" data-src="./img/8275294f-9d39-48b0-b67e-53cdbea621a6.png" src="./img/8275294f-9d39-48b0-b67e-53cdbea621a6.png" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">今ならなんと！</strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">メーカーのアンケートに</strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">答えた方限定で、定期便初回が</strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="color: rgb(255, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">\最安値/</span></strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">約47%オフの2,480円</span></strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">でゲットできちゃいます！</span></strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.webp" srcset="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.webp"><source type="image/avif" data-srcset="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.avif" srcset="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.avif"><img src="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.png" class="entered loaded" height="453" width="571" data-src="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.png" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mlgaq6psy84af8fttq9"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※ヘアカラーロング剤の分類名であり、染色効果は2ヵ月程度。新たに生えてくる白髪には染色効果はありません。
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mlgaq6psy84af8fttq9 div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">余った分はリタッチにとっておけるので</span></strong></div>
+<div id="docs-internal-guid-89feda04-7fff-07bc-6d35-e39e44ba4d1a" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">市販の白髪染めよりお得！</span></strong></div>
+<div id="docs-internal-guid-1f476401-7fff-1c45-3a5c-d4b7720a341b" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-1f476401-7fff-1c45-3a5c-d4b7720a341b" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">届くのはお試し品ではなく、</span></div>
+<div id="docs-internal-guid-1f476401-7fff-1c45-3a5c-d4b7720a341b" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(250, 87, 204); font-size: 21px;; cursor: default;">もちろん正規品1本です◎</strong></div>
+<div id="docs-internal-guid-1f476401-7fff-1c45-3a5c-d4b7720a341b" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/66aac7ab-9d5a-40cf-b2f6-f84d89460484.webp" srcset="./img/66aac7ab-9d5a-40cf-b2f6-f84d89460484.webp"><source type="image/avif" data-srcset="./img/66aac7ab-9d5a-40cf-b2f6-f84d89460484.avif" srcset="./img/66aac7ab-9d5a-40cf-b2f6-f84d89460484.avif"><img src="./img/66aac7ab-9d5a-40cf-b2f6-f84d89460484.jpg" class="entered loaded" height="331" width="571" data-src="./img/66aac7ab-9d5a-40cf-b2f6-f84d89460484.jpg" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0"><br></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">ちなみに</span></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">ネットの商品でありがちな</strong></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">定期購入回数のお約束も一切なし！</span></strong></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">いつでも解約できるし、</strong></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/2e961245-8d94-472c-9424-a77493d82fa1.webp" srcset="./img/2e961245-8d94-472c-9424-a77493d82fa1.webp"><source type="image/avif" data-srcset="./img/2e961245-8d94-472c-9424-a77493d82fa1.avif" srcset="./img/2e961245-8d94-472c-9424-a77493d82fa1.avif"><img class="entered loaded" height="449" width="571" data-src="./img/2e961245-8d94-472c-9424-a77493d82fa1.jpg" src="./img/2e961245-8d94-472c-9424-a77493d82fa1.jpg" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">全額返金保証も</span></strong></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;">
+<strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">あるので安心</span></strong><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">です♪</span></strong>
+</div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mky1gspcnp5uatriz0g"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※返送時の送料はお客様負担となります
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mky1gspcnp5uatriz0g div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/d643dfd6-0b9e-458f-98e7-8fbce74a1956.webp" srcset="./img/d643dfd6-0b9e-458f-98e7-8fbce74a1956.webp"><source type="image/avif" data-srcset="./img/d643dfd6-0b9e-458f-98e7-8fbce74a1956.avif" srcset="./img/d643dfd6-0b9e-458f-98e7-8fbce74a1956.avif"><img class="entered loaded" height="197" width="571" data-src="./img/d643dfd6-0b9e-458f-98e7-8fbce74a1956.png" src="./img/d643dfd6-0b9e-458f-98e7-8fbce74a1956.png" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><span style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">また、</span></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">後払いも選べるので、</strong></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">商品到着後に支払うのでもOK！</strong></div>
+<div id="docs-internal-guid-73457e50-7fff-3950-5ef7-7459a10598c0" style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/f0652d22-e243-4d4c-a6f3-bbc8a8c6de31.webp" srcset="./img/f0652d22-e243-4d4c-a6f3-bbc8a8c6de31.webp"><source type="image/avif" data-srcset="./img/f0652d22-e243-4d4c-a6f3-bbc8a8c6de31.avif" srcset="./img/f0652d22-e243-4d4c-a6f3-bbc8a8c6de31.avif"><img class="entered loaded" height="374" width="571" data-src="./img/f0652d22-e243-4d4c-a6f3-bbc8a8c6de31.jpg" src="./img/f0652d22-e243-4d4c-a6f3-bbc8a8c6de31.jpg" data-ll-status="loaded"></picture></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;">
+<strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">⚠️</strong><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">ただし</strong><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 17px;; cursor: default;">⚠️</strong>
+</div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b"><br></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">さすがにお得すぎて</span></strong></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">注文が殺到中！</span></strong></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/6fea6d5b-a20a-4f1c-bffe-44bd4fa40352.webp" srcset="./img/6fea6d5b-a20a-4f1c-bffe-44bd4fa40352.webp"><source type="image/avif" data-srcset="./img/6fea6d5b-a20a-4f1c-bffe-44bd4fa40352.avif" srcset="./img/6fea6d5b-a20a-4f1c-bffe-44bd4fa40352.avif"><img class="entered loaded" height="314" width="571" data-src="./img/6fea6d5b-a20a-4f1c-bffe-44bd4fa40352.jpg" src="./img/6fea6d5b-a20a-4f1c-bffe-44bd4fa40352.jpg" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b"><br></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">在庫が無くなる前に、</strong></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">アンケートに答えて</strong></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;">
+<strong style="color: rgb(250, 87, 204); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">最安値でゲット</span></strong><strong style="color: rgb(0, 0, 0); font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">しちゃってください！</span></strong>
+</div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b"><br></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b"><div class="sb-custom"><span><div id="sb-part-14304" class="sb-custom-part-mlewa5aeb5tqcc89be">
+<script>var sbCountdownTimer = sbCountdownTimer || {};
+ (function(_) {
+ const target = '.js-countdown';
+ let endTime = '24:00';
+ _.loadAction = function(el) {
+ el.querySelector('.countdown-end-title').style.display = 'none';
+ }
+ _.padZero = function(number) {
+ return number.toString().padStart(2, '0');
+ }
+ _.padMilli = function(number) {
+ return number.toString().padStart(2, '0');
+ }
+ _.getTime = function(dataLimit) {
+ if (dataLimit) {
+ endTime = dataLimit;
+ }
+ const now = new Date();
+ const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endTime.split(':')[0], endTime.split(':')[1], 0);
+ const remainingTime = endOfDay - now;
+ const hour = Math.floor(remainingTime / (1000 * 60 * 60));
+ const minute = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+ const second = Math.floor((remainingTime % (1000 * 60)) / 1000);
+ const milli = Math.floor((remainingTime % 1000) / 10); 
+ return {
+ hour: hour,
+ minute: minute,
+ second: second,
+ milli: milli
+ }
+ }
+ _.updateTimer = function(el) {
+ const dataLimit = el.querySelector('.countdown-times').dataset.limit;
+ const getTime = _.getTime(dataLimit);
+ let viewTime = {
+ hour: el.querySelector('.hour'),
+ minute: el.querySelector('.minute'),
+ second: el.querySelector('.second'),
+ milli: el.querySelector('.milli')
+ };
+ if (getTime.hour <= 0 && getTime.minute <= 0 && getTime.second <= 0 && getTime.milli <= 0) {
+ el.classList.remove('timer-start');
+ el.classList.add('timer-end');
+ viewTime.hour.textContent = '00';
+ viewTime.minute.textContent = '00';
+ viewTime.second.textContent = '00';
+ viewTime.milli.textContent = '00';
+ return false;
+ } else {
+ el.classList.remove('timer-end');
+ el.classList.add('timer-start');
+ viewTime.hour.textContent = _.padZero(getTime.hour);
+ viewTime.minute.textContent = _.padZero(getTime.minute);
+ viewTime.second.textContent = _.padZero(getTime.second);
+ viewTime.milli.textContent = _.padMilli(getTime.milli);
+ return true;
+ }
+ }
+ _.init = function() {
+ Array.from(document.querySelectorAll(target), el => {
+ _.loadAction(el);
+ const timerInterval = setInterval(() => {
+ const isRunning = _.updateTimer(el);
+ if (!isRunning) {
+ clearInterval(timerInterval);
+ }
+ }, 10); 
+ });
+ };
+ })(sbCountdownTimer);</script>
+<script>document.addEventListener('DOMContentLoaded', sbCountdownTimer.init, false);</script>
+<div class="countdown js-countdown timer-start">
+<div class="countdown-wrap">
+<div class="countdown-title"><span style="; cursor: default;">🚨在庫わずかで予約殺到中！急いで💦<br>本日の受付終了まで</span></div>
+<div class="countdown-end-title" style="display: none;; cursor: default;"></div>
+ <div class="countdown-times">
+<div class="before">あと</div>
+<div class="time hour" data-time="時間">06</div>
+<div class="time minute" data-time="分">57</div>
+<div class="time second" data-time="秒">30</div>
+<div class="time milli" data-time="">58</div>
+</div>
+</div>
+</div>
+</div>
+<style>#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown {
+ font-size: 14px;
+ max-width: 620px;
+ margin-left: auto;
+ margin-right: auto;
+ color: #fff;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown-wrap {
+ background-color: #000;
+ border-radius: 0.5em;
+ padding: 1em;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown-title,
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown-end-title {
+ font-size: 1.5em;
+ font-weight: 600;
+ text-align: center;
+ line-height: 1.5;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown-times {
+ background-color: #fff;
+ color: #000;
+ font-weight: 600;
+ display: flex;
+ align-items: baseline;
+ justify-content: center;
+ column-gap: 0.25em;
+ border-radius: 0.5em;
+ line-height: 100%;
+ padding: 1em;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown-times .time {
+ font-size: 2em;
+ color: #f00;
+ line-height: 1.25;
+ font-weight: 700;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown-times .time::after {
+ content: attr(data-time);
+ font-size: 0.65em;
+ margin-left: 0.25em;
+ color: #000;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown-times .before {
+ font-size: 1.25em;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown-times .before:before {
+ content: "";
+ display: inline-block;
+ width: 1.25em;
+ height: 1.25em;
+ margin-right: 0.25em;
+ vertical-align: text-bottom;
+ background-image: url("data:image/svg+xml,%3C!--%3Fxml version='1.0' encoding='utf-8'%3F--%3E%3C!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='_x32_' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 512 512' style='width: 256px; height: 256px; opacity: 1;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%234B4B4B;%7D%0A%3C/style%3E%3Cg%3E%3Cpath class='st0' d='M255.999,343.319c12.863,0,23.288-10.425,23.288-23.288c0-7.801-3.842-14.7-9.731-18.927l-8.42-112.928 c-0.225-3.032-2.456-5.37-5.137-5.37c-2.68,0-4.911,2.338-5.136,5.37l-8.42,112.928c-5.889,4.227-9.731,11.126-9.731,18.927 C232.713,332.894,243.145,343.319,255.999,343.319z' style='fill: rgb(255, 255, 255);'%3E%3C/path%3E%3Cpath class='st0' d='M432.399,246.019c-14.55-34.388-38.798-63.572-69.336-84.211c-15.285-10.316-32.141-18.501-50.141-24.098 c-18-5.605-37.144-8.611-56.924-8.611c-26.369,0-51.61,5.354-74.53,15.051c-34.388,14.551-63.572,38.799-84.211,69.336 c-10.316,15.277-18.501,32.141-24.098,50.141c-5.605,18-8.611,37.144-8.611,56.924c-0.009,26.377,5.362,51.61,15.051,74.53 c14.55,34.388,38.798,63.572,69.336,84.211c15.276,10.316,32.141,18.501,50.141,24.098S236.221,512,255.999,512 c26.378,0.008,51.611-5.353,74.531-15.051c34.388-14.551,63.572-38.799,84.212-69.344c10.316-15.269,18.501-32.133,24.097-50.133 c5.605-18,8.62-37.144,8.612-56.922C447.459,294.18,442.097,268.939,432.399,246.019z M255.999,174.629 c20.214,0.008,39.35,4.084,56.79,11.46c26.161,11.058,48.487,29.593,64.224,52.888c7.868,11.653,14.09,24.482,18.351,38.172 c4.252,13.69,6.557,28.241,6.557,43.401c-0.008,20.205-4.085,39.348-11.46,56.789c-11.058,26.152-29.593,48.488-52.889,64.224 c-11.652,7.868-24.482,14.091-38.171,18.342c-13.69,4.26-28.241,6.565-43.401,6.565c-20.205-0.008-39.348-4.084-56.789-11.459 c-26.16-11.059-48.479-29.594-64.224-52.898c-7.868-11.652-14.091-24.473-18.342-38.172c-4.26-13.69-6.565-28.232-6.565-43.392 c0.008-20.214,4.084-39.35,11.459-56.79c11.059-26.152,29.594-48.487,52.898-64.224c11.643-7.868,24.482-14.09,38.172-18.351 C226.298,176.934,240.84,174.629,255.999,174.629z' style='fill: rgb(255, 255, 255);'%3E%3C/path%3E%3Cpolygon class='st0' points='431.28,140.634 402.748,116.678 372.779,152.394 401.319,176.35 ' style='fill: rgb(255, 255, 255);'%3E%3C/polygon%3E%3Cpath class='st0' d='M228.578,99.74v16.938h54.843V99.74c3.842-2.289,7.376-5.037,10.508-8.169 c9.698-9.689,15.72-23.137,15.711-37.93c0.009-14.792-6.014-28.248-15.711-37.93c-9.68-9.705-23.137-15.72-37.93-15.711 c-14.784-0.008-28.248,6.006-37.929,15.711c-9.689,9.681-15.711,23.137-15.711,37.93c0,14.793,6.022,28.241,15.711,37.93 C221.203,94.702,224.736,97.451,228.578,99.74z M228.578,69.076V83c-0.334-0.308-0.668-0.617-0.994-0.943 c-7.292-7.292-11.769-17.299-11.769-28.416s4.476-21.124,11.769-28.416c7.292-7.283,17.298-11.768,28.415-11.777 c11.117,0.009,21.124,4.494,28.424,11.777c7.276,7.292,11.761,17.299,11.769,28.416c-0.008,11.117-4.494,21.124-11.769,28.416 c-0.334,0.326-0.668,0.635-1.002,0.943V69.076H228.578z' style='fill: rgb(255, 255, 255);'%3E%3C/path%3E%3C/g%3E%3C/svg%3E%0A");
+ background-repeat: no-repeat;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown.timer-start .countdown-title {
+ display: block;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown.timer-start .countdown-end-title {
+ display: none;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown.timer-end .countdown-title {
+ display: none;
+}
+#sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown.timer-end .countdown-end-title {
+ display: block !important;
+}
+@media (max-width: 600px) {
+ #sb-part-14304.sb-custom-part-mlewa5aeb5tqcc89be .countdown {
+ font-size: 3vw;
+ }
+}</style></span></div></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b"><br></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b"><br></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b"><div class="sb-custom"><span><div id="sb-part-11152" class="sb-custom-part-mkwczqsjoc4u712e39"><div class="arrowFlow__area">
+<div class="arrowFlow__inner">
+<div class="arrowFlow__beforeG">
+<span class="arrow"></span><span class="arrow"></span><span class="arrow"></span>
+</div>
+<div class="arrowFlow__afterG">
+<span class="arrow"></span><span class="arrow"></span><span class="arrow"></span>
+</div>
+</div>
+</div></div>
+<style>#sb-part-11152.sb-custom-part-mkwczqsjoc4u712e39 .arrowFlow__area {
+ width: 100%;
+ height: auto;
+}
+#sb-part-11152.sb-custom-part-mkwczqsjoc4u712e39 .arrowFlow__inner {
+ padding-bottom: 200px;
+ overflow-y: hidden;
+ position: relative;
+}
+#sb-part-11152.sb-custom-part-mkwczqsjoc4u712e39 .arrowFlow__beforeG,
+#sb-part-11152.sb-custom-part-mkwczqsjoc4u712e39 .arrowFlow__afterG {
+ width: 80%;
+ max-width: 600px;
+ height: auto;
+ margin: 0 auto;
+ display: flex;
+ justify-content: space-evenly;
+ align-items: flex-start;
+ animation-name: arrowFlow;
+ animation-duration: 2s;
+ animation-timing-function: ease-in-out;
+ animation-iteration-count: infinite;
+ transform: translate(-50%, -300%);
+ position: absolute;
+ top: 0;
+ left: 50%;
+}
+#sb-part-11152.sb-custom-part-mkwczqsjoc4u712e39 .arrowFlow__afterG {
+ animation-delay: 1s;
+}
+#sb-part-11152.sb-custom-part-mkwczqsjoc4u712e39 .arrow {
+ display: inline-block;
+ vertical-align: middle;
+ color: #BFDCF5;
+ line-height: 1;
+ position: relative;
+ width: 40px;
+ height: 60px !important;
+ background: currentColor;
+ margin: 0 30px;
+}
+#sb-part-11152.sb-custom-part-mkwczqsjoc4u712e39 .arrow:before {
+ content: "";
+ display: inline-block;
+ width: 0;
+ height: 0;
+ border-style: solid;
+ border-width: 50px 50px 0 50px;
+ border-color: #BFDCF5 transparent transparent transparent;
+ position: absolute;
+ bottom: -50px;
+ left: 50%;
+ transform: translateX(-50%);
+}
+@keyframes arrowFlow {
+ 0% {
+ transform: translate(-50%, -300%);
+ }
+ 60% {
+ transform: translate(-50%, 100%);
+ }
+ 100% {
+ transform: translate(-50%, 400%);
+ }
+}</style></span></div></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><picture><source type="image/webp" data-srcset="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.webp" srcset="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.webp"><source type="image/avif" data-srcset="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.avif" srcset="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.avif"><img src="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.png" class="entered loaded" height="453" width="571" data-src="./img/5d0f51ac-f613-4d62-b65f-885afd474fdd.png" data-ll-status="loaded"></picture></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b"><div class="sb-custom"><span><div id="sb-part-17965" class="sb-custom-part-mlgari7z30jro4mab0v"><div style="text-align: right;; cursor: default;"><span style="font-size: 9px; color: rgb(187, 187, 187);; cursor: default;">※ヘアカラーロング剤の分類名であり、染色効果は2ヵ月程度。新たに生えてくる白髪には染色効果はありません。
+ </span></div></div>
+<style>#sb-part-17965.sb-custom-part-mlgari7z30jro4mab0v div {
+ line-height: 0.8;
+ padding: 0;
+}</style></span></div></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><br></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;">
+<strong style="font-size: 21px; background-color: rgba(0, 0, 0, 0);; cursor: default;"><span class="sb-bg-under-marker" style="background: rgba(0, 0, 0, 0) linear-gradient(transparent 60%,#ffff00 0%) repeat scroll 0 0;; cursor: default;" data-color="#ffff00" data-border-size="60%">本当にお得に手に入るの大チャンス</span></strong><strong style="font-size: 21px;; cursor: default;">なので、</strong>
+</div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><strong style="font-size: 21px;; cursor: default;">在庫がある今のうちに</strong></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><strong style="background-color: transparent; color: rgb(0, 0, 0); font-size: 21px;; cursor: default;">下のボタンから注文してください！</strong></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" draggable="false" class=""><div class="sb-custom"><span><div id="sb-part-18160" class="sb-custom-part-mlordkkl69xjhfw65o4"><div class="puyoBtn__area">
+ <a href="https://trc.a-msp.jp/ad/p/r?medium=254&ad=517&creative=2217" class="btn cta_link" draggable="false">
+ <picture><img src="./img/99c73763-a2e7-4cbd-871c-db22bb1c14bf.png" width="500" height="177" draggable="false" class="entered loaded" data-src="./img/99c73763-a2e7-4cbd-871c-db22bb1c14bf.png" data-ll-status="loaded"></picture>
+ </a>
+</div></div>
+<style>#sb-part-18160.sb-custom-part-mlordkkl69xjhfw65o4
+.puyoBtn__area {
+ width: 500px;
+ max-width: 95%;
+ height: auto;
+ margin: 30px auto;
+}
+#sb-part-18160.sb-custom-part-mlordkkl69xjhfw65o4
+.puyoBtn__area .btn {
+ display: block;
+ width: 100%;
+ height: auto;
+}
+#sb-part-18160.sb-custom-part-mlordkkl69xjhfw65o4
+.puyoBtn__area .btn img {
+ width: 100%;
+ height: auto;
+ animation: puyoBtn 1.6s ease-in infinite;
+}
+@keyframes puyoBtn {
+ 0% {
+ transform: scale(1.09);
+ }
+ 10% {
+ transform: scale(1.09);
+ }
+ 30% {
+ transform: scale(1.01);
+ }
+ 40% {
+ transform: scale(1.01);
+ }
+ 50% {
+ transform: scale(1, 1.04);
+ }
+ 60% {
+ transform: scale(1.09);
+ }
+ 70% {
+ transform: scale(1.02);
+ }
+ 100% {
+ transform: scale(1.09);
+ }
+}</style></span></div></div>
+<div id="docs-internal-guid-24678baf-7fff-5399-c29d-0e90f17c191b" style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;">
+<a href="https://b-ris.shop/hp/online/corporation?squadbeyond_uid=64730adf-8983-4198-a5d3-75e08c3e7fe9&sb_article_uid=bsLi-hqTfvGOxmDog&sad=64730adf-8983-4198-a5d3-75e08c3e7fe9" target="_blank" style="font-size: 13px;; cursor: default;">会社概要</a> <a href="https://b-ris.shop/hp/online/privacy?squadbeyond_uid=64730adf-8983-4198-a5d3-75e08c3e7fe9&sb_article_uid=bsLi-hqTfvGOxmDog&sad=64730adf-8983-4198-a5d3-75e08c3e7fe9" target="_blank" style="font-size: 13px;; cursor: default;">プライバシーポリシー </a> <a href="https://b-ris.shop/hp/online/law?squadbeyond_uid=64730adf-8983-4198-a5d3-75e08c3e7fe9&sb_article_uid=bsLi-hqTfvGOxmDog&sad=64730adf-8983-4198-a5d3-75e08c3e7fe9" target="_blank" style="font-size: 13px;; cursor: default;">特定商取引に関する法律</a>
+</div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+<div style="text-align: center;; cursor: default;"><br></div>
+</div><script>const lazyLoadInstance = new LazyLoad({
+ elements_selector: '.lazyload',
+ callback_loaded: function(element) {
+ element.classList.remove('lazyload');
+ }
+});</script><script>const storageValue = JSON.stringify({ article_uid: "bsLi-hqTfvGOxmDog", visitor_uid: window.sb_visitor_id });
+sessionStorage.setItem('sb_global_id', window.sb_global_id);
+sessionStorage.setItem("sb_bp_CmUIN_gBjfQThh-rYw", storageValue);
+localStorage.setItem('sb_global_id', window.sb_global_id);
+localStorage.setItem("sb_bp_CmUIN_gBjfQThh-rYw", storageValue);</script><script>let hasFunnel = document.querySelector('.js-has-funnel').dataset.value
+if (hasFunnel === "true") {
+ let sbUrl = new URL(location.href);
+ let sbParams = new URLSearchParams(sbUrl.search);
+ if (sbParams.get('step_uid')) {
+ sbParams.delete('step_uid')
+ history.replaceState(null, null, location.pathname + `?${sbParams.toString()}`)
+ }
+}</script> <div data-article-value="bsLi-hqTfvGOxmDog" data-team-id="324" id="link-popup-root"></div><script src="./img/index.js"></script><img src="./img/pixel.gif" alt="" style="display:none; cursor: default;" onload="fetch('https://id.mysquadbeyond.com/visitor-cross-global-id',{credentials:'include'}).then(v=>v.text()).then(v=>{fetch('/visitor-cross-global-id',{method:'POST',body:v});});"><script async="">!function(w,d){
+ w.mks = w.mks || function(a){
+ (w.mks.q = w.mks.q || []).push(a);
+ };
+ var s = d.createElement("script");
+ s.src = "https:
+ s.async = true;
+ d.head.appendChild(s);
+ }(window, document);</script><script async="">window.addEventListener('load', function() {
+ fetch('https:
+ .then(response => response.text())
+ .then(teamUid => {
+ fetch('/team-uid', {
+ method: 'POST',
+ body: teamUid,
+ });
+ });
+);</script>
+<script src="/js/parameter-min.js" defer="None"></script></body>
+</html>
