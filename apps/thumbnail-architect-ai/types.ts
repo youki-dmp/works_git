@@ -26,6 +26,13 @@ export interface FinalImageEntry {
   url: string;
   timestamp: string;
   sourcePattern: string;
+  mainCopy: string;
+  subCopy: string;
+  plan: string;
+  backgroundUrl?: string;
+  subjectUrl?: string;
+  textUrl?: string;
+  effectsUrl?: string;
 }
 
 export const AppStatus = {

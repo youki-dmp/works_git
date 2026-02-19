@@ -66,8 +66,12 @@ const App: React.FC = () => {
     } catch (err: any) {
       clearInterval(progressTimer);
       console.error(err);
-      if (err?.message === "API_KEY_MISSING" || err?.message?.includes("API key")) {
+      if (err?.message === "API_KEY_MISSING") {
         setError("APIキーが設定されていません。.env.local ファイルを確認してください。");
+      } else if (err?.message?.includes("leaked")) {
+        setError("APIキーが漏洩したため、Googleによって失効されました。新しいキーを発行して .env.local を更新してください。");
+      } else if (err?.message?.includes("API key") || err?.message?.includes("invalid")) {
+        setError("APIキーが無効です。正しいキーが設定されているか確認してください。");
       } else if (err?.message?.includes("Requested entity was not found")) {
         setError("モデルが見つかりません。config.ts のモデル名設定を確認してください。");
       } else if (err?.message?.includes("Safety")) {
@@ -97,8 +101,10 @@ const App: React.FC = () => {
       console.error(err);
       if (err?.message?.includes("Safety")) {
         setError("安全性の制限により、画像の生成がスキップされました。");
-      } else if (err?.message?.includes("Requested entity was not found") || err?.message?.includes("API key")) {
-        setError("APIキーエラーです。キーの再選択を試みてください。");
+      } else if (err?.message?.includes("leaked")) {
+        setError("APIキーが漏洩・失効しています。新しいキーを発行してください。");
+      } else if (err?.message?.includes("Requested entity was not found") || err?.message?.includes("API key") || err?.message?.includes("invalid")) {
+        setError("APIキーエラーです。キーの設定内容を確認してください。");
       } else {
         setError("ラフ生成に失敗しました。もう一度お試しください。");
       }
@@ -127,7 +133,14 @@ const App: React.FC = () => {
       const now = new Date();
       const timestamp = now.toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-      setFinalImages(prev => [{ url: polishedImage, timestamp, sourcePattern }, ...prev]);
+      setFinalImages(prev => [{
+        url: polishedImage,
+        timestamp,
+        sourcePattern,
+        mainCopy,
+        subCopy,
+        plan
+      }, ...prev]);
       setStatus(AppStatus.POLISHED);
     } catch (err: any) {
       clearInterval(progressTimer);
@@ -153,37 +166,37 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0f1c] text-slate-50 flex flex-col font-sans selection:bg-indigo-500/30">
-      <header className="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 py-4 px-8 shadow-2xl z-20 sticky top-0">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-slate-900 selection:text-white">
+      <header className="bg-white/80 backdrop-blur-xl border-b border-slate-100 py-5 px-8 shadow-[0_2px_20px_rgba(0,0,0,0.02)] z-20 sticky top-0">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
           <div className="flex items-center">
-            <div className="p-2 bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-700 rounded-xl mr-4 shadow-[0_0_20px_rgba(79,70,229,0.3)] border border-indigo-400/20"><Palette className="w-6 h-6 text-white" /></div>
+            <div className="p-2.5 bg-slate-900 rounded-2xl mr-4 shadow-lg shadow-slate-200"><Palette className="w-6 h-6 text-white" /></div>
             <div>
-              <h1 className="text-xl font-black tracking-tighter text-white flex items-center">
-                THUMBNAIL ARCHITECT <span className="ml-2 text-[10px] bg-white text-black px-1.5 py-0.5 rounded tracking-widest font-black">ULTIMATE</span>
+              <h1 className="text-xl font-bold tracking-tight text-slate-900 flex items-center">
+                THUMBNAIL ARCHITECT <span className="ml-2 text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full tracking-widest font-bold">2026 EDITION</span>
               </h1>
               <div className="flex items-center gap-2 mt-0.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Gemini 3 Pro Deep Research Engine Active</p>
+                <div className="w-1.5 h-1.5 rounded-full bg-slate-900 animate-pulse"></div>
+                <p className="text-[10px] text-slate-400 font-medium tracking-wide">Gemini 3 Pro 解析エンジン稼働中</p>
               </div>
             </div>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <button
               onClick={() => setShowDocs(true)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded-lg transition-all"
+              className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-all shadow-sm"
             >
-              <Book className="w-3.5 h-3.5 text-indigo-400" />
-              <span className="text-[10px] font-black text-indigo-300 uppercase tracking-wider">Team Library</span>
+              <Book className="w-4 h-4 text-slate-600" />
+              <span className="text-xs font-semibold text-slate-700">チームライブラリ</span>
             </button>
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-800/50 rounded-lg border border-slate-700">
-              <TrendingUp className="w-3 h-3 text-indigo-400" />
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Trend Analysis Mode</span>
+            <div className="flex items-center gap-2 px-4 py-2 bg-slate-100/50 rounded-xl border border-slate-100">
+              <TrendingUp className="w-4 h-4 text-slate-500" />
+              <span className="text-xs font-semibold text-slate-500">トレンド分析モード</span>
             </div>
           </div>
         </div>
       </header>
-      <main className="flex-grow p-6 overflow-hidden bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent">
+      <main className="flex-grow p-8 overflow-hidden bg-slate-50">
         <div className="max-w-[1600px] mx-auto h-[calc(100vh-7rem)] grid grid-cols-1 md:grid-cols-12 gap-6">
           <div className="md:col-span-4 h-full overflow-hidden">
             <InputForm inputs={inputs} setInputs={setInputs} onSubmit={handleGeneratePlan} status={status} />

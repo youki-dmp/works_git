@@ -117,33 +117,43 @@ export const generateFinalImage = async (
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const contentParts: any[] = [];
 
-    contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(selectedDraftImage) } });
-    if (inputs.uploadedBackgroundImage) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(inputs.uploadedBackgroundImage) } });
+    // --- IMAGE ORDER: SOURCE OF TRUTH FIRST ---
+    // Image 1: MASTER SUBJECT (The Absolute Truth)
     if (inputs.uploadedImage) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(inputs.uploadedImage) } });
+
+    // Image 2: PREVIOUS DRAFT (Composition/Background Reference)
+    contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(selectedDraftImage) } });
+
+    // Other assets
+    if (inputs.uploadedBackgroundImage) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(inputs.uploadedBackgroundImage) } });
     if (inputs.uploadedLogo) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(inputs.uploadedLogo) } });
     if (previousFinalImage) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(previousFinalImage) } });
 
-    let prompt = `ULTIMATE FINAL RENDER (NANO BANANA PRO). AspectRatio: ${inputs.aspectRatio}.
-    Strategy: ${designPlan}
+    let prompt = `!!! ULTIMATE FINAL RENDER - SOURCE OF TRUTH MODE !!!
+    AspectRatio: ${inputs.aspectRatio}.
+    
+    ${SYSTEM_PROMPTS.ABSOLUTE_SOURCE_OF_TRUTH_RULE}
     ${inputs.strictIdentity ? SYSTEM_PROMPTS.ABSOLUTE_IDENTITY_PRESERVATION_RULE : ""}
     ${SYSTEM_PROMPTS.STRICT_IDENTITY_RULE}
     ${SYSTEM_PROMPTS.VISUAL_HIERARCHY_RULES}
     ${SYSTEM_PROMPTS.JAPANESE_FIDELITY_RULE}
     
-    !!! SUBJECT ADJUSTMENT !!!
+    !!! MANDATORY COMPOSITING INSTRUCTION !!!
+    - Use IMAGE 1 for the Subject. DO NOT use any subject features found in other images.
+    - Use IMAGE 2 for Background elements and layout layout reference.
+    - Perform "Seamless Compositing": Ground the subject from Image 1 into the environment of Image 2, but NEVER alter the subject's base features (face, hair, costume).
+    
     Target Shot: ${inputs.subjectType === 'full' ? 'Full Body (全身)' : inputs.subjectType === 'bust' ? 'Bust-up (バストアップ)' : 'Face Close-up (ドアップ)'}
-    Scale Factor: ${inputs.subjectScale}x relative to standard.
-    Position Offset: X=${inputs.subjectX}%, Y=${inputs.subjectY}% (Negative Y means move the subject UP to focus on the top/bust).
+    Scale Factor: ${inputs.subjectScale}x.
+    Position Offset: X=${inputs.subjectX}%, Y=${inputs.subjectY}%.
     
     !!! MANDATORY TEXT EXECUTION !!!
-    1. MAIN COPY: "${specificMainCopy}" - MUST be the most prominent visual element.
-    2. SUB COPY: "${specificSubCopy}" - MUST be included as supporting text.
-    DO NOT OMIT, DO NOT ALTER, DO NOT ADD EXTRA TEXT.
+    - MAIN COPY: "${specificMainCopy}"
+    - SUB COPY: "${specificSubCopy}"
+    - Render in high-quality Japanese fonts. NO ARTIFACTS.
     
-    ${inputs.uploadedBackgroundImage ? "Use the provided Background Image as the environment base." : ""}
     Instruction: ${modificationInstruction}
-    Ensure the text is NOT garbled and is rendered in high-quality Japanese fonts.
-    High-end production quality, perfect lighting.`;
+    Max production quality. Pixel-perfect Japanese.`;
 
     contentParts.push({ text: prompt });
 
@@ -156,5 +166,43 @@ export const generateFinalImage = async (
     const imageData = response.candidates?.[0]?.content?.parts.find(p => p.inlineData)?.inlineData?.data;
     if (!imageData) throw new Error("生成失敗");
     return `data:image/png;base64,${imageData}`;
+  } catch (error) { throw error; }
+};
+
+export const generateLayeredAssets = async (
+  designPlan: string,
+  finalImageBase64: string,
+  inputs: ThumbnailInputs
+): Promise<{ background: string, subject: string, text: string, effects: string }> => {
+  try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
+    const callAI = async (component: string, instruction: string) => {
+      const parts = [
+        { inlineData: { mimeType: "image/png", data: cleanBase64(finalImageBase64) } },
+        {
+          text: `LAYER EXTRACTION: Based on the provided final thumbnail, generate ONLY the ${component}.
+        Instruction: ${instruction}
+        Aspect Ratio: ${inputs.aspectRatio}. No other elements allowed. Ensure the style matches the source image perfectly.`
+        }
+      ];
+      const res = await ai.models.generateContent({
+        model: AI_MODELS.FINAL_RENDERER,
+        contents: { parts },
+        config: { imageConfig: { aspectRatio: inputs.aspectRatio } }
+      });
+      const data = res.candidates?.[0]?.content?.parts.find(p => p.inlineData)?.inlineData?.data;
+      return data ? `data:image/png;base64,${data}` : "";
+    };
+
+    // Parallel calls for speed
+    const [bg, sub, txt, eff] = await Promise.all([
+      callAI("Background", "Clean background environment. USE INPAINTING TO REMOVE the character, logo, all text, and foreground effects. Extend the background seamlessly where objects were removed."),
+      callAI("Subject", "Standalone character/subject. REMOVE the background, logo, text, and environmental effects. Deliver the subject with original lighting but on a clean, solid background (the user will handle transparency)."),
+      callAI("Text", "Standalone main and sub copy text with all designed effects/decorations. REMOVE character, background, and other graphics. High-end typography focus."),
+      callAI("Effects & Overlays", "Standalone visual effects (sparks, glows, particles, frame decorations). REMOVE character, background, and text.")
+    ]);
+
+    return { background: bg, subject: sub, text: txt, effects: eff };
   } catch (error) { throw error; }
 };
