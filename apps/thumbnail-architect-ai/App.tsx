@@ -173,7 +173,7 @@ const App: React.FC = () => {
             <div className="p-2.5 bg-slate-900 rounded-2xl mr-4 shadow-lg shadow-slate-200"><Palette className="w-6 h-6 text-white" /></div>
             <div>
               <h1 className="text-xl font-bold tracking-tight text-slate-900 flex items-center">
-                THUMBNAIL ARCHITECT <span className="ml-2 text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full tracking-widest font-bold">2026 EDITION</span>
+                サムネイル職人 <span className="ml-2 text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full tracking-widest font-bold">2026年度版</span>
               </h1>
               <div className="flex items-center gap-2 mt-0.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-slate-900 animate-pulse"></div>
