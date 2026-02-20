@@ -18,6 +18,29 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
   const logoFileInputRef = useRef<HTMLInputElement>(null);
   const bgFileInputRef = useRef<HTMLInputElement>(null);
 
+  const [dragActiveField, setDragActiveField] = useState<string | null>(null);
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      // Find the closest field name from the data attribute
+      const field = e.currentTarget.getAttribute('data-field');
+      if (field) setDragActiveField(field);
+    } else if (e.type === "dragleave") {
+      setDragActiveField(null);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, fieldName: 'uploadedImage' | 'uploadedLogo' | 'uploadedBackgroundImage') => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActiveField(null);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFile(e.dataTransfer.files[0], fieldName);
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type, checked } = e.target as any;
     setInputs(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
@@ -90,8 +113,16 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
               <div className="flex gap-4">
                 <div className="flex-grow">
                   {!inputs.uploadedImage ? (
-                    <div onClick={() => mainFileInputRef.current?.click()} className="border-2 border-dashed border-slate-200 rounded-2xl p-4 flex flex-col items-center justify-center text-slate-400 h-28 hover:bg-slate-50 transition-all cursor-pointer">
-                      <Upload className="w-5 h-5 mb-2" />
+                    <div
+                      data-field="uploadedImage"
+                      onDragEnter={handleDrag}
+                      onDragOver={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDrop={(e) => handleDrop(e, 'uploadedImage')}
+                      onClick={() => mainFileInputRef.current?.click()}
+                      className={`border-2 border-dashed rounded-2xl p-4 flex flex-col items-center justify-center h-28 transition-all cursor-pointer ${dragActiveField === 'uploadedImage' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 scale-[1.02]' : 'border-slate-200 text-slate-400 hover:bg-slate-50'}`}
+                    >
+                      <Upload className={`w-5 h-5 mb-2 ${dragActiveField === 'uploadedImage' ? 'animate-bounce' : ''}`} />
                       <span className="text-xs font-medium">人物・キャラクター</span>
                     </div>
                   ) : (
@@ -170,8 +201,16 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
                 チャンネルロゴ
               </label>
               {!inputs.uploadedLogo ? (
-                <div onClick={() => logoFileInputRef.current?.click()} className="border-2 border-dashed border-slate-700 rounded-lg p-2 flex flex-col items-center justify-center text-slate-500 h-16 hover:bg-slate-700/50 transition-all cursor-pointer">
-                  <Upload className="w-4 h-4 mb-1" />
+                <div
+                  data-field="uploadedLogo"
+                  onDragEnter={handleDrag}
+                  onDragOver={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDrop={(e) => handleDrop(e, 'uploadedLogo')}
+                  onClick={() => logoFileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-lg p-2 flex flex-col items-center justify-center h-16 transition-all cursor-pointer ${dragActiveField === 'uploadedLogo' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 scale-[1.02]' : 'border-slate-700 text-slate-500 hover:bg-slate-700/50'}`}
+                >
+                  <Upload className={`w-4 h-4 mb-1 ${dragActiveField === 'uploadedLogo' ? 'animate-bounce' : ''}`} />
                   <span className="text-[8px] uppercase">Logo</span>
                 </div>
               ) : (
@@ -190,8 +229,16 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
               背景画像（ゲーム画面など）
             </label>
             {!inputs.uploadedBackgroundImage ? (
-              <div onClick={() => bgFileInputRef.current?.click()} className="border-2 border-dashed border-slate-700 rounded-lg p-3 flex flex-col items-center justify-center text-slate-500 h-24 hover:bg-slate-700/50 transition-all cursor-pointer">
-                <Upload className="w-5 h-5 mb-1 text-slate-600" />
+              <div
+                data-field="uploadedBackgroundImage"
+                onDragEnter={handleDrag}
+                onDragOver={handleDrag}
+                onDragLeave={handleDrag}
+                onDrop={(e) => handleDrop(e, 'uploadedBackgroundImage')}
+                onClick={() => bgFileInputRef.current?.click()}
+                className={`border-2 border-dashed rounded-lg p-3 flex flex-col items-center justify-center h-24 transition-all cursor-pointer ${dragActiveField === 'uploadedBackgroundImage' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 scale-[1.02]' : 'border-slate-700 text-slate-500 hover:bg-slate-700/50'}`}
+              >
+                <Upload className={`w-5 h-5 mb-1 ${dragActiveField === 'uploadedBackgroundImage' ? 'animate-bounce' : 'text-slate-600'}`} />
                 <span className="text-[9px] uppercase font-bold">Background Upload</span>
                 <p className="text-[8px] text-slate-600 mt-1">ゲームのスクショなどを背景に指定できます</p>
               </div>
