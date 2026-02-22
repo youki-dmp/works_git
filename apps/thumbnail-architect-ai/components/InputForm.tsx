@@ -10,13 +10,14 @@ interface InputFormProps {
 }
 
 const EMOTIONS = [
-  "衝撃・サプライズ", "絶望・ピンチ", "歓喜・達成", "好奇心・謎", "怒り・不満", "感動・エモい", "爆笑・ユーモア", "ポップ・エンタメ", "ホラー・恐怖", "裏技・攻略"
+  "衝撃・サプライズ", "絶望・ピンチ", "歓喜・達成", "好奇心・謎", "怒り・不満", "感動・エモい", "爆笑・ユーモア", "ポップ・エンタメ", "ホラー・恐怖", "裏技・攻略", "雑談", "歌枠"
 ];
 
 const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, status }) => {
   const mainFileInputRef = useRef<HTMLInputElement>(null);
   const logoFileInputRef = useRef<HTMLInputElement>(null);
   const bgFileInputRef = useRef<HTMLInputElement>(null);
+  const refFileInputRef = useRef<HTMLInputElement>(null);
 
   const [dragActiveField, setDragActiveField] = useState<string | null>(null);
 
@@ -32,7 +33,7 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
     }
   };
 
-  const handleDrop = (e: React.DragEvent, fieldName: 'uploadedImage' | 'uploadedLogo' | 'uploadedBackgroundImage') => {
+  const handleDrop = (e: React.DragEvent, fieldName: 'uploadedImage' | 'uploadedLogo' | 'uploadedBackgroundImage' | 'referenceImages') => {
     e.preventDefault();
     e.stopPropagation();
     setDragActiveField(null);
@@ -46,13 +47,26 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
     setInputs(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
-  const handleFile = (file: File, fieldName: 'uploadedImage' | 'uploadedLogo' | 'uploadedBackgroundImage') => {
+  const handleFile = (file: File, fieldName: 'uploadedImage' | 'uploadedLogo' | 'uploadedBackgroundImage' | 'referenceImages') => {
     if (!file.type.startsWith('image/')) return;
     const reader = new FileReader();
     reader.onloadend = () => {
-      setInputs(prev => ({ ...prev, [fieldName]: reader.result as string }));
+      setInputs(prev => {
+        if (fieldName === 'referenceImages') {
+          const newRefs = [...prev.referenceImages, reader.result as string].slice(0, 3);
+          return { ...prev, referenceImages: newRefs };
+        }
+        return { ...prev, [fieldName]: reader.result as string };
+      });
     };
     reader.readAsDataURL(file);
+  };
+
+  const removeReferenceImage = (index: number) => {
+    setInputs(prev => ({
+      ...prev,
+      referenceImages: prev.referenceImages.filter((_, i) => i !== index)
+    }));
   };
 
   const isProcessing = status !== AppStatus.IDLE && status !== AppStatus.PLANNED && status !== AppStatus.COMPLETE && status !== AppStatus.POLISHED && status !== AppStatus.ERROR;
@@ -250,6 +264,37 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
             )}
             <input type="file" ref={bgFileInputRef} onChange={(e) => handleFile(e.target.files?.[0]!, 'uploadedBackgroundImage')} className="hidden" />
           </div>
+
+          {/* Reference Images */}
+          <div className="space-y-2">
+            <label className="text-[10px] text-slate-300 font-bold flex items-center justify-between">
+              参考レイアウト画像（最大3枚）
+              <span className="bg-slate-800 px-2 py-0.5 rounded text-[8px]">{inputs.referenceImages.length}/3</span>
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {inputs.referenceImages.map((refImg, i) => (
+                <div key={i} className="relative rounded-lg overflow-hidden border border-slate-600 h-16">
+                  <img src={refImg} className="w-full h-full object-cover" />
+                  <button onClick={() => removeReferenceImage(i)} className="absolute top-1 right-1 bg-black/70 p-1 rounded-full text-white hover:bg-red-500 shadow-lg"><X className="w-3 h-3" /></button>
+                </div>
+              ))}
+              {inputs.referenceImages.length < 3 && (
+                <div
+                  data-field="referenceImages"
+                  onDragEnter={handleDrag}
+                  onDragOver={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDrop={(e) => handleDrop(e, 'referenceImages')}
+                  onClick={() => refFileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-lg flex flex-col items-center justify-center h-16 transition-all cursor-pointer ${dragActiveField === 'referenceImages' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 scale-[1.05]' : 'border-slate-700 text-slate-500 hover:bg-slate-700/50'}`}
+                >
+                  <Upload className={`w-4 h-4 mb-1 ${dragActiveField === 'referenceImages' ? 'animate-bounce' : 'text-slate-600'}`} />
+                  <span className="text-[7px] font-bold">追加</span>
+                </div>
+              )}
+            </div>
+            <input type="file" ref={refFileInputRef} onChange={(e) => handleFile(e.target.files?.[0]!, 'referenceImages')} className="hidden" />
+          </div>
         </div>
 
         {/* Analysis & Copy */}
@@ -279,7 +324,8 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
               <Type className="w-3 h-3 mr-2" /> サムネイルコピー
             </label>
             <input type="text" name="copyText" value={inputs.copyText} onChange={handleChange} placeholder="メインコピー（一瞬で伝わる！）" className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-slate-900 mb-3 focus:ring-2 focus:ring-slate-950 transition-all outline-none" />
-            <input type="text" name="subCopy" value={inputs.subCopy} onChange={handleChange} placeholder="サブコピー" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-500 focus:ring-1 focus:ring-slate-950 transition-all outline-none" />
+            <input type="text" name="subCopy" value={inputs.subCopy} onChange={handleChange} placeholder="サブコピー1" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-500 focus:ring-1 focus:ring-slate-950 transition-all outline-none mb-2" />
+            <input type="text" name="subCopy2" value={inputs.subCopy2} onChange={handleChange} placeholder="サブコピー2（補足情報など）" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-500 focus:ring-1 focus:ring-slate-950 transition-all outline-none" />
           </div>
         </div>
       </div>

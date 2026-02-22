@@ -8,6 +8,7 @@ export interface ThumbnailInputs {
   referenceUrls: string[];
   copyText: string;
   subCopy: string;
+  subCopy2: string;
   videoDescription: string;
   aspectRatio: '16:9' | '9:16';
   subjectBorderColor: string;
@@ -28,6 +29,7 @@ export interface FinalImageEntry {
   sourcePattern: string;
   mainCopy: string;
   subCopy: string;
+  subCopy2: string;
   plan: string;
   backgroundUrl?: string;
   subjectUrl?: string;

@@ -19,9 +19,10 @@ interface ResultDisplayProps {
   error: string | null;
   initialCopy: string;
   initialSubCopy: string;
+  initialSubCopy2: string;
   onGenerateDrafts: (instruction?: string) => void;
   onSelectDraft: (index: number) => void;
-  onGenerateFinal: (instruction: string, mainCopy: string, subCopy: string) => void;
+  onGenerateFinal: (instruction: string, mainCopy: string, subCopy: string, subCopy2: string, historyIndex?: number | null) => void;
   onUpdatePlan: (plan: string) => void;
   progress: number;
   onRetry: () => void;
@@ -30,12 +31,13 @@ interface ResultDisplayProps {
 
 const ResultDisplay: React.FC<ResultDisplayProps> = ({
   plan, draftImages, selectedDraftIndex, finalImages, status, error,
-  initialCopy, initialSubCopy, onGenerateDrafts, onSelectDraft, onGenerateFinal, onUpdatePlan,
+  initialCopy, initialSubCopy, initialSubCopy2, onGenerateDrafts, onSelectDraft, onGenerateFinal, onUpdatePlan,
   progress, onRetry, inputs
 }) => {
   const [brushupInstruction, setBrushupInstruction] = useState("");
   const [editMainCopy, setEditMainCopy] = useState(initialCopy);
   const [editSubCopy, setEditSubCopy] = useState(initialSubCopy);
+  const [editSubCopy2, setEditSubCopy2] = useState(initialSubCopy2);
   const [isEditingPlan, setIsEditingPlan] = useState(false);
   const [editedPlan, setEditedPlan] = useState("");
   const [critique, setCritique] = useState<string | null>(null);
@@ -181,11 +183,11 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
     if (action === 'face-focus') instruction = "被写体の顔に寄せて、より表情が感情的に伝わるようにズームしてください。";
     if (action === 'impact') instruction = "全体的なインパクトを高めるために、ライティングとコントラストを強化してください。";
 
-    onGenerateFinal(instruction, editMainCopy, editSubCopy);
+    onGenerateFinal(instruction, editMainCopy, editSubCopy, editSubCopy2, selectedFinalIndex);
   };
 
   useEffect(() => { if (plan) setEditedPlan(plan); }, [plan]);
-  useEffect(() => { setEditMainCopy(initialCopy); setEditSubCopy(initialSubCopy); }, [initialCopy, initialSubCopy]);
+  useEffect(() => { setEditMainCopy(initialCopy); setEditSubCopy(initialSubCopy); setEditSubCopy2(initialSubCopy2); }, [initialCopy, initialSubCopy, initialSubCopy2]);
 
   const handleCritique = async () => {
     if (selectedDraftIndex === null || !draftImages[selectedDraftIndex]) return;
@@ -212,7 +214,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
       const locationDesc = `画像の ${Math.round(marker.x)}% (横), ${Math.round(marker.y)}% (縦) の位置にある部分 ${modeDesc} に対して、以下の修正を行ってください：`;
       finalInstruction = `${locationDesc}\n${brushupInstruction}`;
     }
-    onGenerateFinal(finalInstruction, editMainCopy, editSubCopy);
+    onGenerateFinal(finalInstruction, editMainCopy, editSubCopy, editSubCopy2, selectedFinalIndex);
   };
 
   const currentPreviewImage = (selectedFinalIndex !== null && finalImages[selectedFinalIndex])
@@ -519,6 +521,15 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
                   <button onClick={() => handleQuickRefine('impact')} className="px-5 py-3 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:border-slate-900 hover:text-slate-900 transition-all flex items-center shadow-sm">
                     <Zap className="w-4 h-4 mr-2" /> インパクトを強化
                   </button>
+                  <button
+                    onClick={() => {
+                      const fixMsg = "【和魂注入・フォント修正】中国語フォント（中華フォント）の混入を排除し、標準的な日本の教育漢字・ゴシック体で再レンダリングしてください。特に「待」「凸」「刃」「直」などの字体に注意し、文字化けやノイズを完全に除去してください。";
+                      setBrushupInstruction(prev => prev.includes(fixMsg) ? prev : prev + "\n" + fixMsg);
+                    }}
+                    className="px-5 py-3 bg-red-50 rounded-xl border border-red-200 text-xs font-bold text-red-600 hover:bg-red-100 hover:border-red-400 transition-all flex items-center shadow-sm"
+                  >
+                    <Type className="w-4 h-4 mr-2" /> 日本語フォントを修正
+                  </button>
                 </div>
 
                 <textarea
@@ -528,20 +539,24 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
                   className="w-full bg-slate-50 border border-slate-100 rounded-3xl p-6 text-sm text-slate-900 h-36 resize-none outline-none focus:ring-1 focus:ring-slate-900 transition-all font-medium shadow-inner"
                 />
 
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-3 gap-6">
                   <div className="space-y-2">
                     <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider ml-1">メインコピー</span>
                     <input type="text" value={editMainCopy} onChange={(e) => setEditMainCopy(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm text-slate-900 shadow-inner" />
                   </div>
                   <div className="space-y-2">
-                    <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider ml-1">サブコピー</span>
+                    <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider ml-1">サブコピー1</span>
                     <input type="text" value={editSubCopy} onChange={(e) => setEditSubCopy(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm text-slate-900 shadow-inner" />
+                  </div>
+                  <div className="space-y-2">
+                    <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider ml-1">サブコピー2</span>
+                    <input type="text" value={editSubCopy2} onChange={(e) => setEditSubCopy2(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm text-slate-900 shadow-inner" />
                   </div>
                 </div>
 
                 <button
                   onClick={handleGenerateFinalWithMarker}
-                  disabled={status === AppStatus.POLISHING}
+                  disabled={status === AppStatus.POLISHING || (!brushupInstruction && !editMainCopy)}
                   className="w-full py-6 bg-slate-900 text-white font-semibold text-base rounded-[2rem] shadow-2xl shadow-slate-200 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center disabled:opacity-30"
                 >
                   {status === AppStatus.POLISHING ? <Loader2 className="w-6 h-6 animate-spin mr-3" /> : <Wand2 className="w-6 h-6 mr-3" />}

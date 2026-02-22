@@ -10,6 +10,11 @@ export const generateDesignPlan = async (inputs: ThumbnailInputs): Promise<strin
     const contentParts: any[] = [];
 
     if (inputs.uploadedImage) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(inputs.uploadedImage) } });
+    if (inputs.referenceImages && inputs.referenceImages.length > 0) {
+      inputs.referenceImages.forEach((ref) => {
+        contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(ref) } });
+      });
+    }
 
     let promptText = `
     YouTube Thumbnail Strategy Plan.
@@ -17,15 +22,18 @@ export const generateDesignPlan = async (inputs: ThumbnailInputs): Promise<strin
     Competitor Analysis Target: ${inputs.competitorKeyword || inputs.videoDescription}
     Target Emotion: ${inputs.emotionalTrigger}
     Main Copy: ${inputs.copyText}
-    Sub Copy: ${inputs.subCopy}
+    Sub Copy 1: ${inputs.subCopy}
+    Sub Copy 2: ${inputs.subCopy2}
     
     被写体の扱い: ${inputs.subjectType === 'full' ? '全身' : inputs.subjectType === 'bust' ? 'バストアップ' : 'ドアップ（顔）'}
     被写体位置オフセット: X=${inputs.subjectX}%, Y=${inputs.subjectY}% (0,0が中央、Yがマイナスで上方向へ移動)
     ${inputs.strictIdentity ? SYSTEM_PROMPTS.ABSOLUTE_IDENTITY_PRESERVATION_RULE : "被写体の特徴を活かした再構成を許可します。"}
+    ${['雑談', '歌枠'].includes(inputs.emotionalTrigger) ? SYSTEM_PROMPTS.TYPOGRAPHY_HEAVY_RULE : ""}
 
     Gemini 3 Proの検索ツールを使い、競合のサムネイルパターンを分析した上で、以下のプランを日本語で作成してください：
     1. 【競合差別化】競合が多用している色や構図を避け、目立つための「逆張り」提案。
     2. 【レイアウト指示】${inputs.uploadedImage ? `被写体の配置（サイズ感: ${inputs.subjectScale}x）` : "被写体の生成指示"}と文字の強弱。
+       ${inputs.referenceImages && inputs.referenceImages.length > 0 ? "提供された複数枚の「参考画像」を解析し、その構図やレイアウトの意図を汲み取った上で、今回のサムネイルに適用する際の具体的な配置やデザイン構造を提案してください。" : ""}
     3. 【空間設計】${inputs.uploadedLogo ? "チャンネルロゴの最適な配置場所。" : ""}
     4. 【カラーパレット】CTRを最大化する配色（HEXコード付き）。
     `;
@@ -71,6 +79,7 @@ export const generateVisualMockups = async (
       let p = `Thumbnail Mockup. ${inputs.aspectRatio}. ${v.suffix}\nPlan: ${designPlan}\n${SYSTEM_PROMPTS.STRICT_IDENTITY_RULE}\n${SYSTEM_PROMPTS.VISUAL_HIERARCHY_RULES}\nTEXT: "${inputs.copyText}" / "${inputs.subCopy}"`;
 
       if (inputs.strictIdentity) p += `\n${SYSTEM_PROMPTS.ABSOLUTE_IDENTITY_PRESERVATION_RULE}`;
+      if (['雑談', '歌枠'].includes(inputs.emotionalTrigger)) p += `\n${SYSTEM_PROMPTS.TYPOGRAPHY_HEAVY_RULE}`;
       p += `\nSHOT TYPE: ${inputs.subjectType}. SCALE: ${inputs.subjectScale}x. POSITION OFFSET: X=${inputs.subjectX}%, Y=${inputs.subjectY}% (Y-negative is UP).`;
 
       if (inputs.uploadedBackgroundImage) {
@@ -111,6 +120,7 @@ export const generateFinalImage = async (
   modificationInstruction: string = "",
   specificMainCopy: string = "",
   specificSubCopy: string = "",
+  specificSubCopy2: string = "",
   previousFinalImage: string | null = null
 ): Promise<string> => {
   try {
@@ -121,19 +131,21 @@ export const generateFinalImage = async (
     // Image 1: MASTER SUBJECT (The Absolute Truth)
     if (inputs.uploadedImage) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(inputs.uploadedImage) } });
 
-    // Image 2: PREVIOUS DRAFT (Composition/Background Reference)
-    contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(selectedDraftImage) } });
+    // Image 2: COMPOSITION REFERENCE (Draft OR Previous Final Image depending on if it's a brush-up)
+    const compositionBase = previousFinalImage || selectedDraftImage;
+    contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(compositionBase) } });
 
     // Other assets
     if (inputs.uploadedBackgroundImage) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(inputs.uploadedBackgroundImage) } });
     if (inputs.uploadedLogo) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(inputs.uploadedLogo) } });
-    if (previousFinalImage) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(previousFinalImage) } });
 
     let prompt = `!!! ULTIMATE FINAL RENDER - SOURCE OF TRUTH MODE !!!
     AspectRatio: ${inputs.aspectRatio}.
+    ${previousFinalImage ? "THIS IS A REFINEMENT ROUND. IMAGE 2 is the PREVIOUS RESULT. Apply the requested modifications while preserving all other successful elements of IMAGE 2." : ""}
     
     ${SYSTEM_PROMPTS.ABSOLUTE_SOURCE_OF_TRUTH_RULE}
     ${inputs.strictIdentity ? SYSTEM_PROMPTS.ABSOLUTE_IDENTITY_PRESERVATION_RULE : ""}
+    ${['雑談', '歌枠'].includes(inputs.emotionalTrigger) ? SYSTEM_PROMPTS.TYPOGRAPHY_HEAVY_RULE : ""}
     ${SYSTEM_PROMPTS.STRICT_IDENTITY_RULE}
     ${SYSTEM_PROMPTS.VISUAL_HIERARCHY_RULES}
     ${SYSTEM_PROMPTS.JAPANESE_FIDELITY_RULE}
@@ -143,17 +155,23 @@ export const generateFinalImage = async (
     - Use IMAGE 2 for Background elements and layout layout reference.
     - Perform "Seamless Compositing": Ground the subject from Image 1 into the environment of Image 2, but NEVER alter the subject's base features (face, hair, costume).
     
-    Target Shot: ${inputs.subjectType === 'full' ? 'Full Body (全身)' : inputs.subjectType === 'bust' ? 'Bust-up (バストアップ)' : 'Face Close-up (ドアップ)'}
+    Target Shot: ${inputs.subjectType === 'full' ? 'Full Body (全身)' : inputs.subjectType === 'bust' ? 'バストアップ' : 'Face Close-up (ドアップ)'}
     Scale Factor: ${inputs.subjectScale}x.
     Position Offset: X=${inputs.subjectX}%, Y=${inputs.subjectY}%.
     
-    !!! MANDATORY TEXT EXECUTION !!!
-    - MAIN COPY: "${specificMainCopy}"
-    - SUB COPY: "${specificSubCopy}"
-    - Render in high-quality Japanese fonts. NO ARTIFACTS.
-    
-    Instruction: ${modificationInstruction}
+    !!! TEXT QUALITY & JAPANESE FIDELITY !!!
+    1. MAIN COPY: "${specificMainCopy}"
+    2. SUB COPY 1: "${specificSubCopy}"
+    3. SUB COPY 2: "${specificSubCopy2}"
+    CRITICAL: Render the Japanese text exactly as provided. NO MOJIBAKE. Use premium, bold, professional Japanese fonts. The text must be legible and visually striking against the background.
     Max production quality. Pixel-perfect Japanese.`;
+
+    if (inputs.referenceImages && inputs.referenceImages.length > 0) {
+      inputs.referenceImages.forEach((ref, idx) => {
+        contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(ref) } });
+        prompt += `\nREFERENCE ${idx + 1}: Analyze the provided reference image. Adopt its layout structure, energy, and overall professional stylistic approach, but adapt it to fit the current subject and requirements.`;
+      });
+    }
 
     contentParts.push({ text: prompt });
 

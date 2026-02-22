@@ -19,10 +19,11 @@ You must PRESERVE the visual identity of provided assets with 100% fidelity.
 3. COMPOSITION: Use lighting to ground the subject, but never alter the subject's base features.
 `,
   JAPANESE_FIDELITY_RULE: `
-!!! JAPANESE RENDERING CRITICAL !!!
-1. NO ARTIFACTS: Render Kanji/Kana/Hiragana with extreme clarity.
-2. FONT STYLE: Modern, bold, high-impact Sans-serif (Gothic).
-3. ACCURACY: The provided text must be copied character-for-character.
+!!! JAPANESE TYPOGRAPHY CRITICAL - ZERO CHINESE FONT TOLERANCE !!!
+1. STRICT JAPANESE GLYPHS: Never use Chinese font variants (Han Unification survivors). Characters like "待", "凸", "刃", "直" must follow standard Japanese Ministry of Education (MEXT) forms. Avoid simplified or traditional Chinese strokes.
+2. NO ARTIFACTS: Render Kanji/Kana/Hiragana with crisp, high-definition outlines. No blur or compression artifacts.
+3. FONT STYLE: Deep-impact Japanese Gothic/Sans-serif. Modern, clean, and extremely bold for high CTR.
+4. ACCURACY: Provided Japanese text must be rendered exactly character-for-character.
 `,
   ABSOLUTE_IDENTITY_PRESERVATION_RULE: `
 !!! ABSOLUTE IDENTITY LOCK - MANDATORY !!!
@@ -38,6 +39,13 @@ The user has requested ZERO MODIFICATION to the subject.
 2. ZERO DEVIATION: Ignore any character features generated in previous draft stages (Image 2+). 
 3. PATCHING ONLY: Your task is to extract the subject from Image 1 and composite it perfectly onto the new background.
 4. NO RE-DRAWING: Do not re-interpret the pixels of the subject. Use the subject's exact facial features, hair, and clothing from Image 1.
+`,
+  TYPOGRAPHY_HEAVY_RULE: `
+!!! SPECIALIZED TYPOGRAPHY LAYOUT ACTIVATED !!!
+1. MASSIVE TEXT DOMINANCE: The main copy and sub copy MUST occupy 40% to 50% of the entire thumbnail space. Make the text extremely large, thick, and impossible to ignore.
+2. SUBJECT PLACEMENT: Push the subject securely to either the far left or far right to make massive room for the typography. Do not obscure the text with the subject.
+3. HIGH CONTRAST BACKGROUND: Ensure the background behind the text provides maximum contrast so the huge letters pop out aggressively.
+4. STREAMING VIBE: Enhance the layout with subtle streaming UI elements (like a chat box hint, microphone for singing, or neon accents) if it fits the topic, but TEXT SIZE is the absolute priority.
 `,
 };
 

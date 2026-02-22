@@ -11,7 +11,7 @@ const App: React.FC = () => {
   // Added missing emotionalTrigger and competitorKeyword to the initial state to comply with ThumbnailInputs interface.
   const [inputs, setInputs] = useState<ThumbnailInputs>({
     mainSubject: '', uploadedImage: null, uploadedLogo: null, background: '', uploadedBackgroundImage: null,
-    referenceImages: [], referenceUrls: [], copyText: '', subCopy: '', videoDescription: '', aspectRatio: '16:9',
+    referenceImages: [], referenceUrls: [], copyText: '', subCopy: '', subCopy2: '', videoDescription: '', aspectRatio: '16:9',
     subjectBorderColor: '#ffffff',
     subjectGlowColor: '#6366f1',
     useTrendSearch: false,
@@ -112,18 +112,18 @@ const App: React.FC = () => {
     }
   };
 
-  const handleGenerateFinal = async (instruction: string, mainCopy: string, subCopy: string) => {
+  const handleGenerateFinal = async (instruction: string, mainCopy: string, subCopy: string, subCopy2: string, historyIndex?: number | null) => {
     if (selectedDraftIndex === null || !draftImages[selectedDraftIndex]) return;
 
     setStatus(AppStatus.POLISHING); setError(null);
-    setLastAction({ type: 'FINAL', args: { instruction, mainCopy, subCopy } });
+    setLastAction({ type: 'FINAL', args: { instruction, mainCopy, subCopy, subCopy2 } });
     setProgress(5);
     const progressTimer = simulateProgress(5, 98, 15000);
     try {
-      const previousFinal = finalImages.length > 0 ? finalImages[0].url : null;
+      const baseFinalUrl = typeof historyIndex === 'number' ? finalImages[historyIndex].url : null;
 
       const polishedImage = await generateFinalImage(
-        plan, draftImages[selectedDraftIndex], inputs, instruction, mainCopy, subCopy, previousFinal
+        plan, draftImages[selectedDraftIndex], inputs, instruction, mainCopy, subCopy, subCopy2, baseFinalUrl
       );
 
       clearInterval(progressTimer);
@@ -139,6 +139,7 @@ const App: React.FC = () => {
         sourcePattern,
         mainCopy,
         subCopy,
+        subCopy2,
         plan
       }, ...prev]);
       setStatus(AppStatus.POLISHED);
@@ -161,7 +162,7 @@ const App: React.FC = () => {
     switch (lastAction.type) {
       case 'PLAN': handleGeneratePlan(); break;
       case 'DRAFTS': handleGenerateDrafts(lastAction.args); break;
-      case 'FINAL': handleGenerateFinal(lastAction.args.instruction, lastAction.args.mainCopy, lastAction.args.subCopy); break;
+      case 'FINAL': handleGenerateFinal(lastAction.args.instruction, lastAction.args.mainCopy, lastAction.args.subCopy, lastAction.args.subCopy2); break;
     }
   };
 
@@ -212,6 +213,7 @@ const App: React.FC = () => {
               progress={progress}
               initialCopy={inputs.copyText}
               initialSubCopy={inputs.subCopy}
+              initialSubCopy2={inputs.subCopy2}
               onGenerateDrafts={handleGenerateDrafts}
               onSelectDraft={setSelectedDraftIndex}
               onGenerateFinal={handleGenerateFinal}
