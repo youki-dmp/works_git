@@ -78,7 +78,9 @@ export const generateVisualMockups = async (
       const parts: any[] = [];
       let p = `Thumbnail Mockup. ${inputs.aspectRatio}. ${v.suffix}\nPlan: ${designPlan}\n${SYSTEM_PROMPTS.STRICT_IDENTITY_RULE}\n${SYSTEM_PROMPTS.VISUAL_HIERARCHY_RULES}\nTEXT: "${inputs.copyText}" / "${inputs.subCopy}"`;
 
-      if (inputs.strictIdentity) p += `\n${SYSTEM_PROMPTS.ABSOLUTE_IDENTITY_PRESERVATION_RULE}`;
+      if (inputs.strictIdentity) {
+        p += `\n${SYSTEM_PROMPTS.ABSOLUTE_IDENTITY_PRESERVATION_RULE}\n${SYSTEM_PROMPTS.ABSOLUTE_SOURCE_OF_TRUTH_RULE}`;
+      }
       if (['雑談', '歌枠'].includes(inputs.emotionalTrigger)) p += `\n${SYSTEM_PROMPTS.TYPOGRAPHY_HEAVY_RULE}`;
       p += `\nSHOT TYPE: ${inputs.subjectType}. SCALE: ${inputs.subjectScale}x. POSITION OFFSET: X=${inputs.subjectX}%, Y=${inputs.subjectY}% (Y-negative is UP).`;
 
@@ -139,9 +141,11 @@ export const generateFinalImage = async (
     if (inputs.uploadedBackgroundImage) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(inputs.uploadedBackgroundImage) } });
     if (inputs.uploadedLogo) contentParts.push({ inlineData: { mimeType: "image/png", data: cleanBase64(inputs.uploadedLogo) } });
 
-    let prompt = `!!! ULTIMATE FINAL RENDER - SOURCE OF TRUTH MODE !!!
+    let prompt = `!!! ULTIMATE FINAL RENDER (NANO BANANA PRO LEVEL PRECISION) - SOURCE OF TRUTH MODE !!!
     AspectRatio: ${inputs.aspectRatio}.
     ${previousFinalImage ? "THIS IS A REFINEMENT ROUND. IMAGE 2 is the PREVIOUS RESULT. Apply the requested modifications while preserving all other successful elements of IMAGE 2." : ""}
+    
+    ${modificationInstruction ? `\n!!! USER MODIFICATION REQUEST !!!\n${modificationInstruction}\nFocus specifically on reflecting this request in the output.\n` : ""}
     
     ${SYSTEM_PROMPTS.ABSOLUTE_SOURCE_OF_TRUTH_RULE}
     ${inputs.strictIdentity ? SYSTEM_PROMPTS.ABSOLUTE_IDENTITY_PRESERVATION_RULE : ""}

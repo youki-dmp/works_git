@@ -257,7 +257,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   const critiquePoints = parseCritiquePoints(critique);
 
   return (
-    <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_30px_60px_rgba(0,0,0,0.05)] h-full flex flex-col overflow-hidden">
+    <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_30px_60px_rgba(0,0,0,0.05)] h-full flex flex-col overflow-hidden relative">
       <div className="border-b border-slate-50 p-6 bg-white flex justify-between items-center z-10">
         <h2 className="font-semibold text-slate-800 flex items-center tracking-tight text-sm"><Zap className="w-4 h-4 mr-3 text-slate-900" />制作ワークスペース</h2>
         <div className="flex gap-4">
@@ -270,21 +270,6 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
       <div className="flex-grow flex overflow-hidden">
         {/* Main Console */}
         <div className={`flex-grow overflow-y-auto p-6 space-y-10 custom-scrollbar transition-all duration-500 ${showSimulator ? 'w-2/3 opacity-50 pointer-events-none sm:opacity-100 sm:pointer-events-auto' : 'w-full'}`}>
-          {error && (
-            <div className="bg-red-900/20 border border-red-500/50 text-red-200 p-4 rounded-xl items-start animate-in fade-in flex justify-between">
-              <div className="flex items-start">
-                <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />
-                <p className="text-xs font-medium">{error}</p>
-              </div>
-              <button
-                onClick={onRetry}
-                className="ml-4 px-3 py-1 bg-red-500/20 hover:bg-red-500/40 border border-red-500/50 rounded-lg text-[10px] font-bold uppercase tracking-widest flex items-center transition-all"
-              >
-                <RotateCcw className="w-3 h-3 mr-1.5" /> 再試行
-              </button>
-            </div>
-          )}
-
           {/* Strategy Section */}
           {plan && (
             <div className="space-y-6">
@@ -619,6 +604,20 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {error && (
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50 bg-red-950/95 backdrop-blur-xl border border-red-500/50 text-red-200 px-6 py-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom flex justify-between items-center max-w-2xl w-[90%] pointer-events-auto">
+          <div className="flex items-center">
+            <AlertCircle className="w-6 h-6 mr-4 flex-shrink-0 text-red-400" />
+            <p className="text-sm font-semibold">{error}</p>
+          </div>
+          <button
+            onClick={onRetry}
+            className="ml-6 px-4 py-2 bg-red-500 text-white rounded-xl text-xs font-black uppercase tracking-widest flex items-center hover:bg-red-600 transition-all shadow-lg active:scale-95 whitespace-nowrap"
+          >
+            <RotateCcw className="w-4 h-4 mr-2" /> 再試行
+          </button>
         </div>
       )}
     </div>

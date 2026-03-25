@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --background: #09090b;
+  /* Very dark zinc */
+  --foreground: #fafafa;
+  --primary: #a855f7;
+  /* Purple 500 */
+  --primary-foreground: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  /* A subtle premium animated mesh-like gradient background */
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(168, 85, 247, 0.15), transparent 40%),
+    radial-gradient(ellipse at 80% 100%, rgba(56, 189, 248, 0.15), transparent 40%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+/* Glassmorphism Utility Class */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Hide scrollbar for carousels */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
