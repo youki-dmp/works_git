@@ -1,8 +1,8 @@
 export const AI_MODELS = {
-  STRATEGY_PLANER: 'gemini-3-pro-preview',
+  STRATEGY_PLANER: 'gemini-3.1-flash-lite-preview',
   DRAFT_GENERATOR: 'gemini-2.5-flash-image',
   FINAL_RENDERER: 'gemini-3-pro-image-preview',
-  CRITIQUE_MODEL: 'gemini-3-pro-preview',
+  CRITIQUE_MODEL: 'gemini-3.1-flash-lite-preview',
 };
 
 export const SYSTEM_PROMPTS = {
