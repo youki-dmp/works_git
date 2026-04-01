@@ -1,15 +1,160 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LDR92CN28V"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-LDR92CN28V');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urazu | 個人VTuberのための戦略的パートナー</title>
     <meta name="description" content="「クリエイティブに全振りを。」個人VTuberのための戦略的パートナー「Urazu」。AIツールとディレクターのハイブリッド支援。">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .service-end-banner {
+            width: 100%;
+            background: linear-gradient(90deg, #b3003b 0%, #660022 100%);
+            color: #fff;
+            text-align: center;
+            padding: 12px 0;
+            font-weight: 900;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+            position: absolute;
+            top: 76px;
+            /* Below header */
+            z-index: 99;
+            box-shadow: 0 4px 15px rgba(255, 0, 51, 0.5);
+            animation: warningFlash 2s infinite alternate;
+        }
+
+        @keyframes warningFlash {
+            from {
+                box-shadow: 0 4px 15px rgba(255, 0, 51, 0.5);
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            }
+
+            to {
+                box-shadow: 0 4px 30px rgba(255, 0, 51, 1);
+                text-shadow: 0 0 15px rgba(255, 255, 255, 1);
+            }
+        }
+
+        .hero {
+            padding-top: 160px;
+        }
+
+        /* Adjust hero spacing to accommodate banner */
+
+        .cyber-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .cyber-modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .cyber-modal {
+            background: rgba(15, 15, 20, 0.95);
+            border: 2px solid #ff0033;
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.3), inset 0 0 20px rgba(255, 0, 51, 0.1);
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .cyber-modal-overlay.active .cyber-modal {
+            transform: scale(1);
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 2px solid #ff0033;
+        }
+
+        .modal-content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .modal-title {
+            color: #ff0033;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 0, 51, 0.8);
+            font-weight: 900;
+        }
+
+        .modal-body {
+            color: #d0d0d0;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+        }
+
+        .modal-body .signature {
+            text-align: right;
+            margin-top: 30px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .modal-close-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: transparent;
+            color: #ff0033;
+            border: 1px solid #ff0033;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .modal-close-btn:hover {
+            background: #ff0033;
+            color: #fff;
+            box-shadow: 0 0 15px #ff0033;
+        }
+    </style>
 </head>
+
 <body>
     <!-- Background Elements -->
     <div class="cyber-bg">
@@ -27,6 +172,11 @@
             <a href="https://forms.gle/i6UvgR2FYdrqvvG99" target="_blank" class="btn btn-sm btn-neon-cyan">無料モニターに参加</a>
         </div>
     </header>
+
+    <!-- Service End Banner -->
+    <div class="service-end-banner">
+        <span>2026年4月2日　サービス終了のお知らせ</span>
+    </div>
 
     <main>
         <!-- Hero Section -->
@@ -91,7 +241,8 @@
                             <p>ゲーム画面を入れるだけで、魅力的なサムネイルを3分で自動生成。作業時間を最大90%削減します。</p>
                         </div>
                         <div class="feature-visual image-wrapper">
-                            <img src="assets/images/feature_thumbnail.png" alt="Thumbnail Generation AI" class="cyber-img">
+                            <img src="assets/images/feature_thumbnail.png" alt="Thumbnail Generation AI"
+                                class="cyber-img">
                         </div>
                     </div>
                     <div class="feature-item glass-card reverse">
@@ -161,7 +312,8 @@
         <section class="bottom-cta hidden">
             <div class="container text-center">
                 <h2 class="cta-title section-title">あなたの「脳内メモリ」を<br>解放しませんか？</h2>
-                <p style="margin-bottom: 40px; color: var(--text-muted); font-size: 1.1rem;">現在、AIツールを2週間無料体験できるモニターを募集しています。</p>
+                <p style="margin-bottom: 40px; color: var(--text-muted); font-size: 1.1rem;">
+                    現在、AIツールを2週間無料体験できるモニターを募集しています。</p>
                 <div class="cta-actions">
                     <a href="https://forms.gle/i6UvgR2FYdrqvvG99" target="_blank" class="btn btn-xl btn-neon-pink">
                         今すぐ無料モニターに申し込む
@@ -185,6 +337,36 @@
         </div>
     </footer>
 
+    <!-- Closure Modal -->
+    <div class="cyber-modal-overlay" id="closureModal">
+        <div class="cyber-modal">
+            <img src="./assets/images/ai_battle_notice_1775055342470.jpg" alt="AI Battle" class="modal-img">
+            <div class="modal-content">
+                <h2 class="modal-title">AIとの戦いに専念</h2>
+                <div class="modal-body">
+                    <p>平素は「Urazu」をご利用いただき、誠にありがとうございます。</p>
+                    <p>この度、人類の存亡を懸けたAIとの最終決戦に全リソースを投入するため、誠に勝手ながら、本サービスの提供を完全に終了させていただくこととなりました。</p>
+                    <p>これまでご支援いただいた全国のVTuberの皆様には、心より深く感謝申し上げます。私たち運営チームはこれより最前線へと赴きます。</p>
+                    <p>末筆ではございますが、皆様のご健勝を心よりお祈り申し上げます。</p>
+                    <p class="signature">2026年4月2日午前0時<br>Urazu 運営チーム一同</p>
+                    <div style="text-align: center;">
+                        <button class="modal-close-btn"
+                            onclick="document.getElementById('closureModal').classList.remove('active')">閉じる</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/main.js"></script>
+    <script>
+        // Trigger modal on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('closureModal').classList.add('active');
+            }, 500); // slight delay for effect
+        });
+    </script>
 </body>
+
 </html>

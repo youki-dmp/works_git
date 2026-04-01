@@ -53,6 +53,10 @@ AIを活用したYouTubeサムネイル生成アプリケーションです。Ge
 ### VTuber HP Builder / VTuber向けサイトビルダー (apps/vtuber-hp-builder)
 VTuberのプロフィールや実績をまとめた高品質なWebサイトを簡単に作成できるビルダーツールです。設定ファイルから自動でデザインが適用され、配信スケジュールやギャラリー等の機能を提供します。
 
+### Urazu LP / 戦略的パートナーLP (apps/urazu_lp)
+個人VTuberのクリエイティブ活動を支援する「Urazu」のランディングページです。Cyber-Popデザインを採用し、サービス終了のお知らせ（エイプリルフール）ギミックを搭載しています。
+公開URL: [https://dsm.static.jp/urazu/](https://dsm.static.jp/urazu/)
+
 #### 使い方
 1. APIキーの設定
    `apps/job_analyzer/.env.example` をコピーして `.env` を作成し、Google Gemini APIキーを設定します。
