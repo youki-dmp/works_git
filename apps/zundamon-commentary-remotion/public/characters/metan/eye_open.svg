@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <!-- 左目（ツンデレ気味のお嬢様アイ） -->
+  <g transform="translate(145, 260)">
+    <ellipse cx="15" cy="15" rx="13" ry="19" fill="#831843" />
+    <ellipse cx="15" cy="15" rx="10" ry="15" fill="#db2777" />
+    <circle cx="11" cy="9" r="5" fill="#ffffff" />
+    <circle cx="18" cy="22" r="2.5" fill="#ffffff" />
+    <!-- まつ毛 -->
+    <path d="M -2 8 Q 15 -7 32 8" fill="none" stroke="#500724" stroke-width="4.5" stroke-linecap="round" />
+  </g>
+  <!-- 右目 -->
+  <g transform="translate(225, 260)">
+    <ellipse cx="15" cy="15" rx="13" ry="19" fill="#831843" />
+    <ellipse cx="15" cy="15" rx="10" ry="15" fill="#db2777" />
+    <circle cx="11" cy="9" r="5" fill="#ffffff" />
+    <circle cx="18" cy="22" r="2.5" fill="#ffffff" />
+    <!-- まつ毛 -->
+    <path d="M -2 8 Q 15 -7 32 8" fill="none" stroke="#500724" stroke-width="4.5" stroke-linecap="round" />
+  </g>
+</svg>

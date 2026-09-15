@@ -1,8 +1,19 @@
+# Dependencies & Environments
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Build & Output
+dist/
+build/
+.next/
+out/
+
 # General
 .DS_Store
 *.log
-.venv/
-venv/
 .env
 .env.local
 .env.*.local
@@ -19,3 +30,4 @@ apps/voicevox-changer/model/*.zip
 .idea/
 .vscode/
 *.swp
+

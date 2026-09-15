@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThumbnailInputs, AppStatus, AppStatusType, FinalImageEntry } from '../types';
-import { FileText, Sparkles, Image as ImageIcon, AlertCircle, Loader2, Star, CheckCircle, RefreshCw, PenTool, Type, Download, Edit3, History, Wand2, Calendar, Zap, Palette, TrendingUp, Quote, MessageSquare, Smartphone, Eye, Clock, User, MoreVertical, Search, ShieldCheck, X, Target, MapPin, RotateCcw, FolderArchive } from 'lucide-react';
+import { FileText, Sparkles, Image as ImageIcon, AlertCircle, Loader2, Star, CheckCircle, RefreshCw, PenTool, Type, Download, Edit3, History, Wand2, Calendar, Zap, Palette, TrendingUp, Quote, MessageSquare, Smartphone, Eye, Clock, User, MoreVertical, Search, ShieldCheck, X, Target, MapPin, RotateCcw, FolderArchive, Layers, Play } from 'lucide-react';
 import { critiqueDraft } from '../services/geminiService';
 import ProgressBar from './ProgressBar';
 import JSZip from 'jszip';
@@ -43,15 +43,12 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   const [critique, setCritique] = useState<string | null>(null);
   const [isCritiquing, setIsCritiquing] = useState(false);
   const [showSimulator, setShowSimulator] = useState(false);
+  const [showSafeZone, setShowSafeZone] = useState(true);
   const [selectedFinalIndex, setSelectedFinalIndex] = useState<number | null>(null);
-  const [selectionRadius, setSelectionRadius] = useState(15);
-  const [isAutoSelect, setIsAutoSelect] = useState(false);
 
-  // 匠のデリバリー 2.0：AIによる真のレイヤー別Zip書き出し
   const [isExporting, setIsExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState(0);
 
-  // 匠の画像洗浄 (Washing): ブラウザのCanvasを通して再エンコードし、Mac Finderでのプレビューを確実にする
   const washImageThroughCanvas = (dataUrl: string): Promise<string> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -81,44 +78,31 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
     try {
       const zip = new JSZip();
 
-      // AIによるレイヤー抽出を呼び出し
       const layers = await import('../services/geminiService').then(m =>
         m.generateLayeredAssets(targetEntry.plan, targetEntry.url, inputs)
       );
 
       setExportProgress(40);
 
-      // 各レイヤーをCanvasで「洗浄」してMac Finder対応させる
       const washAndAdd = async (name: string, data: string | undefined) => {
         if (!data) return;
         const washed = await washImageThroughCanvas(data);
         zip.file(name, washed.split(',')[1], { base64: true });
       };
 
-      // 1. 最終レンダリング画像
       await washAndAdd("01_final_render.png", targetEntry.url);
       setExportProgress(50);
-
-      // 2. 背景レイヤー (AI抽出)
       await washAndAdd("02_background_layer.png", layers.background);
       setExportProgress(60);
-
-      // 3. 被写体レイヤー (AI抽出)
       await washAndAdd("03_subject_layer.png", layers.subject);
       setExportProgress(70);
-
-      // 4. 文字レイヤー (AI抽出)
       await washAndAdd("04_text_layer.png", layers.text);
       setExportProgress(80);
-
-      // 5. エフェクトレイヤー (AI抽出)
       await washAndAdd("05_effects_layer.png", layers.effects);
       setExportProgress(90);
 
-      // 6. 戦略プラン
       zip.file("strategy_plan.txt", targetEntry.plan);
 
-      // Zip生成とダウンロード (DEFLATE圧縮で整合性を向上)
       const content = await zip.generateAsync({
         type: "blob",
         compression: "DEFLATE",
@@ -128,7 +112,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
       const url = URL.createObjectURL(content);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `thumbnail-v${finalImages.length - selectedIndex}_layers_匠.zip`;
+      link.download = `thumbnail-v${finalImages.length - selectedIndex}_layers.zip`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -141,12 +125,9 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
     }
   };
 
-  // 匠のダウンロード・バッファ処理 (Mac Finder プレビュー対応)
   const downloadImageBuffer = async (dataUrl: string, filename: string) => {
     try {
-      // ダウンロード前にCanvasで再エンコード
       const washedDataUrl = await washImageThroughCanvas(dataUrl);
-
       const parts = washedDataUrl.split(';base64,');
       const contentType = parts[0].split(':')[1];
       const raw = window.atob(parts[1]);
@@ -158,7 +139,6 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
       }
 
       const blob = new Blob([uInt8Array], { type: contentType });
-
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -169,11 +149,10 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
 
       setTimeout(() => URL.revokeObjectURL(url), 100);
     } catch (err) {
-      console.error("ダウンロード中にエラーが発生しました:", err);
+      console.error("ダウンロードエラー:", err);
     }
   };
 
-  // Visual Annotation State
   const [marker, setMarker] = useState<Marker | null>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -194,7 +173,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
     setIsCritiquing(true);
     setCritique(null);
     try {
-      const result = await critiqueDraft(plan, draftImages[selectedDraftIndex]);
+      const result = await critiqueDraft(plan, draftImages[selectedDraftIndex], inputs);
       setCritique(result);
     } catch (e) { console.error(e); } finally { setIsCritiquing(false); }
   };
@@ -210,8 +189,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   const handleGenerateFinalWithMarker = () => {
     let finalInstruction = brushupInstruction;
     if (marker) {
-      const modeDesc = isAutoSelect ? "【AI自動選択モード】周辺の関連オブジェクトやセグメントをインテリジェントに自動認識し、マスク範囲として扱ってください。" : "";
-      const locationDesc = `画像の ${Math.round(marker.x)}% (横), ${Math.round(marker.y)}% (縦) の位置にある部分 ${modeDesc} に対して、以下の修正を行ってください：`;
+      const locationDesc = `画像の ${Math.round(marker.x)}% (横), ${Math.round(marker.y)}% (縦) の位置にある部分に対して、以下の修正を行ってください：`;
       finalInstruction = `${locationDesc}\n${brushupInstruction}`;
     }
     onGenerateFinal(finalInstruction, editMainCopy, editSubCopy, editSubCopy2, selectedFinalIndex);
@@ -221,10 +199,8 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
     ? finalImages[selectedFinalIndex].url
     : (finalImages.length > 0 ? finalImages[0].url : (selectedDraftIndex !== null ? draftImages[selectedDraftIndex] : null));
 
-  // 匠のインサイト・ダイレクト・アクション：添削結果を解析してボタン化
   const parseCritiquePoints = (text: string | null) => {
     if (!text) return [];
-    // 箇条書きや番号付きリストを抽出（1. XXX, - XXX, ・XXX など）
     const lines = text.split('\n');
     return lines
       .map(line => line.trim())
@@ -237,7 +213,6 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
       const separator = prev ? "\n" : "";
       return `${prev}${separator}【添削反映】${suggestion}`;
     });
-    // スムーズな遷移のため、textareaへスクロール
     const textarea = document.querySelector('textarea');
     textarea?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
@@ -245,7 +220,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   const prevLengthRef = useRef(finalImages.length);
   useEffect(() => {
     if (finalImages.length > prevLengthRef.current) {
-      setSelectedFinalIndex(0); // 新しい画像が生成されたら自動的に最新版を表示
+      setSelectedFinalIndex(0);
     }
     prevLengthRef.current = finalImages.length;
 
@@ -257,36 +232,60 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   const critiquePoints = parseCritiquePoints(critique);
 
   return (
-    <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_30px_60px_rgba(0,0,0,0.05)] h-full flex flex-col overflow-hidden relative">
-      <div className="border-b border-slate-50 p-6 bg-white flex justify-between items-center z-10">
-        <h2 className="font-semibold text-slate-800 flex items-center tracking-tight text-sm"><Zap className="w-4 h-4 mr-3 text-slate-900" />制作ワークスペース</h2>
-        <div className="flex gap-4">
-          <button onClick={() => setShowSimulator(!showSimulator)} className={`text-xs font-semibold px-5 py-2.5 rounded-2xl border transition-all ${showSimulator ? 'bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-200' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-400'}`}>
-            <Smartphone className="w-4 h-4 mr-2" /> {showSimulator ? "プレビューを閉じる" : "モバイル実機シミュレーター"}
+    <div className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] h-full flex flex-col overflow-hidden relative text-slate-900">
+      {/* Header Bar */}
+      <div className="border-b border-slate-100 p-5 bg-white/80 backdrop-blur-md flex justify-between items-center z-10 sticky top-0">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+            <Zap className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="font-bold text-slate-900 text-sm tracking-tight">ワークスペース＆プレビュー</h2>
+            <p className="text-[11px] text-slate-400 font-medium">リアルタイム構図テスト＆YouTube実機検証</p>
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowSafeZone(!showSafeZone)}
+            className={`text-xs font-semibold px-4 py-2 rounded-xl border transition-all ${showSafeZone ? 'bg-amber-50 border-amber-200 text-amber-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+          >
+            <Clock className="w-3.5 h-3.5 inline mr-1.5" /> セーフゾーン 1:23 {showSafeZone ? "ON" : "OFF"}
+          </button>
+          <button
+            onClick={() => setShowSimulator(!showSimulator)}
+            className={`text-xs font-semibold px-4 py-2 rounded-xl border transition-all ${showSimulator ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+          >
+            <Smartphone className="w-3.5 h-3.5 inline mr-1.5" /> YouTube実機ビュー
           </button>
         </div>
       </div>
 
       <div className="flex-grow flex overflow-hidden">
-        {/* Main Console */}
-        <div className={`flex-grow overflow-y-auto p-6 space-y-10 custom-scrollbar transition-all duration-500 ${showSimulator ? 'w-2/3 opacity-50 pointer-events-none sm:opacity-100 sm:pointer-events-auto' : 'w-full'}`}>
-          {/* Strategy Section */}
+        {/* Main Console Area */}
+        <div className={`flex-grow overflow-y-auto p-7 space-y-8 custom-scrollbar transition-all duration-300 ${showSimulator ? 'w-2/3' : 'w-full'}`}>
+          {/* Strategy Plan Section */}
           {plan && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-xs text-slate-400 uppercase tracking-widest flex items-center">
-                  <TrendingUp className="w-4 h-4 mr-2 text-slate-900" /> 戦略・競合分析レポート
+                <h3 className="font-bold text-xs text-slate-400 uppercase tracking-wider flex items-center">
+                  <TrendingUp className="w-4 h-4 mr-2 text-indigo-600" /> AI サムネイル戦略・構図解析
                 </h3>
-                <button onClick={() => setIsEditingPlan(!isEditingPlan)} className="text-xs text-slate-400 hover:text-slate-900 transition-colors font-medium">
-                  {isEditingPlan ? "編集を終了" : "戦略を編集"}
+                <button onClick={() => setIsEditingPlan(!isEditingPlan)} className="text-xs text-indigo-600 hover:underline font-semibold">
+                  {isEditingPlan ? "編集完了" : "戦略プランを直接修正"}
                 </button>
               </div>
+
               {isEditingPlan ? (
-                <textarea value={editedPlan} onChange={(e) => { setEditedPlan(e.target.value); onUpdatePlan(e.target.value); }} className="w-full h-48 bg-slate-50 border border-slate-100 rounded-2xl p-6 text-sm text-slate-700 focus:ring-1 focus:ring-slate-900 outline-none resize-none shadow-inner" />
+                <textarea
+                  value={editedPlan}
+                  onChange={(e) => { setEditedPlan(e.target.value); onUpdatePlan(e.target.value); }}
+                  className="w-full h-44 bg-slate-50 border border-slate-200 rounded-2xl p-5 text-xs text-slate-800 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none resize-none font-medium shadow-inner"
+                />
               ) : (
-                <div className="relative bg-white border border-slate-100 p-10 rounded-[2.5rem] group shadow-xl shadow-slate-200/50 overflow-hidden">
-                  <div className="absolute top-0 left-0 w-2 h-full bg-slate-900"></div>
-                  <div className="whitespace-pre-wrap text-sm text-slate-700 leading-relaxed font-semibold">
+                <div className="relative bg-slate-50/70 border border-slate-200/80 p-6 rounded-2xl overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-600"></div>
+                  <div className="whitespace-pre-wrap text-xs text-slate-700 leading-relaxed font-medium">
                     {plan}
                   </div>
                 </div>
@@ -294,92 +293,86 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
             </div>
           )}
 
-          {/* Drafts Section */}
+          {/* Draft Variations Section */}
           {plan && (
-            <div className="space-y-8 pt-8 border-t border-slate-50">
+            <div className="space-y-5 pt-6 border-t border-slate-100">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-slate-800 flex items-center text-sm tracking-tight"><ImageIcon className="w-5 h-5 mr-3 text-slate-900" /> 1. ラフ案デザイン</h3>
+                <h3 className="font-bold text-slate-900 flex items-center text-sm tracking-tight">
+                  <ImageIcon className="w-4 h-4 mr-2 text-indigo-600" /> 1. ラフ案デザイン (3パターン同時生成)
+                </h3>
               </div>
+
               {draftImages.length === 0 && status !== AppStatus.RENDERING && (
-                <button onClick={() => onGenerateDrafts()} className="w-full py-16 bg-slate-50 border-2 border-slate-100 border-dashed rounded-[2rem] text-slate-400 hover:bg-slate-100 transition-all font-semibold text-sm flex flex-col items-center group relative overflow-hidden">
-                  <Sparkles className="w-10 h-10 mb-5 text-slate-300 group-hover:scale-110 transition-transform" />
-                  デザインプロトタイプを生成（3パターン）
+                <button
+                  onClick={() => onGenerateDrafts()}
+                  className="w-full py-12 bg-slate-50 border-2 border-slate-200 border-dashed rounded-2xl text-slate-500 hover:bg-indigo-50/40 hover:border-indigo-300 hover:text-indigo-600 transition-all font-bold text-xs flex flex-col items-center gap-3 group"
+                >
+                  <div className="p-3 bg-white rounded-2xl shadow-sm border border-slate-100 group-hover:scale-105 transition-transform">
+                    <Sparkles className="w-6 h-6 text-indigo-600" />
+                  </div>
+                  Gemini 3.6 でラフ案 3 パターンを一元生成する
                 </button>
               )}
+
               {status === AppStatus.RENDERING && (
-                <div className="py-16 px-12 text-center flex flex-col items-center bg-black/20 rounded-3xl border border-slate-800 space-y-6">
-                  <div className="relative">
-                    <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
-                    <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-pink-500 animate-pulse" />
-                  </div>
-                  <ProgressBar progress={progress} label="デザイン案をレンダリング中..." />
-                  <p className="text-[9px] text-slate-600 font-bold uppercase tracking-[0.2em]">生成エンジンがバリエーションを合成しています</p>
+                <div className="py-12 px-8 text-center flex flex-col items-center bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
+                  <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+                  <ProgressBar progress={progress} label="デザイン案を生成中..." />
                 </div>
               )}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {draftImages.map((img, idx) => (
-                  <div key={idx} onClick={() => onSelectDraft(idx)} className={`group relative rounded-2xl overflow-hidden border-2 cursor-pointer transition-all duration-500 ${selectedDraftIndex === idx ? 'border-indigo-500 scale-[1.02] shadow-[0_0_30px_rgba(79,70,229,0.4)]' : 'border-slate-800 opacity-60 hover:opacity-100 hover:scale-[1.01]'}`}>
+                  <div
+                    key={idx}
+                    onClick={() => onSelectDraft(idx)}
+                    className={`group relative rounded-2xl overflow-hidden border-2 cursor-pointer transition-all duration-300 ${selectedDraftIndex === idx ? 'border-indigo-600 shadow-md ring-4 ring-indigo-100 scale-[1.01]' : 'border-slate-200 opacity-70 hover:opacity-100 hover:border-slate-300'}`}
+                  >
                     <img src={img} alt="Draft" className="w-full h-auto" />
-                    <div className={`absolute inset-0 bg-indigo-600/10 transition-opacity ${selectedDraftIndex === idx ? 'opacity-100' : 'opacity-0'}`}></div>
+                    <div className="absolute top-2 left-2 bg-slate-900/80 backdrop-blur text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
+                      案 {idx + 1}
+                    </div>
                   </div>
                 ))}
               </div>
 
-              {/* AI Critique Section */}
+              {/* AI Critique Feedback */}
               {selectedDraftIndex !== null && (
-                <div className="pt-6">
+                <div className="pt-2">
                   {!critique && !isCritiquing ? (
                     <button
                       onClick={handleCritique}
-                      className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm group"
+                      className="flex items-center gap-2 px-5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-600 transition-all shadow-sm"
                     >
-                      <Search className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                      プロ視点でこの案を添削（AI Critique）
+                      <Search className="w-3.5 h-3.5 text-indigo-600" />
+                      プロ視点でこのラフ案を添削（AI Critique）
                     </button>
                   ) : (
-                    <div className="bg-slate-50 border border-slate-100 rounded-[2rem] p-8 space-y-6 animate-in slide-in-from-top-4 duration-500">
+                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-4">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center">
-                          <Eye className="w-4 h-4 mr-2 text-indigo-500" /> AI 添削アドバイス＆インサイト
+                        <h4 className="text-xs font-bold text-slate-700 flex items-center">
+                          <Eye className="w-4 h-4 mr-2 text-indigo-600" /> AI 添削アドバイス
                         </h4>
-                        {isCritiquing && <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />}
+                        {isCritiquing && <Loader2 className="w-4 h-4 animate-spin text-indigo-600" />}
                       </div>
 
                       {isCritiquing ? (
-                        <div className="flex items-center gap-4 py-4">
-                          <div className="flex gap-1">
-                            <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                            <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '200ms' }}></div>
-                            <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '400ms' }}></div>
-                          </div>
-                          <p className="text-xs font-semibold text-slate-500">匠の視点で微調整ポイントを抽出中...</p>
-                        </div>
+                        <p className="text-xs text-slate-500 font-medium">添削ポイントを抽出しています...</p>
                       ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                           {critiquePoints.map((point, i) => (
                             <button
                               key={i}
                               onClick={() => applyCritiqueSuggestion(point)}
-                              className="group relative bg-white border border-slate-100 p-5 rounded-2xl text-left hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10 transition-all active:scale-[0.98]"
+                              className="bg-white border border-slate-200 p-4 rounded-xl text-left hover:border-indigo-500 hover:shadow-sm transition-all text-xs font-medium text-slate-800"
                             >
-                              <div className="flex items-start gap-3">
-                                <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                                  <CheckCircle className="w-3.5 h-3.5" />
-                                </div>
-                                <p className="text-xs font-bold text-slate-700 leading-relaxed group-hover:text-indigo-900">{point}</p>
-                              </div>
-                              <div className="mt-3 flex items-center justify-end">
-                                <span className="text-[8px] font-black text-slate-300 group-hover:text-indigo-500 uppercase tracking-widest">修正指示に反映</span>
+                              <div className="flex items-start gap-2">
+                                <CheckCircle className="w-4 h-4 text-indigo-600 flex-shrink-0 mt-0.5" />
+                                <span>{point}</span>
                               </div>
                             </button>
                           ))}
                         </div>
-                      )}
-
-                      {!isCritiquing && (
-                        <button onClick={handleCritique} className="text-[9px] font-bold text-slate-400 hover:text-indigo-600 flex items-center gap-1 transition-colors">
-                          <RefreshCw className="w-3 h-3" /> 再添削
-                        </button>
                       )}
                     </div>
                   )}
@@ -388,17 +381,17 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
             </div>
           )}
 
-          {/* Final Deliverables / Brush-up Area */}
+          {/* Final Render and Refinement Section */}
           {currentPreviewImage && status !== AppStatus.RENDERING && (
-            <div className="space-y-10 pt-10 border-t border-slate-50 animate-in slide-in-from-bottom-8">
+            <div className="space-y-6 pt-6 border-t border-slate-100">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-slate-800 flex items-center text-sm tracking-tight">
-                  <Star className="w-5 h-5 mr-3 text-slate-900" /> 最終出力とブラッシュアップ
+                <h3 className="font-bold text-slate-900 flex items-center text-sm tracking-tight">
+                  <Star className="w-4 h-4 mr-2 text-amber-500 fill-amber-500" /> 2. プレビュー＆最終ポリッシュ
                 </h3>
               </div>
 
-              {/* Main Preview */}
-              <div className="relative group rounded-3xl overflow-hidden shadow-2xl border border-slate-800 bg-slate-950">
+              {/* Main Image Container */}
+              <div className="relative group rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 shadow-md">
                 <div className="relative cursor-crosshair w-full" onClick={handleImageClick}>
                   <img
                     ref={imageRef}
@@ -406,166 +399,122 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
                     className="w-full h-auto select-none"
                     alt="Current Work"
                   />
-                  {marker && (
-                    <>
-                      <div
-                        className={`absolute -translate-x-1/2 -translate-y-1/2 border-2 rounded-full animate-[pulse_2s_infinite] ${isAutoSelect ? 'bg-indigo-500/20 border-indigo-400' : 'bg-pink-500/10 border-pink-500/50'}`}
-                        style={{ left: `${marker.x}%`, top: `${marker.y}%`, width: `${selectionRadius}%`, height: `${selectionRadius * (inputs.aspectRatio === '16:9' ? 1.77 : 0.56)}%` }}
-                      >
-                        <div className="absolute inset-0 flex items-center justify-center opacity-40">
-                          {isAutoSelect && <Sparkles className="w-6 h-6 text-indigo-400" />}
-                        </div>
-                      </div>
-                      <div className="absolute w-8 h-8 -translate-x-1/2 -translate-y-1/2 animate-bounce pointer-events-none z-10" style={{ left: `${marker.x}%`, top: `${marker.y}%` }}>
-                        <MapPin className={`w-8 h-8 ${isAutoSelect ? 'text-indigo-400' : 'text-pink-500'} fill-current drop-shadow-[0_0_15px_rgba(236,72,153,1)]`} />
-                      </div>
-                    </>
-                  )}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center pointer-events-none">
-                    <div className="px-4 py-2 bg-black/60 backdrop-blur-md rounded-full border border-white/10 text-white text-[10px] font-black uppercase tracking-widest flex items-center">
-                      <Edit3 className="w-3 h-3 mr-2" /> クリックしてピンポイント修正
+
+                  {/* YouTube 1:23 Duration Badge Overlay (Safe Zone) */}
+                  {showSafeZone && (
+                    <div className="absolute bottom-2.5 right-2.5 bg-black/85 backdrop-blur text-white text-[11px] font-bold px-2 py-0.5 rounded tracking-wider shadow-lg flex items-center gap-1 border border-white/10 pointer-events-none">
+                      <Play className="w-2.5 h-2.5 fill-white text-white" /> 1:23
                     </div>
-                  </div>
+                  )}
+
+                  {/* Interactive Pin Marker */}
+                  {marker && (
+                    <div
+                      className="absolute w-7 h-7 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10"
+                      style={{ left: `${marker.x}%`, top: `${marker.y}%` }}
+                    >
+                      <MapPin className="w-7 h-7 text-indigo-600 fill-current drop-shadow-[0_2px_8px_rgba(79,70,229,0.8)]" />
+                    </div>
+                  )}
                 </div>
 
-                {/* Download Buttons (below image) */}
+                {/* Download Actions */}
                 {finalImages.length > 0 && selectedFinalIndex !== null && (
-                  <div className="p-6 bg-white border-t border-slate-50 space-y-4">
+                  <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center gap-3">
                     <button
                       onClick={() => downloadImageBuffer(currentPreviewImage, `thumbnail-v${finalImages.length - selectedFinalIndex}.png`)}
-                      className="w-full flex items-center justify-center gap-4 py-5 bg-slate-900 text-white rounded-2xl font-semibold text-sm shadow-xl shadow-slate-200 hover:scale-[1.01] active:scale-[0.98] transition-all"
+                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-900 text-white rounded-xl font-bold text-xs shadow-sm hover:bg-slate-800 transition-all"
                     >
-                      <Download className="w-5 h-5" /> 画像をダウンロード (Mac対応)
+                      <Download className="w-4 h-4" /> サムネイル画像を保存
                     </button>
 
                     <button
                       onClick={() => selectedFinalIndex !== null && downloadLayersAsZip(selectedFinalIndex)}
                       disabled={isExporting}
-                      className="w-full flex flex-col items-center justify-center gap-2 py-5 bg-white text-slate-900 rounded-2xl font-semibold text-sm border-2 border-slate-900 hover:bg-slate-50 hover:scale-[1.01] active:scale-[0.98] transition-all group disabled:opacity-50"
+                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-white text-slate-800 rounded-xl font-bold text-xs border border-slate-200 hover:bg-slate-100 transition-all disabled:opacity-50"
                     >
-                      <div className="flex items-center gap-3">
-                        {isExporting ? <Loader2 className="w-5 h-5 animate-spin" /> : <FolderArchive className="w-5 h-5 group-hover:scale-110 transition-transform" />}
-                        <span>{isExporting ? "AIがレイヤーを精密抽出中..." : "匠の透明納品 2.0 (透過レイヤー一括書出)"}</span>
-                      </div>
-                      {isExporting && (
-                        <div className="w-2/3 mt-2">
-                          <ProgressBar progress={exportProgress} label="" />
-                        </div>
-                      )}
+                      {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FolderArchive className="w-4 h-4 text-indigo-600" />}
+                      <span>{isExporting ? "レイヤー抽出中..." : "透過レイヤー別 Zip 書き出し"}</span>
                     </button>
                   </div>
                 )}
               </div>
 
-              {/* Refinement Options */}
-              <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 space-y-8 shadow-[0_20px_50px_rgba(0,0,0,0.03)] backdrop-blur-md">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Identity Boost */}
-                  <div className="space-y-4">
-                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-widest flex items-center">
-                      <ShieldCheck className="w-4 h-4 mr-2" /> 同一性の完全維持
-                    </label>
-                    <button
-                      onClick={() => {
-                        const boostMsg = "【同一性維持モード】被写体の顔・髪型・服装の特徴を一切変更せず、完全に固定した状態で高品質レンダリングしてください。";
-                        setBrushupInstruction(prev => prev.includes(boostMsg) ? prev : prev + "\n" + boostMsg);
-                      }}
-                      className="w-full py-4 bg-slate-50 rounded-2xl text-slate-900 font-semibold text-xs hover:bg-slate-100 transition-all flex items-center justify-center gap-3 border border-slate-100"
-                    >
-                      <Zap className="w-5 h-5" /> 同一性ブースト起動
-                    </button>
-                  </div>
+              {/* Refinement Inputs */}
+              <div className="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-6 space-y-5">
+                <h4 className="text-xs font-bold text-slate-800 flex items-center">
+                  <Edit3 className="w-4 h-4 mr-1.5 text-indigo-600" /> ピンポイント修正・ブラッシュアップ指示
+                </h4>
 
-                  {/* Quick Position */}
-                  <div className="space-y-4">
-                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-widest flex items-center">
-                      <Target className="w-4 h-4 mr-2 text-slate-900" /> 立ち位置の調整
-                    </label>
-                    <div className="grid grid-cols-3 gap-3">
-                      {[
-                        { label: '左端', msg: "被写体を左端に配置してください。" },
-                        { label: '中央', msg: "被写体を中央に配置してください。" },
-                        { label: '右端', msg: "被写体を右端に配置してください。" }
-                      ].map((pos, i) => (
-                        <button key={i} onClick={() => setBrushupInstruction(prev => prev + "\n" + pos.msg)} className="py-4 bg-slate-50 rounded-2xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all border border-slate-100">
-                          {pos.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Additional Quick Refines */}
-                <div className="flex flex-wrap gap-3 pt-2">
-                  <button onClick={() => handleQuickRefine('text-big')} className="px-5 py-3 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:border-slate-900 hover:text-slate-900 transition-all flex items-center shadow-sm">
-                    <Type className="w-4 h-4 mr-2" /> 文字を大きく
+                <div className="flex flex-wrap gap-2">
+                  <button onClick={() => handleQuickRefine('text-big')} className="px-3.5 py-2 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm">
+                    <Type className="w-3.5 h-3.5 inline mr-1" /> 文字を大きく
                   </button>
-                  <button onClick={() => handleQuickRefine('face-focus')} className="px-5 py-3 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:border-slate-900 hover:text-slate-900 transition-all flex items-center shadow-sm">
-                    <User className="w-4 h-4 mr-2" /> 表情を強調（ズーム）
+                  <button onClick={() => handleQuickRefine('face-focus')} className="px-3.5 py-2 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm">
+                    <User className="w-3.5 h-3.5 inline mr-1" /> 被写体をズーム
                   </button>
-                  <button onClick={() => handleQuickRefine('impact')} className="px-5 py-3 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:border-slate-900 hover:text-slate-900 transition-all flex items-center shadow-sm">
-                    <Zap className="w-4 h-4 mr-2" /> インパクトを強化
-                  </button>
-                  <button
-                    onClick={() => {
-                      const fixMsg = "【和魂注入・フォント修正】中国語フォント（中華フォント）の混入を排除し、標準的な日本の教育漢字・ゴシック体で再レンダリングしてください。特に「待」「凸」「刃」「直」などの字体に注意し、文字化けやノイズを完全に除去してください。";
-                      setBrushupInstruction(prev => prev.includes(fixMsg) ? prev : prev + "\n" + fixMsg);
-                    }}
-                    className="px-5 py-3 bg-red-50 rounded-xl border border-red-200 text-xs font-bold text-red-600 hover:bg-red-100 hover:border-red-400 transition-all flex items-center shadow-sm"
-                  >
-                    <Type className="w-4 h-4 mr-2" /> 日本語フォントを修正
+                  <button onClick={() => handleQuickRefine('impact')} className="px-3.5 py-2 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm">
+                    <Zap className="w-3.5 h-3.5 inline mr-1" /> インパクト強調
                   </button>
                 </div>
 
                 <textarea
                   value={brushupInstruction}
                   onChange={(e) => setBrushupInstruction(e.target.value)}
-                  placeholder={marker ? "この選択範囲に対して、どのような修正を加えたいですか？" : "画像全体への具体的な修正指示を入力してください..."}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-3xl p-6 text-sm text-slate-900 h-36 resize-none outline-none focus:ring-1 focus:ring-slate-900 transition-all font-medium shadow-inner"
+                  placeholder={marker ? "クリックされた位置の要素に対して具体的な修正指示を入力..." : "全体への修正指示 (例: 背景を暗くしてテロップを目立たせる)"}
+                  className="w-full bg-white border border-slate-200 rounded-xl p-4 text-xs text-slate-900 h-28 resize-none outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all font-medium"
                 />
 
-                <div className="grid grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider ml-1">メインコピー</span>
-                    <input type="text" value={editMainCopy} onChange={(e) => setEditMainCopy(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm text-slate-900 shadow-inner" />
-                  </div>
-                  <div className="space-y-2">
-                    <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider ml-1">サブコピー1</span>
-                    <input type="text" value={editSubCopy} onChange={(e) => setEditSubCopy(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm text-slate-900 shadow-inner" />
-                  </div>
-                  <div className="space-y-2">
-                    <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider ml-1">サブコピー2</span>
-                    <input type="text" value={editSubCopy2} onChange={(e) => setEditSubCopy2(e.target.value)} className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm text-slate-900 shadow-inner" />
-                  </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <input
+                    type="text"
+                    value={editMainCopy}
+                    onChange={(e) => setEditMainCopy(e.target.value)}
+                    placeholder="メインコピー"
+                    className="bg-white border border-slate-200 rounded-xl p-3 text-xs text-slate-900 font-bold outline-none"
+                  />
+                  <input
+                    type="text"
+                    value={editSubCopy}
+                    onChange={(e) => setEditSubCopy(e.target.value)}
+                    placeholder="サブコピー1"
+                    className="bg-white border border-slate-200 rounded-xl p-3 text-xs text-slate-700 outline-none"
+                  />
+                  <input
+                    type="text"
+                    value={editSubCopy2}
+                    onChange={(e) => setEditSubCopy2(e.target.value)}
+                    placeholder="サブコピー2"
+                    className="bg-white border border-slate-200 rounded-xl p-3 text-xs text-slate-700 outline-none"
+                  />
                 </div>
 
                 <button
                   onClick={handleGenerateFinalWithMarker}
                   disabled={status === AppStatus.POLISHING || (!brushupInstruction && !editMainCopy)}
-                  className="w-full py-6 bg-slate-900 text-white font-semibold text-base rounded-[2rem] shadow-2xl shadow-slate-200 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center disabled:opacity-30"
+                  className="w-full py-4 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-md hover:bg-indigo-700 active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
                 >
-                  {status === AppStatus.POLISHING ? <Loader2 className="w-6 h-6 animate-spin mr-3" /> : <Wand2 className="w-6 h-6 mr-3" />}
-                  {finalImages.length > 0 ? "修正を実行して保存" : "最高画質でレンダリングを開始"}
+                  {status === AppStatus.POLISHING ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+                  {finalImages.length > 0 ? "修正を反映して再レンダリング" : "最高画質で最終レンダリング"}
                 </button>
               </div>
 
-              {/* History */}
+              {/* History Gallery */}
               {finalImages.length > 0 && (
-                <div className="space-y-4 pt-4">
-                  <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] flex items-center">
-                    <History className="w-3.5 h-3.5 mr-2" /> 生成履歴
+                <div className="space-y-3 pt-2">
+                  <h4 className="text-xs font-bold text-slate-500 flex items-center">
+                    <History className="w-3.5 h-3.5 mr-1.5" /> 生成履歴
                   </h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {finalImages.map((img, idx) => (
                       <div
                         key={idx}
                         onClick={() => setSelectedFinalIndex(idx)}
-                        className={`group relative aspect-video rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${selectedFinalIndex === idx ? 'border-indigo-500 ring-4 ring-indigo-500/20' : 'border-slate-800 opacity-60 hover:opacity-100'}`}
+                        className={`group relative aspect-video rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${selectedFinalIndex === idx ? 'border-indigo-600 ring-2 ring-indigo-200' : 'border-slate-200 opacity-60 hover:opacity-100'}`}
                       >
                         <img src={img.url} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-2">
-                          <span className="text-[8px] font-black text-white uppercase tracking-tighter truncate">v{finalImages.length - idx}</span>
-                          <span className="text-[6px] text-slate-400 font-bold">{img.timestamp.split(' ')[1]}</span>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-2">
+                          <span className="text-[9px] font-bold text-white">v{finalImages.length - idx}</span>
                         </div>
                       </div>
                     ))}
@@ -576,47 +525,48 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
           )}
         </div>
 
-        {/* Polishing State Animation */}
-        {status === AppStatus.POLISHING && (
-          <div className="py-16 px-12 flex flex-col items-center bg-slate-950/60 rounded-[2.5rem] border border-slate-800 border-dashed space-y-8 animate-in zoom-in-95">
-            <Loader2 className="w-16 h-16 text-indigo-500 animate-spin" />
-            <ProgressBar progress={progress} label="Polishing Visual Excellence..." />
+        {/* YouTube Feed Simulator Panel */}
+        {showSimulator && (
+          <div className="w-1/3 border-l border-slate-200 bg-slate-50 p-6 flex flex-col items-center overflow-y-auto space-y-6">
+            <div className="flex items-center justify-between w-full">
+              <h3 className="text-xs font-bold text-slate-700 flex items-center">
+                <Smartphone className="w-4 h-4 mr-1.5 text-indigo-600" /> YouTube 表示プレビュー
+              </h3>
+              <button onClick={() => setShowSimulator(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Mobile Feed Card */}
+            <div className="w-full bg-white rounded-2xl border border-slate-200 p-3 shadow-sm space-y-3">
+              <div className="relative aspect-video rounded-xl overflow-hidden bg-slate-900">
+                {currentPreviewImage && <img src={currentPreviewImage} className="w-full h-full object-cover" />}
+                <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+                  1:23
+                </div>
+              </div>
+              <div className="flex gap-3 pt-1">
+                <div className="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">
+                  AI
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-xs font-bold text-slate-900 leading-snug line-clamp-2">
+                    {editMainCopy || "YouTube動画タイトルサンプル"}
+                  </h4>
+                  <p className="text-[10px] text-slate-400 font-medium">チャンネル名 • 1.2万回視聴 • 2時間前</p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Simulator */}
-      {showSimulator && (
-        <div className="w-full sm:w-1/3 border-l border-slate-800 bg-slate-950/80 p-8 flex flex-col items-center overflow-y-auto">
-          <div className="flex items-center justify-between w-full mb-8">
-            <h3 className="text-[10px] text-slate-500 flex items-center uppercase tracking-widest font-black">
-              <Smartphone className="w-4 h-4 mr-2" /> モバイル実機シミュレーター
-            </h3>
-            <button onClick={() => setShowSimulator(false)} className="sm:hidden"><X className="w-5 h-5 text-slate-500" /></button>
-          </div>
-          <div className="w-[280px] bg-[#0f0f0f] rounded-[3rem] border-[10px] border-[#1a1a1a] shadow-2xl p-4 aspect-[9/19.5] relative overflow-hidden">
-            <div className="mt-8 space-y-6">
-              <div className="relative aspect-video rounded-2xl overflow-hidden bg-slate-900">
-                {currentPreviewImage && <img src={currentPreviewImage} className="w-full h-full object-cover" />}
-              </div>
-              <div className="px-1">
-                <span className="text-[13px] text-white font-bold block line-clamp-2">{editMainCopy || "Title Here"}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
       {error && (
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50 bg-red-950/95 backdrop-blur-xl border border-red-500/50 text-red-200 px-6 py-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom flex justify-between items-center max-w-2xl w-[90%] pointer-events-auto">
-          <div className="flex items-center">
-            <AlertCircle className="w-6 h-6 mr-4 flex-shrink-0 text-red-400" />
-            <p className="text-sm font-semibold">{error}</p>
-          </div>
-          <button
-            onClick={onRetry}
-            className="ml-6 px-4 py-2 bg-red-500 text-white rounded-xl text-xs font-black uppercase tracking-widest flex items-center hover:bg-red-600 transition-all shadow-lg active:scale-95 whitespace-nowrap"
-          >
-            <RotateCcw className="w-4 h-4 mr-2" /> 再試行
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-50 bg-rose-600 text-white px-6 py-3.5 rounded-2xl shadow-xl flex items-center gap-4 max-w-xl w-[90%] font-semibold text-xs">
+          <AlertCircle className="w-5 h-5 flex-shrink-0" />
+          <p className="flex-grow">{error}</p>
+          <button onClick={onRetry} className="px-3 py-1.5 bg-white text-rose-600 rounded-lg text-xs font-bold hover:bg-rose-50 transition-colors">
+            再試行
           </button>
         </div>
       )}

@@ -1,0 +1,26 @@
+{
+  "name": "zundamon-commentary-remotion",
+  "version": "1.0.0",
+  "description": "Zundamon & Metan commentary video generator powered by Remotion and VOICEVOX",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "remotion preview src/index.ts",
+    "build": "remotion render src/index.ts CommentaryVideo out/commentary.mp4",
+    "render:short": "remotion render src/index.ts CommentaryVideo out/short_test.mp4 --frames=0-90",
+    "generate": "npx tsx scripts/generate-audio.ts"
+  },
+  "keywords": ["remotion", "zundamon", "voicevox", "video-generator", "commentary"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@remotion/cli": "^4.0.409",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.9",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "remotion": "^4.0.409",
+    "tsx": "^4.19.3",
+    "typescript": "^5.9.3"
+  }
+}

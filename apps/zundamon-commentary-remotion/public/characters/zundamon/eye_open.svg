@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <!-- 左目 -->
+  <g transform="translate(145, 260)">
+    <ellipse cx="15" cy="15" rx="14" ry="20" fill="#15803d" />
+    <ellipse cx="15" cy="15" rx="11" ry="16" fill="#22c55e" />
+    <circle cx="11" cy="9" r="6" fill="#ffffff" />
+    <circle cx="19" cy="22" r="3" fill="#ffffff" />
+    <!-- まつ毛 -->
+    <path d="M 0 10 Q 15 -5 30 10" fill="none" stroke="#14532d" stroke-width="4" stroke-linecap="round" />
+  </g>
+  <!-- 右目 -->
+  <g transform="translate(225, 260)">
+    <ellipse cx="15" cy="15" rx="14" ry="20" fill="#15803d" />
+    <ellipse cx="15" cy="15" rx="11" ry="16" fill="#22c55e" />
+    <circle cx="11" cy="9" r="6" fill="#ffffff" />
+    <circle cx="19" cy="22" r="3" fill="#ffffff" />
+    <!-- まつ毛 -->
+    <path d="M 0 10 Q 15 -5 30 10" fill="none" stroke="#14532d" stroke-width="4" stroke-linecap="round" />
+  </g>
+</svg>

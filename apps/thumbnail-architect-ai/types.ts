@@ -1,3 +1,5 @@
+export type GenerationMode = 'speed' | 'quality';
+
 export interface ThumbnailInputs {
   mainSubject: string;
   uploadedImage: string | null;
@@ -21,6 +23,15 @@ export interface ThumbnailInputs {
   subjectType: 'full' | 'bust' | 'face';
   subjectX: number; // -50 to 50
   subjectY: number; // -50 to 50
+  generationMode: GenerationMode;
+  preserveRawSubjectLayer: boolean; // 元人物画像を直接レイヤー重ねで非加工使用するか
+}
+
+export interface LayeredAssets {
+  background: string;
+  subject: string;
+  text: string;
+  effects: string;
 }
 
 export interface FinalImageEntry {

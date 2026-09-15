@@ -1,0 +1,25 @@
+# タスクリスト: ずんだもん解説動画自動生成ツール (Remotionベース)
+
+- [x] プロジェクト基盤の構築 <!-- id: 0 -->
+  - [x] `apps/zundamon-commentary-remotion` の初期化 (package.json, tsconfig.json, remotion設定) <!-- id: 1 -->
+  - [x] 依存パッケージのインストール (`remotion`, `@remotion/cli`, `react`, `react-dom`, `@types/react` 等) <!-- id: 2 -->
+  - [x] GitHub用 `README.md` の作成（目的・セットアップ手順・更新履歴） <!-- id: 3 -->
+- [x] 音声合成 & タイムライン生成スクリプトの開発 <!-- id: 4 -->
+  - [x] 台本フォーマットの策定 (`script.json`) <!-- id: 5 -->
+  - [x] VOICEVOX API連携スクリプト (`scripts/generate-audio.ts`) <!-- id: 6 -->
+    - [x] 音声合成クエリ作成 & WAV書き出し
+    - [x] 音素タイミング情報（リップシンク用）の抽出 & `timeline.json` 出力
+    - [x] VOICEVOX未起動時のモック/フォールバックモード実装
+- [x] Remotionコンポーネントの実装 <!-- id: 7 -->
+  - [x] 立ち絵レンダラー (`CharacterAvatar.tsx`): 口パク（音素連動）、目パチ、感情差分、バウンス演出 <!-- id: 8 -->
+  - [x] 字幕・テロップコンポーネント (`SubtitleBanner.tsx`): YouTube風太枠線、話者カラー別 <!-- id: 9 -->
+  - [x] スライド・図解コンポーネント (`SlideArea.tsx`): ポップアップ演出 <!-- id: 10 -->
+  - [x] 背景 & BGM/SEミキサー (`Background.tsx`, 音声配置) <!-- id: 11 -->
+  - [x] メイン合成画面 (`CommentaryVideo.tsx`) & Remotion Root (`Root.tsx`) <!-- id: 12 -->
+- [x] サンプル素材と動作確認 <!-- id: 13 -->
+  - [x] 立ち絵用アセット（ずんだもん・四国めたん等）の配置 <!-- id: 14 -->
+  - [x] サンプル台本による音声生成とタイムライン構築 <!-- id: 15 -->
+  - [x] レンダリング検証 (`npm run render:short` による MP4 出力確認完了) <!-- id: 17 -->
+- [x] ドキュメント更新と完了報告 <!-- id: 18 -->
+  - [x] `walkthrough.md` の作成 <!-- id: 19 -->
+  - [x] README.md の更新履歴記載 <!-- id: 20 -->

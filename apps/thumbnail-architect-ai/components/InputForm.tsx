@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { ThumbnailInputs, AppStatusType, AppStatus } from '../types';
-import { Sparkles, Image as ImageIcon, Type, LayoutTemplate, Upload, X, BadgeCheck, Smartphone, Monitor, Palette, Search, Loader2, Target, Heart, ShieldCheck } from 'lucide-react';
+import { Sparkles, Image as ImageIcon, Type, LayoutTemplate, Upload, X, BadgeCheck, Smartphone, Monitor, Palette, Search, Loader2, Target, Heart, ShieldCheck, Zap, Sliders, Layers } from 'lucide-react';
 
 interface InputFormProps {
   inputs: ThumbnailInputs;
@@ -25,7 +25,6 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
     e.preventDefault();
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
-      // Find the closest field name from the data attribute
       const field = e.currentTarget.getAttribute('data-field');
       if (field) setDragActiveField(field);
     } else if (e.type === "dragleave") {
@@ -72,59 +71,107 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
   const isProcessing = status !== AppStatus.IDLE && status !== AppStatus.PLANNED && status !== AppStatus.COMPLETE && status !== AppStatus.POLISHED && status !== AppStatus.ERROR;
 
   return (
-    <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] h-full flex flex-col text-slate-900">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl font-semibold tracking-tight flex items-center text-slate-800">
-          <LayoutTemplate className="w-6 h-6 mr-3 text-slate-900" />
-          デザイン構成
-        </h2>
-        <label className="flex items-center cursor-pointer group">
-          <div className="mr-3 text-xs font-medium text-slate-400 group-hover:text-slate-900 transition-colors">トレンド調査</div>
-          <div className="relative">
-            <input type="checkbox" name="useTrendSearch" checked={inputs.useTrendSearch} onChange={handleChange} className="sr-only" />
-            <div className={`block w-10 h-6 rounded-full transition-colors ${inputs.useTrendSearch ? 'bg-slate-900' : 'bg-slate-200'}`}></div>
-            <div className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${inputs.useTrendSearch ? 'transform translate-x-4' : ''}`}></div>
-          </div>
-        </label>
+    <div className="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] h-full flex flex-col text-slate-900 transition-all">
+      {/* Header Controls */}
+      <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2.5">
+            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+              <LayoutTemplate className="w-5 h-5" />
+            </div>
+            デザイン構成
+          </h2>
+          <p className="text-xs text-slate-400 mt-1 font-medium">Gemini 3.5 Flash & 3 Pro エンジンによるサムネイル最適化</p>
+        </div>
+
+        {/* Engine Mode Toggle */}
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200/60">
+          <button
+            onClick={() => setInputs(p => ({ ...p, generationMode: 'speed' }))}
+            className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${inputs.generationMode === 'speed' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+            title="高速生成 (Gemini 3.5 Flash)"
+          >
+            <Zap className="w-3.5 h-3.5" />
+            Speed
+          </button>
+          <button
+            onClick={() => setInputs(p => ({ ...p, generationMode: 'quality' }))}
+            className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${inputs.generationMode === 'quality' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+            title="最高品質 (Gemini 3 Pro Image)"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            Pro
+          </button>
+        </div>
       </div>
 
+      {/* Form Content */}
       <div className="space-y-6 flex-grow overflow-y-auto pr-2 custom-scrollbar">
         {/* Aspect Ratio */}
-        <div className="grid grid-cols-2 gap-4">
-          <button onClick={() => setInputs(prev => ({ ...prev, aspectRatio: '16:9' }))} className={`flex items-center justify-center py-3 rounded-xl text-sm font-medium border transition-all ${inputs.aspectRatio === '16:9' ? 'bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-200' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-400'}`}>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={() => setInputs(prev => ({ ...prev, aspectRatio: '16:9' }))}
+            className={`flex items-center justify-center py-3 rounded-2xl text-xs font-bold border transition-all ${inputs.aspectRatio === '16:9' ? 'bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300'}`}
+          >
             <Monitor className="w-4 h-4 mr-2" /> 16:9 通常画面
           </button>
-          <button onClick={() => setInputs(prev => ({ ...prev, aspectRatio: '9:16' }))} className={`flex items-center justify-center py-3 rounded-xl text-sm font-medium border transition-all ${inputs.aspectRatio === '9:16' ? 'bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-200' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-400'}`}>
+          <button
+            onClick={() => setInputs(prev => ({ ...prev, aspectRatio: '9:16' }))}
+            className={`flex items-center justify-center py-3 rounded-2xl text-xs font-bold border transition-all ${inputs.aspectRatio === '9:16' ? 'bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300'}`}
+          >
             <Smartphone className="w-4 h-4 mr-2" /> 9:16 ショート
           </button>
         </div>
 
+        {/* Layer & Identity Controls (Raw Subject Preservation) */}
+        <div className="bg-indigo-50/60 p-4 rounded-2xl border border-indigo-100 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Layers className="w-4 h-4 text-indigo-600" />
+              <span className="text-xs font-bold text-slate-800">元人物画像を直接非加工レイヤーとして使用</span>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                name="preserveRawSubjectLayer"
+                checked={inputs.preserveRawSubjectLayer}
+                onChange={handleChange}
+                className="sr-only peer"
+              />
+              <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+            </label>
+          </div>
+          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">
+            AIによる再描画を行わず、アップロードされた被写体画像をそのままのレイヤーとして背景・テキスト・エフェクトと重ね合わせます。
+          </p>
+        </div>
+
         {/* Assets Section */}
-        <div className="space-y-6">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest flex items-center">
-            <ShieldCheck className="w-4 h-4 mr-2" /> 素材アセット
+        <div className="space-y-4">
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center">
+            <ShieldCheck className="w-4 h-4 mr-1.5 text-indigo-500" /> 素材アセット
           </h3>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {/* Main Subject */}
-            <div className="col-span-2 space-y-3">
+            <div className="col-span-2 space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-[10px] text-slate-300 font-bold flex items-center">
-                  被写体画像（立ち絵）
+                <label className="text-xs font-bold text-slate-700 flex items-center">
+                  被写体画像（人物・キャラ立ち絵）
                 </label>
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-bold text-slate-500 uppercase">改変禁止</span>
+                  <span className="text-[10px] font-bold text-slate-400">特徴完全固定</span>
                   <input
                     type="checkbox"
                     name="strictIdentity"
                     checked={inputs.strictIdentity}
                     onChange={handleChange}
-                    className="w-3.5 h-3.5 rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500"
+                    className="w-3.5 h-3.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                   />
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 <div className="flex-grow">
                   {!inputs.uploadedImage ? (
                     <div
@@ -134,74 +181,57 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
                       onDragLeave={handleDrag}
                       onDrop={(e) => handleDrop(e, 'uploadedImage')}
                       onClick={() => mainFileInputRef.current?.click()}
-                      className={`border-2 border-dashed rounded-2xl p-4 flex flex-col items-center justify-center h-28 transition-all cursor-pointer ${dragActiveField === 'uploadedImage' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 scale-[1.02]' : 'border-slate-200 text-slate-400 hover:bg-slate-50'}`}
+                      className={`border-2 border-dashed rounded-2xl p-4 flex flex-col items-center justify-center h-28 transition-all cursor-pointer ${dragActiveField === 'uploadedImage' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 scale-[1.01]' : 'border-slate-200 text-slate-400 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300'}`}
                     >
-                      <Upload className={`w-5 h-5 mb-2 ${dragActiveField === 'uploadedImage' ? 'animate-bounce' : ''}`} />
-                      <span className="text-xs font-medium">人物・キャラクター</span>
+                      <Upload className={`w-5 h-5 mb-1.5 text-slate-400 ${dragActiveField === 'uploadedImage' ? 'animate-bounce text-indigo-600' : ''}`} />
+                      <span className="text-xs font-semibold text-slate-600">人物・キャラクター画像をドロップ</span>
+                      <span className="text-[10px] text-slate-400 mt-0.5">PNG / JPG 形式</span>
                     </div>
                   ) : (
-                    <div className="relative rounded-2xl overflow-hidden border border-slate-100 h-28 bg-slate-50 flex items-center justify-center p-2 shadow-inner">
+                    <div className="relative rounded-2xl overflow-hidden border border-slate-200 h-28 bg-slate-50 flex items-center justify-center p-2 shadow-sm">
                       <img
                         src={inputs.uploadedImage}
-                        className={`max-w-full max-h-full object-contain transition-transform duration-300`}
+                        className="max-w-full max-h-full object-contain transition-transform duration-300"
                         style={{ transform: `scale(${inputs.subjectScale}) translate(${inputs.subjectX}%, ${inputs.subjectY}%)` }}
                       />
-                      <button onClick={() => setInputs(p => ({ ...p, uploadedImage: null }))} className="absolute top-2 right-2 bg-slate-900 shadow-lg p-1.5 rounded-full text-white hover:bg-red-500 transition-colors"><X className="w-3 h-3" /></button>
+                      <button onClick={() => setInputs(p => ({ ...p, uploadedImage: null }))} className="absolute top-2 right-2 bg-slate-900/80 backdrop-blur shadow-md p-1.5 rounded-full text-white hover:bg-red-500 transition-colors">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   )}
                   <input type="file" ref={mainFileInputRef} onChange={(e) => handleFile(e.target.files?.[0]!, 'uploadedImage')} className="hidden" />
                 </div>
 
                 {inputs.uploadedImage && (
-                  <div className="w-40 space-y-2">
+                  <div className="w-44 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 space-y-2.5">
                     <div className="flex flex-col gap-1">
-                      <span className="text-[8px] font-black text-slate-500 uppercase">Size Control</span>
+                      <span className="text-[10px] font-bold text-slate-500 uppercase">構図タイプ</span>
                       <div className="grid grid-cols-3 gap-1">
                         {(['full', 'bust', 'face'] as const).map(type => (
                           <button
                             key={type}
                             onClick={() => setInputs(p => ({ ...p, subjectType: type, subjectScale: type === 'full' ? 0.8 : type === 'bust' ? 1.2 : 2.0, subjectX: 0, subjectY: type === 'bust' ? -15 : type === 'face' ? -25 : 0 }))}
-                            className={`py-1 rounded text-[8px] font-bold border transition-all ${inputs.subjectType === type ? 'bg-indigo-600 border-indigo-400 text-white' : 'bg-slate-900 border-slate-700 text-slate-500'}`}
+                            className={`py-1 rounded-lg text-[9px] font-bold border transition-all ${inputs.subjectType === type ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'}`}
                           >
-                            {type === 'full' ? '全身' : type === 'bust' ? '上半身' : 'アップ'}
+                            {type === 'full' ? '全身' : type === 'bust' ? '上半身' : 'ドアップ'}
                           </button>
                         ))}
                       </div>
                     </div>
 
                     <div className="flex flex-col gap-1">
-                      <span className="text-[8px] font-black text-slate-500 uppercase">Position Fine-tune</span>
-                      <div className="flex items-center justify-between gap-1">
-                        <div className="grid grid-cols-3 gap-1">
-                          <div />
-                          <button onClick={() => setInputs(p => ({ ...p, subjectY: Math.max(-100, p.subjectY - 5) }))} className="p-1 bg-slate-700 rounded hover:bg-slate-600"><Monitor className="w-2.5 h-2.5 text-white transform rotate-180" /></button>
-                          <div />
-                          <button onClick={() => setInputs(p => ({ ...p, subjectX: Math.max(-100, p.subjectX - 5) }))} className="p-1 bg-slate-700 rounded hover:bg-slate-600"><Monitor className="w-2.5 h-2.5 text-white transform -rotate-90" /></button>
-                          <button onClick={() => setInputs(p => ({ ...p, subjectX: 0, subjectY: 0 }))} className="p-1 bg-slate-700 rounded hover:bg-slate-600 font-bold text-[7px] text-white">R</button>
-                          <button onClick={() => setInputs(p => ({ ...p, subjectX: Math.min(100, p.subjectX + 5) }))} className="p-1 bg-slate-700 rounded hover:bg-slate-600"><Monitor className="w-2.5 h-2.5 text-white transform rotate-90" /></button>
-                          <div />
-                          <button onClick={() => setInputs(p => ({ ...p, subjectY: Math.min(100, p.subjectY + 5) }))} className="p-1 bg-slate-700 rounded hover:bg-slate-600"><Monitor className="w-2.5 h-2.5 text-white" /></button>
-                          <div />
-                        </div>
-                        <div className="flex flex-col text-[7px] text-slate-500 font-bold">
-                          <span>X: {inputs.subjectX}%</span>
-                          <span>Y: {inputs.subjectY}%</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                      <div className="flex justify-between items-center">
-                        <span className="text-[8px] font-black text-slate-500 uppercase">Scale: x{inputs.subjectScale.toFixed(1)}</span>
+                      <div className="flex justify-between items-center text-[10px] font-bold text-slate-500">
+                        <span>拡大率</span>
+                        <span>x{inputs.subjectScale.toFixed(1)}</span>
                       </div>
                       <input
                         type="range"
                         min="0.5"
-                        max="4.0"
+                        max="3.0"
                         step="0.1"
                         value={inputs.subjectScale}
                         onChange={(e) => setInputs(p => ({ ...p, subjectScale: parseFloat(e.target.value) }))}
-                        className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                        className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                       />
                     </div>
                   </div>
@@ -210,10 +240,8 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
             </div>
 
             {/* Logo Image */}
-            <div className="col-span-2 space-y-2">
-              <label className="text-[10px] text-slate-300 font-bold flex items-center">
-                チャンネルロゴ
-              </label>
+            <div className="col-span-1 space-y-1.5">
+              <label className="text-xs font-bold text-slate-700">ロゴ画像</label>
               {!inputs.uploadedLogo ? (
                 <div
                   data-field="uploadedLogo"
@@ -222,97 +250,105 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
                   onDragLeave={handleDrag}
                   onDrop={(e) => handleDrop(e, 'uploadedLogo')}
                   onClick={() => logoFileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-lg p-2 flex flex-col items-center justify-center h-16 transition-all cursor-pointer ${dragActiveField === 'uploadedLogo' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 scale-[1.02]' : 'border-slate-700 text-slate-500 hover:bg-slate-700/50'}`}
+                  className={`border-2 border-dashed rounded-2xl p-2 flex flex-col items-center justify-center h-20 transition-all cursor-pointer ${dragActiveField === 'uploadedLogo' ? 'border-indigo-500 bg-indigo-50 text-indigo-600' : 'border-slate-200 bg-slate-50/50 text-slate-400 hover:bg-slate-50'}`}
                 >
-                  <Upload className={`w-4 h-4 mb-1 ${dragActiveField === 'uploadedLogo' ? 'animate-bounce' : ''}`} />
-                  <span className="text-[8px] uppercase">Logo</span>
+                  <Upload className="w-4 h-4 mb-1 text-slate-400" />
+                  <span className="text-[10px] font-semibold">ロゴ追加</span>
                 </div>
               ) : (
-                <div className="relative rounded-lg overflow-hidden border border-slate-600 h-16 bg-slate-900 flex items-center justify-center p-2">
+                <div className="relative rounded-2xl overflow-hidden border border-slate-200 h-20 bg-slate-50 flex items-center justify-center p-2">
                   <img src={inputs.uploadedLogo} className="max-w-full max-h-full object-contain" />
-                  <button onClick={() => setInputs(p => ({ ...p, uploadedLogo: null }))} className="absolute top-1 right-1 bg-black/70 p-1 rounded-full text-white hover:bg-red-500"><X className="w-3 h-3" /></button>
+                  <button onClick={() => setInputs(p => ({ ...p, uploadedLogo: null }))} className="absolute top-1 right-1 bg-slate-900/80 p-1 rounded-full text-white hover:bg-red-500"><X className="w-3 h-3" /></button>
                 </div>
               )}
               <input type="file" ref={logoFileInputRef} onChange={(e) => handleFile(e.target.files?.[0]!, 'uploadedLogo')} className="hidden" />
             </div>
-          </div>
 
-          {/* Background Image (Full Width) */}
-          <div className="space-y-2">
-            <label className="text-[10px] text-slate-300 font-bold flex items-center">
-              背景画像（ゲーム画面など）
-            </label>
-            {!inputs.uploadedBackgroundImage ? (
-              <div
-                data-field="uploadedBackgroundImage"
-                onDragEnter={handleDrag}
-                onDragOver={handleDrag}
-                onDragLeave={handleDrag}
-                onDrop={(e) => handleDrop(e, 'uploadedBackgroundImage')}
-                onClick={() => bgFileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-lg p-3 flex flex-col items-center justify-center h-24 transition-all cursor-pointer ${dragActiveField === 'uploadedBackgroundImage' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 scale-[1.02]' : 'border-slate-700 text-slate-500 hover:bg-slate-700/50'}`}
-              >
-                <Upload className={`w-5 h-5 mb-1 ${dragActiveField === 'uploadedBackgroundImage' ? 'animate-bounce' : 'text-slate-600'}`} />
-                <span className="text-[9px] uppercase font-bold">Background Upload</span>
-                <p className="text-[8px] text-slate-600 mt-1">ゲームのスクショなどを背景に指定できます</p>
-              </div>
-            ) : (
-              <div className="relative rounded-lg overflow-hidden border border-slate-600 h-24">
-                <img src={inputs.uploadedBackgroundImage} className="w-full h-full object-cover" />
-                <button onClick={() => setInputs(p => ({ ...p, uploadedBackgroundImage: null }))} className="absolute top-1 right-1 bg-black/70 p-1.5 rounded-full text-white hover:bg-red-500 shadow-lg"><X className="w-3.5 h-3.5" /></button>
-              </div>
-            )}
-            <input type="file" ref={bgFileInputRef} onChange={(e) => handleFile(e.target.files?.[0]!, 'uploadedBackgroundImage')} className="hidden" />
-          </div>
-
-          {/* Reference Images */}
-          <div className="space-y-2">
-            <label className="text-[10px] text-slate-300 font-bold flex items-center justify-between">
-              参考レイアウト画像（最大3枚）
-              <span className="bg-slate-800 px-2 py-0.5 rounded text-[8px]">{inputs.referenceImages.length}/3</span>
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              {inputs.referenceImages.map((refImg, i) => (
-                <div key={i} className="relative rounded-lg overflow-hidden border border-slate-600 h-16">
-                  <img src={refImg} className="w-full h-full object-cover" />
-                  <button onClick={() => removeReferenceImage(i)} className="absolute top-1 right-1 bg-black/70 p-1 rounded-full text-white hover:bg-red-500 shadow-lg"><X className="w-3 h-3" /></button>
-                </div>
-              ))}
-              {inputs.referenceImages.length < 3 && (
+            {/* Background Image */}
+            <div className="col-span-1 space-y-1.5">
+              <label className="text-xs font-bold text-slate-700">背景用スクショ</label>
+              {!inputs.uploadedBackgroundImage ? (
                 <div
-                  data-field="referenceImages"
+                  data-field="uploadedBackgroundImage"
                   onDragEnter={handleDrag}
                   onDragOver={handleDrag}
                   onDragLeave={handleDrag}
-                  onDrop={(e) => handleDrop(e, 'referenceImages')}
-                  onClick={() => refFileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-lg flex flex-col items-center justify-center h-16 transition-all cursor-pointer ${dragActiveField === 'referenceImages' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 scale-[1.05]' : 'border-slate-700 text-slate-500 hover:bg-slate-700/50'}`}
+                  onDrop={(e) => handleDrop(e, 'uploadedBackgroundImage')}
+                  onClick={() => bgFileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-2xl p-2 flex flex-col items-center justify-center h-20 transition-all cursor-pointer ${dragActiveField === 'uploadedBackgroundImage' ? 'border-indigo-500 bg-indigo-50 text-indigo-600' : 'border-slate-200 bg-slate-50/50 text-slate-400 hover:bg-slate-50'}`}
                 >
-                  <Upload className={`w-4 h-4 mb-1 ${dragActiveField === 'referenceImages' ? 'animate-bounce' : 'text-slate-600'}`} />
-                  <span className="text-[7px] font-bold">追加</span>
+                  <Upload className="w-4 h-4 mb-1 text-slate-400" />
+                  <span className="text-[10px] font-semibold">背景画像</span>
+                </div>
+              ) : (
+                <div className="relative rounded-2xl overflow-hidden border border-slate-200 h-20">
+                  <img src={inputs.uploadedBackgroundImage} className="w-full h-full object-cover" />
+                  <button onClick={() => setInputs(p => ({ ...p, uploadedBackgroundImage: null }))} className="absolute top-1 right-1 bg-slate-900/80 p-1 rounded-full text-white hover:bg-red-500"><X className="w-3 h-3" /></button>
                 </div>
               )}
+              <input type="file" ref={bgFileInputRef} onChange={(e) => handleFile(e.target.files?.[0]!, 'uploadedBackgroundImage')} className="hidden" />
             </div>
-            <input type="file" ref={refFileInputRef} onChange={(e) => handleFile(e.target.files?.[0]!, 'referenceImages')} className="hidden" />
+
+            {/* Reference Images */}
+            <div className="col-span-2 space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                参考構図サムネイル (最大3枚)
+                <span className="text-[10px] text-slate-400 font-medium">{inputs.referenceImages.length}/3</span>
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {inputs.referenceImages.map((refImg, i) => (
+                  <div key={i} className="relative rounded-xl overflow-hidden border border-slate-200 h-16">
+                    <img src={refImg} className="w-full h-full object-cover" />
+                    <button onClick={() => removeReferenceImage(i)} className="absolute top-1 right-1 bg-slate-900/80 p-1 rounded-full text-white hover:bg-red-500"><X className="w-3 h-3" /></button>
+                  </div>
+                ))}
+                {inputs.referenceImages.length < 3 && (
+                  <div
+                    data-field="referenceImages"
+                    onDragEnter={handleDrag}
+                    onDragOver={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDrop={(e) => handleDrop(e, 'referenceImages')}
+                    onClick={() => refFileInputRef.current?.click()}
+                    className={`border-2 border-dashed rounded-xl flex flex-col items-center justify-center h-16 transition-all cursor-pointer ${dragActiveField === 'referenceImages' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-200 bg-slate-50/50 text-slate-400 hover:bg-slate-50'}`}
+                  >
+                    <Upload className="w-3.5 h-3.5 mb-0.5 text-slate-400" />
+                    <span className="text-[9px] font-bold">参考追加</span>
+                  </div>
+                )}
+              </div>
+              <input type="file" ref={refFileInputRef} onChange={(e) => handleFile(e.target.files?.[0]!, 'referenceImages')} className="hidden" />
+            </div>
           </div>
         </div>
 
-        {/* Analysis & Copy */}
-        <div className="space-y-4 pt-4 border-t border-slate-700">
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center">
-              <Target className="w-3 h-3 mr-2" /> 競合分析ターゲット
+        {/* Copy & Emotion */}
+        <div className="space-y-4 pt-4 border-t border-slate-100">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 flex items-center">
+              <Target className="w-3.5 h-3.5 mr-1.5 text-indigo-500" /> 競合・企画キーワード
             </label>
-            <input type="text" name="competitorKeyword" value={inputs.competitorKeyword} onChange={handleChange} placeholder="例: マインクラフト 建築" className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-slate-900 focus:ring-2 focus:ring-slate-950 transition-all outline-none" />
+            <input
+              type="text"
+              name="competitorKeyword"
+              value={inputs.competitorKeyword}
+              onChange={handleChange}
+              placeholder="例: Apex ランク立ち回り / マイクラ 自動化"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all outline-none"
+            />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center">
-              <Heart className="w-3 h-3 mr-2 text-pink-500" /> 感情フック
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 flex items-center">
+              <Heart className="w-3.5 h-3.5 mr-1.5 text-rose-500" /> ターゲット感情・ジャンル
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-1.5">
               {EMOTIONS.map(emo => (
-                <button key={emo} onClick={() => setInputs(p => ({ ...p, emotionalTrigger: emo }))} className={`py-3 px-1 rounded-xl text-[10px] font-bold border transition-all ${inputs.emotionalTrigger === emo ? 'bg-slate-900 border-slate-900 text-white shadow-lg shadow-slate-200' : 'bg-white border-slate-200 text-slate-400 hover:border-slate-400 hover:text-slate-800'}`}>
+                <button
+                  key={emo}
+                  onClick={() => setInputs(p => ({ ...p, emotionalTrigger: emo }))}
+                  className={`py-2 px-1 rounded-xl text-[10px] font-bold border transition-all truncate ${inputs.emotionalTrigger === emo ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300'}`}
+                >
                   {emo}
                 </button>
               ))}
@@ -320,19 +356,49 @@ const InputForm: React.FC<InputFormProps> = ({ inputs, setInputs, onSubmit, stat
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center">
-              <Type className="w-3 h-3 mr-2" /> サムネイルコピー
+            <label className="text-xs font-bold text-slate-700 flex items-center">
+              <Type className="w-3.5 h-3.5 mr-1.5 text-indigo-500" /> サムネイルテロップ（インパクト重視）
             </label>
-            <input type="text" name="copyText" value={inputs.copyText} onChange={handleChange} placeholder="メインコピー（一瞬で伝わる！）" className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-slate-900 mb-3 focus:ring-2 focus:ring-slate-950 transition-all outline-none" />
-            <input type="text" name="subCopy" value={inputs.subCopy} onChange={handleChange} placeholder="サブコピー1" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-500 focus:ring-1 focus:ring-slate-950 transition-all outline-none mb-2" />
-            <input type="text" name="subCopy2" value={inputs.subCopy2} onChange={handleChange} placeholder="サブコピー2（補足情報など）" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-500 focus:ring-1 focus:ring-slate-950 transition-all outline-none" />
+            <input
+              type="text"
+              name="copyText"
+              value={inputs.copyText}
+              onChange={handleChange}
+              placeholder="メインコピー (例: 99%が勘違いしている決定的な違い)"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-900 font-bold placeholder:text-slate-400 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all outline-none"
+            />
+            <input
+              type="text"
+              name="subCopy"
+              value={inputs.subCopy}
+              onChange={handleChange}
+              placeholder="サブコピー1 (例: 最新環境対応)"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-700 placeholder:text-slate-400 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all outline-none"
+            />
+            <input
+              type="text"
+              name="subCopy2"
+              value={inputs.subCopy2}
+              onChange={handleChange}
+              placeholder="サブコピー2 (例: 衝撃の結末...)"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-700 placeholder:text-slate-400 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all outline-none"
+            />
           </div>
         </div>
       </div>
 
-      <div className="pt-8 mt-6 border-t border-slate-100">
-        <button onClick={onSubmit} disabled={isProcessing || !inputs.copyText} className={`w-full py-5 px-6 rounded-2xl font-semibold text-white flex items-center justify-center transition-all ${isProcessing || !inputs.copyText ? 'bg-slate-300 cursor-not-allowed shadow-none' : 'bg-slate-900 hover:shadow-[0_15px_30px_rgba(0,0,0,0.1)] hover:scale-[1.01] active:scale-[0.99]'}`}>
-          {isProcessing ? (<><Loader2 className="animate-spin mr-3 h-6 w-6" /> 分析・構成中...</>) : (<><Sparkles className="w-6 h-6 mr-3" /> 戦略プランを策定する</>)}
+      {/* Submit Button */}
+      <div className="pt-5 mt-4 border-t border-slate-100">
+        <button
+          onClick={onSubmit}
+          disabled={isProcessing || !inputs.copyText}
+          className={`w-full py-4 px-6 rounded-2xl font-bold text-sm text-white flex items-center justify-center gap-2 transition-all ${isProcessing || !inputs.copyText ? 'bg-slate-300 cursor-not-allowed shadow-none' : 'bg-slate-900 hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-300 active:scale-[0.99]'}`}
+        >
+          {isProcessing ? (
+            <><Loader2 className="animate-spin h-5 w-5" /> AI戦略プランを作成中...</>
+          ) : (
+            <><Sparkles className="w-5 h-5 text-amber-300" /> AI戦略プランを策定する</>
+          )}
         </button>
       </div>
     </div>

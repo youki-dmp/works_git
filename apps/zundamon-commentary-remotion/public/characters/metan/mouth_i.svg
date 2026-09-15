@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <!-- 口（い・横開き） -->
+  <path d="M 183 318 Q 200 314 217 318 Q 215 328 200 329 Q 185 328 183 318 Z" fill="#ef4444" stroke="#881337" stroke-width="3" />
+  <rect x="187" y="318" width="26" height="4" rx="2" fill="#ffffff" />
+</svg>

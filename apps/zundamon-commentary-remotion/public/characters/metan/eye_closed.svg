@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <!-- 左目（おすまし閉じ目） -->
+  <path d="M 142 274 Q 160 258 178 274" fill="none" stroke="#500724" stroke-width="4.5" stroke-linecap="round" />
+  <!-- 右目（おすまし閉じ目） -->
+  <path d="M 222 274 Q 240 258 258 274" fill="none" stroke="#500724" stroke-width="4.5" stroke-linecap="round" />
+</svg>

@@ -1,0 +1,1139 @@
+{
+  "title": "ずんだもんのAI動画自動化解説",
+  "fps": 30,
+  "totalDurationInFrames": 1171,
+  "speakers": {
+    "zundamon": {
+      "name": "ずんだもん",
+      "voicevoxSpeakerId": 3,
+      "primaryColor": "#22c55e",
+      "secondaryColor": "#15803d",
+      "textColor": "#ffffff",
+      "strokeColor": "#14532d",
+      "position": "left"
+    },
+    "metan": {
+      "name": "四国めたん",
+      "voicevoxSpeakerId": 2,
+      "primaryColor": "#ec4899",
+      "secondaryColor": "#be185d",
+      "textColor": "#ffffff",
+      "strokeColor": "#831843",
+      "position": "right"
+    }
+  },
+  "timeline": [
+    {
+      "id": 1,
+      "speaker": "zundamon",
+      "text": "こんにちはなのだ！今日はAIを使った動画自動編集ツールについて解説するのだ！",
+      "expression": "happy",
+      "slide": "slide1.svg",
+      "audioFile": "audio/dialogue_1.wav",
+      "startFrame": 15,
+      "durationInFrames": 198,
+      "phonemes": [
+        {
+          "frameOffset": 0,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 4,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 8,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 12,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 16,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 20,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 24,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 28,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 32,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 36,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 40,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 44,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 48,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 52,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 56,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 60,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 64,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 68,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 72,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 76,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 80,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 84,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 88,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 92,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 96,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 100,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 104,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 108,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 112,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 116,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 120,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 124,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 128,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 132,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 136,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 140,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 144,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 148,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 152,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 156,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 160,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 164,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 168,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 172,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 176,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 180,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 184,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 193,
+          "vowel": "closed"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "speaker": "metan",
+      "text": "こんにちは。台本さえ用意すれば、音声合成と立ち絵が全自動で連携する時代になりましたね。",
+      "expression": "normal",
+      "slide": "slide1.svg",
+      "audioFile": "audio/dialogue_2.wav",
+      "startFrame": 223,
+      "durationInFrames": 222,
+      "phonemes": [
+        {
+          "frameOffset": 0,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 4,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 8,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 12,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 16,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 20,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 24,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 28,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 32,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 36,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 40,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 44,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 48,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 52,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 56,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 60,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 64,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 68,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 72,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 76,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 80,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 84,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 88,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 92,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 96,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 100,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 104,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 108,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 112,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 116,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 120,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 124,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 128,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 132,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 136,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 140,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 144,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 148,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 152,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 156,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 160,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 164,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 168,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 172,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 176,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 180,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 184,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 188,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 192,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 196,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 200,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 204,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 208,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 217,
+          "vowel": "closed"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "speaker": "zundamon",
+      "text": "そうなのだ！音素データを解析して、口パクやまばたきもリアルタイムに同期しているのだ！",
+      "expression": "surprised",
+      "slide": "slide2.svg",
+      "audioFile": "audio/dialogue_3.wav",
+      "startFrame": 455,
+      "durationInFrames": 217,
+      "phonemes": [
+        {
+          "frameOffset": 0,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 4,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 8,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 12,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 16,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 20,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 24,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 28,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 32,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 36,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 40,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 44,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 48,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 52,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 56,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 60,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 64,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 68,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 72,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 76,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 80,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 84,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 88,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 92,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 96,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 100,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 104,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 108,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 112,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 116,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 120,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 124,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 128,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 132,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 136,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 140,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 144,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 148,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 152,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 156,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 160,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 164,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 168,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 172,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 176,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 180,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 184,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 188,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 192,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 196,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 200,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 204,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 212,
+          "vowel": "closed"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "speaker": "metan",
+      "text": "Remotionを使っているから、Webブラウザでプレビューしながら即座に調整できるのも強みですね。",
+      "expression": "happy",
+      "slide": "slide2.svg",
+      "audioFile": "audio/dialogue_4.wav",
+      "startFrame": 682,
+      "durationInFrames": 255,
+      "phonemes": [
+        {
+          "frameOffset": 0,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 4,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 8,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 12,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 16,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 20,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 24,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 28,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 32,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 36,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 40,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 44,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 48,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 52,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 56,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 60,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 64,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 68,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 72,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 76,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 80,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 84,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 88,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 92,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 96,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 100,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 104,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 108,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 112,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 116,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 120,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 124,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 128,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 132,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 136,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 140,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 144,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 148,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 152,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 156,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 160,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 164,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 168,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 172,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 176,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 180,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 184,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 188,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 192,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 196,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 200,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 204,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 208,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 212,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 216,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 220,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 224,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 228,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 232,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 236,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 240,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 244,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 250,
+          "vowel": "closed"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "speaker": "zundamon",
+      "text": "これでもう動画編集の外注費もゼロなのだ！チャンネル登録よろしくなのだ！",
+      "expression": "happy",
+      "slide": "slide3.svg",
+      "audioFile": "audio/dialogue_5.wav",
+      "startFrame": 947,
+      "durationInFrames": 184,
+      "phonemes": [
+        {
+          "frameOffset": 0,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 4,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 8,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 12,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 16,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 20,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 24,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 28,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 32,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 36,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 40,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 44,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 48,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 52,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 56,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 60,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 64,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 68,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 72,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 76,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 80,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 84,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 88,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 92,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 96,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 100,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 104,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 108,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 112,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 116,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 120,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 124,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 128,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 132,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 136,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 140,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 144,
+          "vowel": "i"
+        },
+        {
+          "frameOffset": 148,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 152,
+          "vowel": "o"
+        },
+        {
+          "frameOffset": 156,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 160,
+          "vowel": "u"
+        },
+        {
+          "frameOffset": 164,
+          "vowel": "e"
+        },
+        {
+          "frameOffset": 168,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 172,
+          "vowel": "a"
+        },
+        {
+          "frameOffset": 179,
+          "vowel": "closed"
+        }
+      ]
+    }
+  ]
+}

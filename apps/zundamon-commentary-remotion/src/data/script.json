@@ -1,0 +1,61 @@
+{
+  "title": "ずんだもんのAI動画自動化解説",
+  "bgm": "bgm_sample.mp3",
+  "speakers": {
+    "zundamon": {
+      "name": "ずんだもん",
+      "voicevoxSpeakerId": 3,
+      "primaryColor": "#22c55e",
+      "secondaryColor": "#15803d",
+      "textColor": "#ffffff",
+      "strokeColor": "#14532d",
+      "position": "left"
+    },
+    "metan": {
+      "name": "四国めたん",
+      "voicevoxSpeakerId": 2,
+      "primaryColor": "#ec4899",
+      "secondaryColor": "#be185d",
+      "textColor": "#ffffff",
+      "strokeColor": "#831843",
+      "position": "right"
+    }
+  },
+  "dialogues": [
+    {
+      "id": 1,
+      "speaker": "zundamon",
+      "text": "こんにちはなのだ！今日はAIを使った動画自動編集ツールについて解説するのだ！",
+      "expression": "happy",
+      "slide": "slide1.svg"
+    },
+    {
+      "id": 2,
+      "speaker": "metan",
+      "text": "こんにちは。台本さえ用意すれば、音声合成と立ち絵が全自動で連携する時代になりましたね。",
+      "expression": "normal",
+      "slide": "slide1.svg"
+    },
+    {
+      "id": 3,
+      "speaker": "zundamon",
+      "text": "そうなのだ！音素データを解析して、口パクやまばたきもリアルタイムに同期しているのだ！",
+      "expression": "surprised",
+      "slide": "slide2.svg"
+    },
+    {
+      "id": 4,
+      "speaker": "metan",
+      "text": "Remotionを使っているから、Webブラウザでプレビューしながら即座に調整できるのも強みですね。",
+      "expression": "happy",
+      "slide": "slide2.svg"
+    },
+    {
+      "id": 5,
+      "speaker": "zundamon",
+      "text": "これでもう動画編集の外注費もゼロなのだ！チャンネル登録よろしくなのだ！",
+      "expression": "happy",
+      "slide": "slide3.svg"
+    }
+  ]
+}

@@ -5,23 +5,24 @@ import ResultDisplay from './components/ResultDisplay';
 import DocumentationViewer from './components/DocumentationViewer';
 import { generateDesignPlan, generateVisualMockups, generateFinalImage } from './services/geminiService';
 import { ThumbnailInputs, AppStatus, AppStatusType, FinalImageEntry } from './types';
-import { Palette, TrendingUp, Book } from 'lucide-react';
+import { Palette, TrendingUp, Book, Sparkles } from 'lucide-react';
 
 const App: React.FC = () => {
-  // Added missing emotionalTrigger and competitorKeyword to the initial state to comply with ThumbnailInputs interface.
   const [inputs, setInputs] = useState<ThumbnailInputs>({
     mainSubject: '', uploadedImage: null, uploadedLogo: null, background: '', uploadedBackgroundImage: null,
     referenceImages: [], referenceUrls: [], copyText: '', subCopy: '', subCopy2: '', videoDescription: '', aspectRatio: '16:9',
     subjectBorderColor: '#ffffff',
     subjectGlowColor: '#6366f1',
     useTrendSearch: false,
-    emotionalTrigger: 'Excitement',
+    emotionalTrigger: '衝撃・サプライズ',
     competitorKeyword: '',
     strictIdentity: true,
     subjectScale: 1.0,
     subjectType: 'bust',
     subjectX: 0,
-    subjectY: 0
+    subjectY: 0,
+    generationMode: 'speed',
+    preserveRawSubjectLayer: true,
   });
 
   const [plan, setPlan] = useState<string>('');
@@ -54,7 +55,7 @@ const App: React.FC = () => {
     setStatus(AppStatus.PLANNING); setError(null); setPlan(''); setDraftImages([]); setSelectedDraftIndex(null); setFinalImages([]);
     setLastAction({ type: 'PLAN' });
     setProgress(5);
-    const progressTimer = simulateProgress(5, 90, 8000);
+    const progressTimer = simulateProgress(5, 90, 4000);
     try {
       if (!process.env.API_KEY || process.env.API_KEY === 'PLACEHOLDER_API_KEY') {
         throw new Error("API_KEY_MISSING");
@@ -69,17 +70,11 @@ const App: React.FC = () => {
       if (err?.message === "API_KEY_MISSING") {
         setError("APIキーが設定されていません。.env.local ファイルを確認してください。");
       } else if (err?.message?.includes("leaked")) {
-        setError("APIキーが漏洩したため、Googleによって失効されました。新しいキーを発行して .env.local を更新してください。");
-      } else if (err?.message?.includes("API key") || err?.message?.includes("invalid")) {
-        setError("APIキーが無効です。正しいキーが設定されているか確認してください。");
-      } else if (err?.message?.includes("Requested entity was not found")) {
-        setError("モデルが見つかりません。config.ts のモデル名設定を確認してください。");
-      } else if (err?.message?.includes("Safety")) {
-        setError("コンテンツポリシーに抵触した可能性があるため、生成を中止しました。入力を変更して試してください。");
+        setError("APIキーが失効しています。新しいキーを発行してください。");
       } else if (err?.message?.includes("Quota") || err?.message?.includes("429")) {
-        setError("リクエスト制限に達しました。しばらく待ってからリトライしてください。");
+        setError("リクエスト上限に達しました。しばらく待ってから再試行してください。");
       } else {
-        setError("プラン生成中に予期せぬエラーが発生しました。");
+        setError("AIプランの策定中にエラーが発生しました。");
       }
       setStatus(AppStatus.ERROR);
     }
@@ -90,7 +85,7 @@ const App: React.FC = () => {
     setStatus(AppStatus.RENDERING); setError(null); setDraftImages([]); setSelectedDraftIndex(null);
     setLastAction({ type: 'DRAFTS', args: instruction });
     setProgress(5);
-    const progressTimer = simulateProgress(5, 95, 12000);
+    const progressTimer = simulateProgress(5, 95, 6000);
     try {
       const images = await generateVisualMockups(plan, inputs, instruction);
       clearInterval(progressTimer);
@@ -99,15 +94,7 @@ const App: React.FC = () => {
     } catch (err: any) {
       clearInterval(progressTimer);
       console.error(err);
-      if (err?.message?.includes("Safety")) {
-        setError("安全性の制限により、画像の生成がスキップされました。");
-      } else if (err?.message?.includes("leaked")) {
-        setError("APIキーが漏洩・失効しています。新しいキーを発行してください。");
-      } else if (err?.message?.includes("Requested entity was not found") || err?.message?.includes("API key") || err?.message?.includes("invalid")) {
-        setError("APIキーエラーです。キーの設定内容を確認してください。");
-      } else {
-        setError("ラフ生成に失敗しました。もう一度お試しください。");
-      }
+      setError("ラフ案の生成に失敗しました。再試行してください。");
       setStatus(AppStatus.ERROR);
     }
   };
@@ -118,7 +105,7 @@ const App: React.FC = () => {
     setStatus(AppStatus.POLISHING); setError(null);
     setLastAction({ type: 'FINAL', args: { instruction, mainCopy, subCopy, subCopy2 } });
     setProgress(5);
-    const progressTimer = simulateProgress(5, 98, 15000);
+    const progressTimer = simulateProgress(5, 98, 8000);
     try {
       const baseFinalUrl = typeof historyIndex === 'number' ? finalImages[historyIndex].url : null;
 
@@ -128,7 +115,7 @@ const App: React.FC = () => {
 
       clearInterval(progressTimer);
       setProgress(100);
-      const patterns = ["Trend-Focused", "Psychological", "Premium"];
+      const patterns = ["High Contrast", "Emotional", "Premium Clean"];
       const sourcePattern = patterns[selectedDraftIndex] || "Custom";
       const now = new Date();
       const timestamp = now.toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -146,11 +133,7 @@ const App: React.FC = () => {
     } catch (err: any) {
       clearInterval(progressTimer);
       console.error(err);
-      if (err?.message?.includes("Safety")) {
-        setError("画像の仕上げ中に安全性の問題が検出されました。");
-      } else {
-        setError("最終画像の生成に失敗しました。");
-      }
+      setError("最終画像のポリッシュに失敗しました。");
       setStatus(AppStatus.ERROR);
     }
   };
@@ -167,38 +150,44 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-slate-900 selection:text-white">
-      <header className="bg-white/80 backdrop-blur-xl border-b border-slate-100 py-5 px-8 shadow-[0_2px_20px_rgba(0,0,0,0.02)] z-20 sticky top-0">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-indigo-600 selection:text-white">
+      {/* Header Bar */}
+      <header className="bg-white/90 backdrop-blur-md border-b border-slate-200/80 py-4 px-8 sticky top-0 z-30 shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-          <div className="flex items-center">
-            <div className="p-2.5 bg-slate-900 rounded-2xl mr-4 shadow-lg shadow-slate-200"><Palette className="w-6 h-6 text-white" /></div>
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-indigo-600 rounded-2xl shadow-md shadow-indigo-200">
+              <Palette className="w-5 h-5 text-white" />
+            </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-900 flex items-center">
-                サムネイル職人 <span className="ml-2 text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full tracking-widest font-bold">2026年度版</span>
+              <h1 className="text-lg font-bold tracking-tight text-slate-900 flex items-center gap-2">
+                サムネイル職人 AI Studio
+                <span className="text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200/60 px-2 py-0.5 rounded-full font-bold tracking-wider">
+                  Gemini 3.5 Flash / 3 Pro
+                </span>
               </h1>
-              <div className="flex items-center gap-2 mt-0.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-slate-900 animate-pulse"></div>
-                <p className="text-[10px] text-slate-400 font-medium tracking-wide">Gemini 3 Pro 解析エンジン稼働中</p>
-              </div>
+              <p className="text-[11px] text-slate-400 font-medium">レイヤー分離非加工合成・超高速サムネイル最適化</p>
             </div>
           </div>
-          <div className="hidden md:flex items-center gap-4">
+
+          <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => setShowDocs(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-all shadow-sm"
+              className="flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all text-xs font-semibold text-slate-700"
             >
-              <Book className="w-4 h-4 text-slate-600" />
-              <span className="text-xs font-semibold text-slate-700">チームライブラリ</span>
+              <Book className="w-4 h-4 text-slate-500" />
+              <span>ドキュメント</span>
             </button>
-            <div className="flex items-center gap-2 px-4 py-2 bg-slate-100/50 rounded-xl border border-slate-100">
-              <TrendingUp className="w-4 h-4 text-slate-500" />
-              <span className="text-xs font-semibold text-slate-500">トレンド分析モード</span>
+            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-200/60 text-xs font-bold">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Gemini 3.6 稼働中</span>
             </div>
           </div>
         </div>
       </header>
-      <main className="flex-grow p-8 overflow-hidden bg-slate-50">
-        <div className="max-w-[1600px] mx-auto h-[calc(100vh-7rem)] grid grid-cols-1 md:grid-cols-12 gap-6">
+
+      {/* Main Container */}
+      <main className="flex-grow p-6 overflow-hidden bg-slate-50">
+        <div className="max-w-[1600px] mx-auto h-[calc(100vh-6.5rem)] grid grid-cols-1 md:grid-cols-12 gap-6">
           <div className="md:col-span-4 h-full overflow-hidden">
             <InputForm inputs={inputs} setInputs={setInputs} onSubmit={handleGeneratePlan} status={status} />
           </div>
@@ -233,3 +222,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

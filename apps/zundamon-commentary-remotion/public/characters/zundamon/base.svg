@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <!-- 影 -->
+  <ellipse cx="200" cy="580" rx="140" ry="16" fill="rgba(0,0,0,0.15)" />
+  <!-- 体・服 -->
+  <path d="M 140 380 Q 120 480 130 570 L 270 570 Q 280 480 260 380 Z" fill="#ffffff" stroke="#22c55e" stroke-width="6" />
+  <!-- ケープ/襟 -->
+  <path d="M 120 370 Q 200 420 280 370 Q 260 450 200 460 Q 140 450 120 370 Z" fill="#4ade80" stroke="#16a34a" stroke-width="5" />
+  <!-- リボン -->
+  <circle cx="200" cy="420" r="14" fill="#ef4444" />
+  <path d="M 190 420 L 160 440 L 175 415 Z" fill="#ef4444" />
+  <path d="M 210 420 L 240 440 L 225 415 Z" fill="#ef4444" />
+  <!-- 頭部ベース（輪郭） -->
+  <circle cx="200" cy="270" r="130" fill="#fffbeb" stroke="#334155" stroke-width="5" />
+  <!-- 髪（緑） -->
+  <path d="M 90 230 Q 70 340 100 390 Q 120 360 120 300 Z" fill="#86efac" stroke="#16a34a" stroke-width="4" />
+  <path d="M 310 230 Q 330 340 300 390 Q 280 360 280 300 Z" fill="#86efac" stroke="#16a34a" stroke-width="4" />
+  <path d="M 80 230 Q 130 130 200 130 Q 270 130 320 230 Q 280 190 200 190 Q 120 190 80 230 Z" fill="#4ade80" stroke="#16a34a" stroke-width="5" />
+  <!-- 前髪 -->
+  <path d="M 110 200 Q 150 250 160 240 Q 180 260 200 230 Q 220 260 240 240 Q 250 250 290 200 Q 240 170 200 170 Q 160 170 110 200 Z" fill="#86efac" stroke="#16a34a" stroke-width="4" />
+  <!-- 枝豆の耳/髪飾り（左右） -->
+  <!-- 左耳（枝豆） -->
+  <g transform="translate(60, 120) rotate(-25)">
+    <ellipse cx="40" cy="30" rx="35" ry="20" fill="#22c55e" stroke="#15803d" stroke-width="5" />
+    <circle cx="22" cy="30" r="10" fill="#86efac" />
+    <circle cx="42" cy="30" r="10" fill="#86efac" />
+    <circle cx="62" cy="30" r="10" fill="#86efac" />
+  </g>
+  <!-- 右耳（枝豆） -->
+  <g transform="translate(260, 100) rotate(25)">
+    <ellipse cx="40" cy="30" rx="35" ry="20" fill="#22c55e" stroke="#15803d" stroke-width="5" />
+    <circle cx="18" cy="30" r="10" fill="#86efac" />
+    <circle cx="38" cy="30" r="10" fill="#86efac" />
+    <circle cx="58" cy="30" r="10" fill="#86efac" />
+  </g>
+  <!-- チーク（ほっぺの赤み） -->
+  <ellipse cx="135" cy="300" rx="16" ry="9" fill="#fca5a5" opacity="0.6" />
+  <ellipse cx="265" cy="300" rx="16" ry="9" fill="#fca5a5" opacity="0.6" />
+</svg>
